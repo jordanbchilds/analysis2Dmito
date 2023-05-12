@@ -13,6 +13,9 @@ classif_plot(dataMats, classifs = NULL, postpred = NULL, ...)
 
 \item{postpred}{A \link{data.frame} outputted from whose columns contain the 95\\% posterior predictive interval and the corresponding x-axis values for a linear regression model for this dataset. The columns should be labelled; 'mitochan', 'lwrNorm', 'medNorm' and 'uprNorm'. This is the form of the output given by \code{\link[=inference]{inference()}}.}
 }
+\value{
+NULL.
+}
 \description{
 Plots control and patient data with patient data classifications on a scale from blue to red.
 }
