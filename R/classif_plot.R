@@ -1,5 +1,4 @@
-#' @title
-#' 2Dmito Plot with Classifications
+#' @title 2Dmito Plot with Classifications
 #'
 #' @description
 #' Plots control and patient data with patient data classifications on a scale from blue to red.
@@ -40,15 +39,10 @@ classif_plot = function(dataMats,
   points(dataMats$ctrl,
          pch = 20,
          col = alphaBlack(0.1))
-  if (is.null(classifs)) {
-    points(dataMats$pts,
-           pch = 20,
-           col = alphaGreen(0.7))
-  } else {
-    points(dataMats$pts,
-           pch = 20,
-           col = classcols(classifs))
-  }
+  cols = ifelse(is.null(classifs), alphaGreen(0.7), classcols(classifs))
+  points(dataMats$pts,
+         pch = 20,
+         col = cols)
   lines(
     postpred[, "mitochan"],
     postpred[, "lwrNorm"],
