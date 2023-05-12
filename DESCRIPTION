@@ -1,0 +1,12 @@
+Package: analysis2Dmito
+Title: Fibre Classification Using 2Dmito PLots
+Version: 0.0.0.9000
+Authors@R: 
+    person("Jordan", "Childs", , "jordanbchilds@gmail.com", role = c("aut", "cre"))
+Description: Classifies individual as being like control or not from a 2Dmito plot.
+    By fitting a Bayesian hierarchical linear mixture model with a Bernoulli classifier. 
+License: use_mit_license()
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3.9000
+ImportFrom: plyr match_df
