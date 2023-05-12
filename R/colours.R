@@ -10,7 +10,7 @@
 #'
 #' @returns A character object of the hex value colour name created.
 alphaBlack = function(alpha) rgb(0,0,0, alpha)
-NULL
+
 
 #' Transparent Blue
 #'
@@ -21,7 +21,7 @@ NULL
 #' @param alpha The level of opacity, between 0.0 and 1.0, 0.0 being completely transparent and 1.0 being opaque.
 #' @returns A character object of the hex value colour name created.
 alphaBlue = function(alpha) rgb(0,0,128/255, alpha)
-NULL
+
 
 #' Transparent Red
 #'
@@ -32,7 +32,7 @@ NULL
 #' @param alpha The level of opacity, between 0.0 and 1.0, 0.0 being completely transparent and 1.0 being opaque.
 #' @returns A character object of the hex value colour name created.
 alphaRed = function(alpha) rgb(1,0,0, alpha)
-NULL
+
 
 #' Transparent Green
 #'
@@ -43,7 +43,7 @@ NULL
 #' @param alpha The level of opacity, between 0.0 and 1.0, 0.0 being completely transparent and 1.0 being opaque.
 #' @returns A character object of the hex value colour name created.
 alphaGreen = function(alpha) rgb(0,150/255,0, alpha)
-NULL
+
 
 #' Transparent Pink
 #'
@@ -54,7 +54,7 @@ NULL
 #' @param alpha The level of opacity, between 0.0 and 1.0, 0.0 being completely transparent and 1.0 being opaque.
 #' @returns A character object of the hex value colour name created.
 alphaPink = function(alpha) rgb(255/255,62/255,150/255, alpha)
-NULL
+
 
 #' Blue-Red Colour Ramp
 #'
@@ -67,7 +67,7 @@ NULL
 ramp_BlueRed = function(alphaLevel){
   colorRamp(c(alphaBlue(alphaLevel), alphaRed(alphaLevel)), alpha=TRUE)
 }
-NULL
+
 
 #' Classification Colour
 #'
@@ -85,4 +85,4 @@ classcols = function(classif, alphaLevel=1.0){
   rgbvals = alphaCramp(classif)/255.0
   return(rgb(rgbvals[,1],rgbvals[,2],rgbvals[,3], alpha=rgbvals[,4]))
 }
-NULL
+

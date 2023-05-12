@@ -5,9 +5,9 @@
 #'
 #' @param dataMats A list of matrices containing the control data, named 'ctrl', and the patient data, named 'pts'. Where the first column represents the data for protein along the x-axis of the 2Dmito plot and the second column is the y-axis data.
 #' @param classifs A numeric vector where the i-th element is the probability that the fibre in the i-th row of the patient fibre matrix is not like control. The default is NULL, if this is the case the fibres are plotted as green.
-#' @param postpred  A [data.frame] outputted from whose columns contain the 95\% posterior predictive interval and the corresponding x-axis values for a linear regression model for this dataset. The columns should be labelled; 'mitochan', 'lwrNorm', 'medNorm' and 'uprNorm'. This is the form of the output given by [analysis2Dmito::inference()].
+#' @param postpred A [data.frame] outputted from whose columns contain the 95\% posterior predictive interval and the corresponding x-axis values for a linear regression model for this dataset. The columns should be labelled; 'mitochan', 'lwrNorm', 'medNorm' and 'uprNorm'. This is the form of the output given by [analysis2Dmito::inference()].
 #'
-#' @return NULL
+#' @return NULL.
 #'
 #' @examples
 #' data(exampleData)
