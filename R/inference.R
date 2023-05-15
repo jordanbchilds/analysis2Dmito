@@ -127,29 +127,22 @@ inference = function(dataMats,
                      MCMCthin = 1) {
   modelstring = "
        model {
-       # Fit the model to the control subjects
         for(i in 1:nCtrl){
-          Yctrl[i] ~ dnorm(m[indexCtrl[i]]*Xctrl[i]+c[indexCtrl[i]], tau_norm)
+          Yctrl[i] ~ dnorm(slope[indexCtrl[i]]*Xctrl[i]+inter[indexCtrl[i]], tau_norm)
         }
-
         for(j in 1:nPat){
-            Ypat[j] ~ dnorm(m[nCrl+1]*Xpat[j]+c[nCrl+1], tau_hat[j])
+            Ypat[j] ~ dnorm(slope[nCrl+1]*Xpat[j]+inter[nCrl+1], tau_hat[j])
             tau_hat[j] = ifelse(class[j]==1, tau_def, tau_norm)
             class[j] ~ dbern(probdef)
         }
-
-        # Predictive for the patient subject
         for(k in 1:nSyn){
-            Ysyn_norm[k] ~ dnorm(m[nCrl+1]*Xsyn[k]+c[nCrl+1], tau_norm)
-            Ysyn_def[k] ~ dnorm(m[nCrl+1]*Xsyn[k]+c[nCrl+1], tau_def)
+            Ysyn_norm[k] ~ dnorm(slope[nCrl+1]*Xsyn[k]+inter[nCrl+1], tau_norm)
+            Ysyn_def[k] ~ dnorm(slope[nCrl+1]*Xsyn[k]+inter[nCrl+1], tau_def)
         }
-
-        # Prior beliefs about parameters
         for(l in 1:(nCrl+nPt)){
-          m[l] ~ dnorm(mu_m0, tau_m0)
-          c[l] ~ dnorm(mu_c0, tau_c0)
+          slope[l] ~ dnorm(mu_m0, tau_m0)
+          inter[l] ~ dnorm(mu_c0, tau_c0)
         }
-
         m_pred ~ dnorm(mu_m0, tau_m0)
         c_pred ~ dnorm(mu_c0, tau_m0)
 
@@ -161,7 +154,6 @@ inference = function(dataMats,
         probdef ~ dlnorm(mu_p, tau_p)
        }
       "
-
   ctrl_mat = dataMats$ctrl
   pat_mat = dataMats$pts
   nCtrl = nrow(ctrl_mat)
@@ -170,7 +162,6 @@ inference = function(dataMats,
   indexPat = dataMats$indexPat
   nPt = length(unique(indexPat))
   nCrl = length(unique(indexCtrl))
-
 
   # prior parameters for control data
   mean_mu_m0 = 1.0
@@ -196,15 +187,15 @@ inference = function(dataMats,
   mu_p = -2.549677 # values taken from the Ahmed_2022 data
   tau_p = 1 / 1.023315 ^ 2 # values taken from the Ahmed_2022 data
 
+  tau_def = 0.001
   # tauDef_mode = 1 / 15 ^ 2 # expected sd of 5
   # tauDef_var = 1
   # rate_tauDef = 0.5 * (tauDef_mode + sqrt(tauDef_mode ^ 2 + 4 * tauDef_var)) / tauDef_var
   # shape_tauDef = 1 + tauDef_mode * rate_tauDef
 
   nSyn = 1e3
-  Xsyn = seq(0, max(c(ctrl_mat[, 1], pat_mat[, 1])) * 1.5, length.out =
+  Xsyn = seq(min(0, min(c(ctrl_mat[,1], pat_mat[,1]))), max(c(ctrl_mat[, 1], pat_mat[, 1])) * 1.5, length.out =
                nSyn)
-  tau_def = 0.001
 
   data_list = list(
     Yctrl = ctrl_mat[, 2],
@@ -261,8 +252,8 @@ inference = function(dataMats,
     n.iter = MCMCout * MCMCthin,
     thin = MCMCthin,
     variable.names = c(
-      "m",
-      "c",
+      "slope",
+      "inter",
       "m_pred",
       "c_pred",
       "mu_m0",
@@ -282,8 +273,8 @@ inference = function(dataMats,
     n.iter = MCMCout,
     thin = 1,
     variable.names = c(
-      "m",
-      "c",
+      "slope",
+      "inter",
       "m_pred",
       "c_pred",
       'mu_m0',
