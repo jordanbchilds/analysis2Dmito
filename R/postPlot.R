@@ -200,7 +200,6 @@ postPlot = function(post,
   points(
     dataMats$ctrl,
     pch = 20,
-    cex = 1.0,
     col = alphaBlack(0.05),
     ...
   )
