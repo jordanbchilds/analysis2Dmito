@@ -116,7 +116,6 @@
 #'    - classif : a dataframe of whose columns correspond to patient fibres and rows are classifications from individual draws from the posterior distirbution
 #'
 #' @importFrom rjags jags.model
-#' @importFrom stats update
 #' @importFrom rjags coda.samples
 #'
 #' @export
@@ -245,7 +244,6 @@ inference = function(dataMats,
                          n.chains = 1)
   model_pat_priorpred = rjags::jags.model(textConnection(modelstring), data =
                                      data_priorpred)
-  stats::update(model_pat, n.iter = MCMCburnin)
 
   output_post = rjags::coda.samples(
     model = model_pat,
