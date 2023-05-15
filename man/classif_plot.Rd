@@ -37,4 +37,5 @@ data_mat$pts = log(data_mat$pts)
 infOut = inference(data_mat)
 class = apply(infOut$classif, 2, mean)
 classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred, xlab=paste0("log(", mitochan, ")"), ylab=paste0("log(",chan,")"))
+
 }

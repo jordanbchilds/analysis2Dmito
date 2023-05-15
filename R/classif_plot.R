@@ -9,8 +9,6 @@
 #'
 #' @return NULL.
 #'
-#' @export
-#'
 #' @examples
 #' data(exampleData)
 #' mitochan = "raw_porin"
@@ -29,7 +27,8 @@
 #' infOut = inference(data_mat)
 #' class = apply(infOut$classif, 2, mean)
 #' classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred, xlab=paste0("log(", mitochan, ")"), ylab=paste0("log(",chan,")"))
-
+#'
+#' @export
 classif_plot = function(dataMats,
                         classifs = NULL,
                         postpred = NULL,
@@ -50,20 +49,20 @@ classif_plot = function(dataMats,
     postpred[, "lwrNorm"],
     col = alphaGreen(0.7),
     lty = 2,
-    lwd = 4
+    ...
   )
   lines(
     postpred[, "mitochan"],
     postpred[, "medNorm"],
     col = alphaGreen(0.7),
     lty = 1,
-    lwd = 4
+    ...
   )
   lines(
     postpred[, "mitochan"],
     postpred[, "uprNorm"],
     col = alphaGreen(0.7),
     lty = 2,
-    lwd = 4
+    ...
   )
 }
