@@ -159,7 +159,6 @@ inference = function(dataMats,
   nPat = nrow(pat_mat)
   indexCtrl = dataMats$indexCtrl
   indexPat = dataMats$indexPat
-  nPt = length(unique(indexPat))
   nCrl = length(unique(indexCtrl))
 
   # prior parameters for control data
@@ -203,7 +202,6 @@ inference = function(dataMats,
     Xpat = pat_mat[, 1],
     nCtrl = nCtrl,
     nCrl = nCrl,
-    nPt = nPt,
     nPat = nPat,
     indexCtrl = indexCtrl,
     nSyn = nSyn,
@@ -298,8 +296,8 @@ inference = function(dataMats,
   post_names = colnames(post_out)
 
   post = post_out[, c(
-    paste0("m[", 1:(nCrl + nPt), "]"),
-    paste0("c[", 1:(nCrl + nPt), "]"),
+    paste0("m[", 1:(nCrl + 1), "]"),
+    paste0("c[", 1:(nCrl + 1), "]"),
     "m_pred",
     "c_pred",
     "mu_m0",
@@ -325,8 +323,8 @@ inference = function(dataMats,
 
   prior_names = colnames(prior_out)
   prior = prior_out[, c(
-    paste0("m[", 1:(nCrl + nPt), "]"),
-    paste0("c[", 1:(nCrl + nPt), "]"),
+    paste0("m[", 1:(nCrl + 1), "]"),
+    paste0("c[", 1:(nCrl + 1), "]"),
     "m_pred",
     "c_pred",
     "mu_m0",
