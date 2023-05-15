@@ -40,28 +40,32 @@ classif_plot = function(dataMats,
   points(dataMats$ctrl,
          pch = 20,
          col = alphaBlack(0.1))
-  cols = ifelse(is.null(classifs), alphaGreen(0.7), classcols(classifs))
+  if (is.null(classifs)) {
+    cols = alphaGreen(0.7)
+  } else {
+    cols = classcols(classifs)
+  }
   points(dataMats$pts,
          pch = 20,
          col = cols)
   lines(
     postpred[, "mitochan"],
     postpred[, "lwrNorm"],
-    col = alphaGreen(0.7),
+    col = alphaGreen(1.0),
     lty = 2,
     ...
   )
   lines(
     postpred[, "mitochan"],
     postpred[, "medNorm"],
-    col = alphaGreen(0.7),
+    col = alphaGreen(1.0),
     lty = 1,
     ...
   )
   lines(
     postpred[, "mitochan"],
     postpred[, "uprNorm"],
-    col = alphaGreen(0.7),
+    col = alphaGreen(1.0),
     lty = 2,
     ...
   )
