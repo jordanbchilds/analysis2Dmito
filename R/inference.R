@@ -138,7 +138,7 @@ inference = function(dataMats,
             Ysyn_norm[k] ~ dnorm(slope[nCrl+1]*Xsyn[k]+inter[nCrl+1], tau_norm)
             Ysyn_def[k] ~ dnorm(slope[nCrl+1]*Xsyn[k]+inter[nCrl+1], tau_def)
         }
-        for(l in 1:(nCrl+nPt)){
+        for(l in 1:(nCrl+1)){
           slope[l] ~ dnorm(mu_m0, tau_m0)
           inter[l] ~ dnorm(mu_c0, tau_c0)
         }
