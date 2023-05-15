@@ -17,7 +17,7 @@
 #'
 #' @return NULL.
 #'
-#'
+#' @export
 postPlot = function(post,
                     prior = NULL,
                     postpred,
