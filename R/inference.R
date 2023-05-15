@@ -127,20 +127,20 @@ inference = function(dataMats,
   modelstring = "
        model {
         for(i in 1:nCtrl){
-          Yctrl[i] ~ dnorm(slope[indexCtrl[i]]*Xctrl[i]+inter[indexCtrl[i]], tau_norm)
+          Yctrl[i] ~ dnorm(m[indexCtrl[i]]*Xctrl[i]+c[indexCtrl[i]], tau_norm)
         }
         for(j in 1:nPat){
-            Ypat[j] ~ dnorm(slope[nCrl+1]*Xpat[j]+inter[nCrl+1], tau_hat[j])
+            Ypat[j] ~ dnorm(m[nCrl+1]*Xpat[j]+c[nCrl+1], tau_hat[j])
             tau_hat[j] = ifelse(class[j]==1, tau_def, tau_norm)
             class[j] ~ dbern(probdef)
         }
         for(k in 1:nSyn){
-            Ysyn_norm[k] ~ dnorm(slope[nCrl+1]*Xsyn[k]+inter[nCrl+1], tau_norm)
-            Ysyn_def[k] ~ dnorm(slope[nCrl+1]*Xsyn[k]+inter[nCrl+1], tau_def)
+            Ysyn_norm[k] ~ dnorm(m[nCrl+1]*Xsyn[k]+c[nCrl+1], tau_norm)
+            Ysyn_def[k] ~ dnorm(m[nCrl+1]*Xsyn[k]+c[nCrl+1], tau_def)
         }
         for(l in 1:(nCrl+1)){
-          slope[l] ~ dnorm(mu_m0, tau_m0)
-          inter[l] ~ dnorm(mu_c0, tau_c0)
+          m[l] ~ dnorm(mu_m0, tau_m0)
+          c[l] ~ dnorm(mu_c0, tau_c0)
         }
         m_pred ~ dnorm(mu_m0, tau_m0)
         c_pred ~ dnorm(mu_c0, tau_m0)
