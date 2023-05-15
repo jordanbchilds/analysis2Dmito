@@ -121,7 +121,6 @@
 #'
 #' @export
 #'
-
 inference = function(dataMats,
                      parameterVals = NULL,
                      MCMCout = 1000,
