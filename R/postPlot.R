@@ -14,6 +14,7 @@
 #' @param classifs A numeric vector of the probabilies that each fibre in the patient datasets are not like control.
 #' @param var.names A named character vector the name of the variables to be plotted on the density plots. The default is NULL, if this is TRUE then names as given in 'var.names' will be plotted.
 #' @param xlabs A character vector of names of variables as they should be added to the plot.
+#' @param ... Any additional parameters to be passed to the plotting functions e.g. lwd, cex, etc.
 #'
 #' @return NULL.
 #'
@@ -112,9 +113,9 @@ postPlot = function(post,
           main = "",
           xlab = paste(var),
           ylab = "",
-          cex.lab = 3,
           xlim = c(xlim_varMin, xlim_varMax),
-          ylim = c(0, ylim_var)
+          ylim = c(0, ylim_var),
+          ...
         )
       } else {
         plot(
@@ -122,22 +123,22 @@ postPlot = function(post,
           main = "",
           xlab = xlabs[var],
           ylab = "",
-          cex.lab = 3,
           xlim = c(xlim_varMin, xlim_varMax),
-          ylim = c(0, ylim_var)
+          ylim = c(0, ylim_var),
+          ...
         )
       }
       lines(
         priorParent_dens,
-        lwd = 5,
         col = alphaPink(1.0),
-        lty = 4
+        lty = 4,
+        ...
       )
       lines(
         postParent_dens,
-        lwd = 5,
         col = alphaGreen(1.0),
-        lty = 4
+        lty = 4,
+        ...
       )
 
       ind = grep(paste0(var, "\\["), colnames, value = TRUE)
@@ -145,11 +146,17 @@ postPlot = function(post,
       max_ind = max(as.numeric(ind))
 
       for (param in colnames(post_var)[paste0(var, "[", max_ind, "]") != colnames(post_var)]) {
-        lines(post_dens[[param]], lwd = 4, col = alphaGreen(0.4))
+        lines(
+          post_dens[[param]],
+          col = alphaGreen(0.4),
+          ...
+        )
       }
-      lines(post_dens[[paste0(var, "[", max_ind, "]")]], lwd = 5, col =
-              alphaGreen(1.0))
-
+      lines(
+        post_dens[[paste0(var, "[", max_ind, "]")]],
+        col = alphaGreen(1.0),
+        ...
+      )
     } else {
       post_den = density(post[, paste(var)])
       prior_den = density(prior[, paste(var)])
@@ -161,12 +168,20 @@ postPlot = function(post,
         xlim = xlims,
         ylim = c(0, yMax),
         xlab = xlabs[var],
-        cex.lab = 3,
         ylab = "",
-        main = ""
+        main = "",
+        ...
       )
-      lines(prior_den, lwd = 4, col = alphaPink(1.0))
-      lines(post_den, lwd = 4, col = alphaGreen(1.0))
+      lines(
+        prior_den,
+        col = alphaPink(1.0),
+        ...
+      )
+      lines(
+        post_den,
+        col = alphaGreen(1.0),
+        ...
+      )
     }
   }
 
@@ -179,37 +194,41 @@ postPlot = function(post,
     ylab = chan,
     main = "",
     xlim = xlims,
-    ylim = ylims
+    ylim = ylims,
+    ...
   )
-  # rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "gray93")
-  points(dataMats$ctrl,
-         pch = 20,
-         cex = 1.0,
-         col = alphaBlack(0.05))
-  points(dataMats$pts,
-         pch = 20,
-         cex = 1.0,
-         col = classcols(classifs))
-
+  points(
+    dataMats$ctrl,
+    pch = 20,
+    cex = 1.0,
+    col = alphaBlack(0.05),
+    ...
+  )
+  points(
+    dataMats$pts,
+    pch = 20,
+    col = classcols(classifs),
+    ...
+  )
   lines(
     postpred[,"mitochan"],
     postpred[,"lwrNorm"],
     lty = 2,
     col = alphaGreen(1.0),
-    lwd = 2
+    ...
   )
   lines(
     postpred[,"mitochan"],
     postpred[,"medNorm"],
     lty = 1,
     col = alphaGreen(1.0),
-    lwd = 4
+    ...
   )
   lines(
     postpred[,"mitochan"],
     postpred[,"uprNorm"],
     lty = 2,
     col = alphaGreen(1.0),
-    lwd = 2
+    ...
   )
 }

@@ -32,6 +32,8 @@ postPlot(
 \item{var.names}{A named character vector the name of the variables to be plotted on the density plots. The default is NULL, if this is TRUE then names as given in 'var.names' will be plotted.}
 
 \item{xlabs}{A character vector of names of variables as they should be added to the plot.}
+
+\item{...}{Any additional parameters to be passed to the plotting functions e.g. lwd, cex, etc.}
 }
 \value{
 NULL.
