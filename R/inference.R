@@ -120,7 +120,6 @@
 #' @importFrom rjags coda.samples
 #'
 #' @export
-#'
 inference = function(dataMats,
                      parameterVals = NULL,
                      MCMCout = 1000,
