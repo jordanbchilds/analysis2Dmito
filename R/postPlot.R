@@ -212,6 +212,4 @@ postPlot = function(post,
     col = alphaGreen(1.0),
     lwd = 2
   )
-
-  return(NULL)
 }

@@ -116,5 +116,4 @@ MCMCplot = function(post,
       lines(density(prior[, param]), lwd = 2, col = alphaPink(1.0))
   }
   par(op)
-  return(NULL)
 }

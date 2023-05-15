@@ -9,6 +9,8 @@
 #'
 #' @return NULL.
 #'
+#' @export
+#'
 #' @examples
 #' data(exampleData)
 #' mitochan = "raw_porin"
@@ -64,6 +66,4 @@ classif_plot = function(dataMats,
     lty = 2,
     lwd = 4
   )
-
-  return(NULL)
 }
