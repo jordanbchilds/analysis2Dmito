@@ -18,6 +18,11 @@
 #'
 #' @return NULL.
 #'
+#' @importFrom data.table fread
+#' @importFrom stats density
+#' @importFrom graphics lines
+#' @importFrom graphics points
+#'
 #' @export
 postPlot = function(post,
                     prior = NULL,
@@ -90,18 +95,18 @@ postPlot = function(post,
       post_dens = list()
 
       priorParent = prior[, min(grep(paste0(var, "\\["), colnames))]
-      priorParent_dens = density(priorParent)
+      priorParent_dens = stats::density(priorParent)
 
       postParent = rnorm(nrow(post_var), post[, paste0("mu_", var, "0")], 1 /
                            sqrt(post[, paste0("tau_", var, "0")]))
-      postParent_dens = density(postParent)
+      postParent_dens = stats::density(postParent)
 
       xlim_varMin = min(postParent_dens$x)
       xlim_varMax = max(postParent_dens$x)
       ylim_var = max(postParent_dens$y)
 
       for (param in colnames(post_var)) {
-        post_dens[[paste(param)]] = density(post_var[[param]])
+        post_dens[[paste(param)]] = stats::density(post_var[[param]])
 
         ylim_var = max(c(ylim_var, post_dens[[param]]$y))
         xlim_varMax = max(c(xlim_varMax, post_dens[[param]]$x))
@@ -128,13 +133,13 @@ postPlot = function(post,
           ...
         )
       }
-      lines(
+      graphics::lines(
         priorParent_dens,
         col = alphaPink(1.0),
         lty = 4,
         ...
       )
-      lines(
+      graphics::lines(
         postParent_dens,
         col = alphaGreen(1.0),
         lty = 4,
@@ -146,20 +151,20 @@ postPlot = function(post,
       max_ind = max(as.numeric(ind))
 
       for (param in colnames(post_var)[paste0(var, "[", max_ind, "]") != colnames(post_var)]) {
-        lines(
+        graphics::lines(
           post_dens[[param]],
           col = alphaGreen(0.4),
           ...
         )
       }
-      lines(
+      graphics::lines(
         post_dens[[paste0(var, "[", max_ind, "]")]],
         col = alphaGreen(1.0),
         ...
       )
     } else {
-      post_den = density(post[, paste(var)])
-      prior_den = density(prior[, paste(var)])
+      post_den = stats::density(post[, paste(var)])
+      prior_den = stats::density(prior[, paste(var)])
       xlims = range(c(prior_den$x, post_den$x))
       yMax = max(c(prior_den$y, post_den$y))
 
@@ -172,12 +177,12 @@ postPlot = function(post,
         main = "",
         ...
       )
-      lines(
+      graphics::lines(
         prior_den,
         col = alphaPink(1.0),
         ...
       )
-      lines(
+      graphics::lines(
         post_den,
         col = alphaGreen(1.0),
         ...
@@ -197,33 +202,33 @@ postPlot = function(post,
     ylim = ylims,
     ...
   )
-  points(
+  graphics::points(
     dataMats$ctrl,
     pch = 20,
     col = alphaBlack(0.05),
     ...
   )
-  points(
+  graphics::points(
     dataMats$pts,
     pch = 20,
     col = classcols(classifs),
     ...
   )
-  lines(
+  graphics::lines(
     postpred[,"mitochan"],
     postpred[,"lwrNorm"],
     lty = 2,
     col = alphaGreen(1.0),
     ...
   )
-  lines(
+  graphics::lines(
     postpred[,"mitochan"],
     postpred[,"medNorm"],
     lty = 1,
     col = alphaGreen(1.0),
     ...
   )
-  lines(
+  graphics::lines(
     postpred[,"mitochan"],
     postpred[,"uprNorm"],
     lty = 2,

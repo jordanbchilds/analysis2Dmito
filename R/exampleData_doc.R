@@ -15,4 +15,7 @@
 #'
 #' @author Syeda T Ahmed, Robert W Taylor, Doug M Turnbull, Conor Lawless, Sarah T Pickett
 #'
+#' @importFrom readr read_delim
+#' @importFrom tidyr pivot_longer
+#' @importFrom plyr match_df
 "exampleData"

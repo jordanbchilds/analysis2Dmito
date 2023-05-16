@@ -8,6 +8,8 @@
 #'
 #' @returns A character object of the hex value colour name created.
 #'
+#' @importFrom grDevices colorRamp
+#'
 #' @export
 ramp_BlueRed = function(alphaLevel){
   colorRamp(c(alphaBlue(alphaLevel), alphaRed(alphaLevel)), alpha=TRUE)

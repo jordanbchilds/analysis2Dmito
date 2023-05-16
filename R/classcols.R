@@ -1,6 +1,3 @@
-
-
-
 #' @title Classification Colour
 #'
 #' @description
@@ -15,6 +12,8 @@
 #' @param alphaLevel A number between 0.0 and 1.0 to control the level of the opacity of the colours.
 #'
 #' @returns A character vector hex value RGB names.
+#'
+#' @importFrom grDevices rgb
 #'
 #' @export
 classcols = function(classif, alphaLevel=1.0){

@@ -11,15 +11,17 @@
 #'
 #' @export
 #'
+#' @importFrom grDevices rgb
+#' @importFrom grDevices col2rgb
 #' @examples
 #' myBlue = alphaCol(0.5, name="blue")
 #' myRed = alphaCol(0.1, rgb=c(240, 20, 2-), maxValue=255)
-alphaCol = function(alpha, name = NULL, rgb = NULL, maxValue=1) {
-  if (is.null(name) && is.null(rgb)) {
+alphaCol = function(alpha, name = NULL, rgbVals = NULL, maxValue=1) {
+  if (is.null(name) && is.null(rgbVals)) {
     stop("Either a valid colour name of a vector RGB values must be passed.")
   }
   if (!is.null(name)) {
-    rgb = as.vector(col2rgb(name))
+    rgbVals = as.vector(col2rgb(name))
   }
-  return(rgb(rgb[1]/maxValue, rgb[2]/maxValue, rgb[3]/maxValue, alpha))
+  return(rgb(rgbVals[1]/maxValue, rgbVals[2]/maxValue, rgbVals[3]/maxValue, alpha))
 }

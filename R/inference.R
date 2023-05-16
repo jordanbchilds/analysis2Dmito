@@ -289,10 +289,7 @@ inference = function(dataMats,
   prior_out = as.data.frame(output_prior[[1]])
 
   summ_pat = summary(output_post)
-  # save every output from the Bernoulli dist for TGo
   classifs = post_out[, grepl("class", colnames(post_out))]
-  # classifs_pat = summ_pat$statistics[grepl("class",rownames(summ_pat$statistics)),"Mean"]
-
   post_names = colnames(post_out)
 
   post = post_out[, c(

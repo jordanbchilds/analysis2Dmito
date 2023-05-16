@@ -21,7 +21,8 @@
 #' @param correctnpc A boolean. If true the expression values are corrected NPC.
 #' @param noNPCchannels If `correctnpc=TRUE` then the
 #'
-#' @import data.table
+#' @importFrom data.table fread
+#' @importFrom stats aggregate
 #'
 #' @return A dataframe of the
 #'
@@ -61,7 +62,7 @@ getData = function(fname,
   if (correctnpc) {
     npc = dat[grepl("NPC", dat$filename),]
     oxphos = dat[grepl("OXPHOS", dat$filename),]
-    agg = aggregate(npc$value, by = list(npc$pch), mean)
+    agg = stats::aggregate(npc$value, by = list(npc$pch), mean)
     lu = agg$x
     names(lu) = gsub("_L._C._S._R.", "", agg$Group.1)
 

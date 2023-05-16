@@ -8,5 +8,7 @@
 #'
 #' @returns A character object of the hex value colour name created.
 #'
+#' @importFrom grDevices rgb
+#'
 #' @export
 alphaPink = function(alpha) rgb(255/255,62/255,150/255, alpha)

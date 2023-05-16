@@ -24,6 +24,7 @@
 #' @return NULL.
 #'
 #' @importFrom data.table fread
+#'
 #' @export
 MCMCplot = function(post,
                     prior = NULL,

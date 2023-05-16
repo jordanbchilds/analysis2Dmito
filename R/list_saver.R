@@ -21,6 +21,8 @@
 #' rootFile = "data/sourceOne"
 #' output_saver(data_list, rootFile, replace=FALSE)
 #'
+#' @importFrom utils write.table
+#'
 #' @export
 
 list_saver = function(df_list,
@@ -39,7 +41,7 @@ list_saver = function(df_list,
     if (file.exist(filePath) && !replace) {
       message("File exists and has NOT been replaced.")
     } else {
-      write.table(
+      utils::write.table(
         df_list[[df]],
         filePath,
         sep = sep,
