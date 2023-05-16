@@ -4,16 +4,16 @@
 \alias{alphaCol}
 \title{Transparent Colour Creator}
 \usage{
-alphaCol(alpha, name = NULL, rgb = NULL, maxValue = 1)
+alphaCol(alpha, name = NULL, rgbVals = NULL, maxValue = 1)
 }
 \arguments{
 \item{alpha}{The level of transparency}
 
 \item{name}{A valid colour name, as listed by \code{\link[=colors]{colors()}}.}
 
-\item{rgb}{A numeic vector of RGB values.}
-
 \item{maxValue}{The maximum colour value, default to 1.}
+
+\item{rgb}{A numeic vector of RGB values.}
 }
 \value{
 A character vector of the hexidecimal value defining the colour.
