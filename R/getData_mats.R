@@ -20,10 +20,9 @@
 #' @export
 #'
 #' @examples
-#' data(exampleData)
+#' exampleData = get_exampleData()
 #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
 #' mitochan = "raw_porin"
-#'
 #' # all channels available in the dataset
 #' channelsAll = unique(exampleData[,"channel"])
 #' # remove mitochan from the channels of interest
@@ -33,6 +32,7 @@
 #' pts = sbj[ !(sbj %in% ctrlid) ]
 #' chan = channels[1]
 #' pat = pts[1]
+#'
 #' data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
 #'
 

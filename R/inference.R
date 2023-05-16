@@ -98,7 +98,8 @@
 #' }
 #' "
 #' ```
-#' @param dataMats A list consisting of four elements.
+#' @param dataMats A list consisting of four elements. The list should be named
+#' or the elements should be in the following order.
 #'     - ctrl : a matrix of the control subject data.
 #'     - pts : a matrix of the patient subject data.
 #'     - indexCtrl : a numeric vector indicating which rows of the control subject matrix belong to the same subject.
@@ -115,15 +116,39 @@
 #'    - priorpred : a dataframe of prior predictions for the patient subject model, similar to postpred.
 #'    - classif : a dataframe of whose columns correspond to patient fibres and rows are classifications from individual draws from the posterior distirbution
 #'
+#' @examples
+#' exampleData = get_exampleData()
+#' #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
+#' mitochan = "raw_porin"
+#' # all channels available in the dataset
+#' channelsAll = unique(exampleData[,"channel"])
+#' # remove mitochan from the channels of interest
+#' channels = channelsAll[ channelsAll!=mitochan ]
+#' sbj = unique(exampleData$sampleID)
+#' ctrlid = c("C01", "C02", "C03", "C04", "C05")
+#' pts = sbj[ !(sbj %in% ctrlid) ]
+#' chan = channels[1]
+#' pat = pts[1]
+#'
+#' data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+#'
+#' tau_mode = 100
+#' tau_var = 500
+#' rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
+#' shape_tau = 1 + tau_mode * rate_tau
+#'
+#' infOut = inference(data_mat, parameterVals=list(shape_tau=shape_tau, rate_tau=rate_tau))
+#'
+#'
 #' @importFrom rjags jags.model
 #' @importFrom rjags coda.samples
 #'
 #' @export
 inference = function(dataMats,
-                     parameterVals = NULL,
+                     parameterVals=NULL,
                      MCMCout = 1000,
                      MCMCburnin = 1000,
-                     MCMCthin = 1) {
+                     MCMCthin = 1 ) {
   modelstring = "
        model {
         for(i in 1:nCtrl){
@@ -153,6 +178,7 @@ inference = function(dataMats,
         probdef ~ dlnorm(mu_p, tau_p)
        }
       "
+  if (is.null(names(dataMats))) names(dataMats) = c("ctrl", "pts", "indexCtrl", "indexPat")
   ctrl_mat = dataMats$ctrl
   pat_mat = dataMats$pts
   nCtrl = nrow(ctrl_mat)
@@ -160,36 +186,6 @@ inference = function(dataMats,
   indexCtrl = dataMats$indexCtrl
   indexPat = dataMats$indexPat
   nCrl = length(unique(indexCtrl))
-
-  # prior parameters for control data
-  mean_mu_m0 = 1.0
-  prec_mu_m0 = 1 / 0.25 ^ 2
-  mean_mu_c0 = 0.0
-  prec_mu_c0 = 1 / 1.5 ^ 2
-
-  tau_m0_mode = 1 / 0.5 ^ 2 # expected sd of 0.5
-  tau_m0_var = 500
-  rate_tau_m0 = 0.5 * (tau_m0_mode + sqrt(tau_m0_mode ^ 2 + 4 * tau_m0_var)) / tau_m0_var
-  shape_tau_m0 = 1 + tau_m0_mode * rate_tau_m0
-
-  tau_c0_mode = 1 / 0.5 ^ 2 # expected sd of 0.5
-  tau_c0_var = 500
-  rate_tau_c0 = 0.5 * (tau_c0_mode + sqrt(tau_c0_mode ^ 2 + 4 * tau_c0_var)) / tau_c0_var
-  shape_tau_c0 = 1 + tau_c0_mode * rate_tau_c0
-
-  tau_mode = 1 / sqrt(0.05) ^ 2
-  tau_var = 10
-  rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
-  shape_tau = 1 + tau_mode * rate_tau
-
-  mu_p = -2.549677 # values taken from the Ahmed_2022 data
-  tau_p = 1 / 1.023315 ^ 2 # values taken from the Ahmed_2022 data
-
-  tau_def = 0.001
-  # tauDef_mode = 1 / 15 ^ 2 # expected sd of 5
-  # tauDef_var = 1
-  # rate_tauDef = 0.5 * (tauDef_mode + sqrt(tauDef_mode ^ 2 + 4 * tauDef_var)) / tauDef_var
-  # shape_tauDef = 1 + tauDef_mode * rate_tauDef
 
   nSyn = 1e3
   Xsyn = seq(min(0, min(c(ctrl_mat[,1], pat_mat[,1]))), max(c(ctrl_mat[, 1], pat_mat[, 1])) * 1.5, length.out =
@@ -206,19 +202,19 @@ inference = function(dataMats,
     indexCtrl = indexCtrl,
     nSyn = nSyn,
     Xsyn = Xsyn,
-    mean_mu_m0 = mean_mu_m0,
-    prec_mu_m0 = prec_mu_m0,
-    mean_mu_c0 = mean_mu_c0,
-    prec_mu_c0 = prec_mu_c0,
-    shape_tau_m0 = shape_tau_m0,
-    rate_tau_m0 = rate_tau_m0,
-    shape_tau_c0 = shape_tau_c0,
-    rate_tau_c0 = rate_tau_c0,
-    shape_tau = shape_tau,
-    rate_tau = rate_tau,
-    mu_p = mu_p,
-    tau_p = tau_p,
-    tau_def = tau_def
+    mean_mu_m0 = 1.0,
+    prec_mu_m0 = 1 / 0.25 ^ 2,
+    mean_mu_c0 = 0.0,
+    prec_mu_c0 = 1 / 1.5 ^ 2,
+    shape_tau_m0 = 1.1956,
+    rate_tau_m0 = 0.04889989,
+    shape_tau_c0 = 1.1956,
+    rate_tau_c0 = 0.04889989,
+    shape_tau = 41.97618,
+    rate_tau = 2.048809,
+    mu_p = -2.549677,
+    tau_p = 1 / 1.023315 ^ 2,
+    tau_def = 0.001
   )
 
   if (!is.null(parameterVals) && is.list(parameterVals)) {

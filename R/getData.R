@@ -24,7 +24,7 @@
 #' @importFrom data.table fread
 #' @importFrom stats aggregate
 #'
-#' @return A dataframe of the
+#' @return
 #'
 #' @export
 

@@ -10,7 +10,7 @@
 #' @return NULL.
 #'
 #' @examples
-#' data(exampleData)
+#' exampleData = get_exampleData()
 #' mitochan = "raw_porin"
 #' # all channels available in the dataset
 #' channelsAll = unique(exampleData[,"channel"])
@@ -22,11 +22,14 @@
 #' chan = channels[1]
 #' pat = "P01"
 #' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
-#' data_mat$ctrl = log(data_mat$ctrl)
-#' data_mat$pts = log(data_mat$pts)
-#' infOut = inference(data_mat)
+#' data_mat$ctrl = data_mat$ctrl
+#' data_mat$pts = data_mat$pts
+#'
+#' infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
 #' class = apply(infOut$classif, 2, mean)
-#' classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred, xlab=paste0("log(", mitochan, ")"), ylab=paste0("log(",chan,")"))
+#'
+#' classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred,
+#'   xlab=mitochan, ylab=chan)
 #'
 #' @export
 classif_plot = function(dataMats,

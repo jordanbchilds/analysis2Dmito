@@ -23,6 +23,26 @@
 #'
 #' @return NULL.
 #'
+#' @examples
+#' exampleData = get_exampleData()
+#' #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
+#' mitochan = "raw_porin"
+#' # all channels available in the dataset
+#' channelsAll = unique(exampleData[,"channel"])
+#' # remove mitochan from the channels of interest
+#' channels = channelsAll[ channelsAll!=mitochan ]
+#' sbj = unique(exampleData$sampleID)
+#' ctrlid = c("C01", "C02", "C03", "C04", "C05")
+#' pts = sbj[ !(sbj %in% ctrlid) ]
+#' chan = channels[1]
+#' pat = pts[1]
+#'
+#' data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+#'
+#' infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+#'
+#' MCMCplot(infOut$post, infOut$prior, nRow=3)
+#'
 #' @importFrom data.table fread
 #'
 #' @export
