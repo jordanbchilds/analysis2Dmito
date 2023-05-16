@@ -62,6 +62,8 @@ postPlot = function(post,
                                   "m",
                                   "c"),
                     xlabs = NULL,
+                    mitoPlot_xlab="",
+                    mitoPlot_ylab="",
                     ...) {
   if (!is.null(xlabs)) {
     if (is.null(names(xlabs)))
@@ -206,8 +208,8 @@ postPlot = function(post,
 
   plot(
     NULL,
-    xlab = mitochan,
-    ylab = chan,
+    xlab = mitoPlot_xlab,
+    ylab = mitoPlot_ylab,
     main = "",
     xlim = xlims,
     ylim = ylims,
