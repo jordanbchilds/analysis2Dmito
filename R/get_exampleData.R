@@ -37,7 +37,7 @@ get_exampleData = function() {
   rawData_sub = rawData[, c("caseno", "Fibre", channels, "controls")]
   longFrom_df = tidyr::pivot_longer(rawData_sub, cols = channels, names_to =
                                       "channels")
-  return(longFrom_df)
+  return(as.data.frame(longFrom_df))
 }
 
 
