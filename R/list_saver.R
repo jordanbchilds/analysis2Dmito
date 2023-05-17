@@ -38,7 +38,7 @@ list_saver = function(df_list,
   names(root) = names(df_list)
   for (df in names(df_list)) {
     filePath = paste0(paste(root[df], df, sep = "_"), ".txt")
-    if (file.exist(filePath) && !replace) {
+    if (file.exists(filePath) && !replace) {
       message("File exists and has NOT been replaced.")
     } else {
       utils::write.table(
