@@ -32,14 +32,13 @@
 #' @export
 get_exampleData = function() {
   urlfile = "https://raw.githubusercontent.com/CnrLwlss/Ahmed_2022/master/rawdat_a.csv"
-  rawData = readr::read_delim(url(urlfile), delim = "\t")
-  channels = c("raw_porin", "raw_CI", "raw_CIV")
-  rawData_sub = rawData[, c("caseno", "Fibre", channels, "controls")]
-  longFrom_df = tidyr::pivot_longer(rawData_sub, cols = channels, names_to =
-                                      "channels")
+  rawData = readr::read_delim(url(urlfile))
+  rawData_sub = rawData[, c("caseno", "Fibre", "raw_porin", "raw_CI", "raw_CIV", "controls")]
+  longFrom_df = tidyr::pivot_longer(rawData_sub,
+                                    cols=c("raw_porin", "raw_CI", "raw_CIV"),
+                                    names_to="channels")
   return(as.data.frame(longFrom_df))
 }
-
 
 
 
