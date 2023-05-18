@@ -175,7 +175,7 @@ inference = function(dataMats,
         tau_m0 ~ dgamma( shape_tau_m0, rate_tau_m0 )
         tau_c0 ~ dgamma( shape_tau_c0, rate_tau_c0 )
         tau_norm ~ dgamma(shape_tau, rate_tau)
-        probdef ~ dlnorm(mu_p, tau_p)
+        probdef ~ dlnorm(mu_p, tau_p) T(,1)
        }
       "
   if (is.null(names(dataMats))) names(dataMats) = c("ctrl", "pts", "indexCtrl", "indexPat")
