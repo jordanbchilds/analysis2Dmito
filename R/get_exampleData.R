@@ -34,11 +34,11 @@ get_exampleData = function() {
   urlfile = "https://raw.githubusercontent.com/CnrLwlss/Ahmed_2022/master/rawdat_a.csv"
   rawData = readr::read_delim(url(urlfile))
   rawData_sub = rawData[, c("caseno", "Fibre", "raw_porin", "raw_CI", "raw_CIV", "controls")]
-  longFrom_df = tidyr::pivot_longer(rawData_sub,
+  longForm_df = tidyr::pivot_longer(rawData_sub,
                                     cols=c("raw_porin", "raw_CI", "raw_CIV"),
                                     names_to="channels")
   colnames(longForm_df) = c("sampleID", "fibreID", "sbj_type", "channel", "value")
-  return(as.data.frame(longFrom_df))
+  return(as.data.frame(longForm_df))
 }
 
 
