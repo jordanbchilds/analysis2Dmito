@@ -19,7 +19,8 @@ exampleData = get_exampleData()
 head(exampleData)
 ```
 This should show the first six rows of the example dataset, here we have called it `exampleData`. The description of the columns are given in the table below
-| --- | --- |
+| Variable Name | Description |
+| ------------- | ----------- |
 | `sampleID` | The identifier of the sample e.g. `C01`, `C02`, `P01`, `P02`, ... |
 |`fibreID` | The identifier of that fibre for that sample. The identifier is not unique throughout the whole dataset, it is only unique for the sample it comes from |
 | `sbj_type` | Identifies which sample are control subjects and which are patient subjects |
