@@ -37,6 +37,7 @@ get_exampleData = function() {
   longFrom_df = tidyr::pivot_longer(rawData_sub,
                                     cols=c("raw_porin", "raw_CI", "raw_CIV"),
                                     names_to="channels")
+  colnames(longForm_df) = c("sampleID", "fibreID", "sbj_type", "channel", "value")
   return(as.data.frame(longFrom_df))
 }
 
