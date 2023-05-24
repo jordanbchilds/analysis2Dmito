@@ -39,10 +39,15 @@
 
 getData_mats = function(data,
                         channels,
-                        ctrlID,
+                        ctrlID=NULL,
                         pts = NULL,
                         ctrl_only = FALSE,
-                        getIndex = FALSE) {
+                        getIndex = TRUE) {
+  if( is.null(ctrlID) & !is.null(data$sbj_type) ){
+    ctrlID = unique( data[data$sbj_type=="control", "sampleID"] )
+  } else if ( is.null(ctrlID) & is.null(data$sbj_type)){
+    stop("Must pass `ctrlID` or have a column in the data called `sbj_type` which indicates which sample IDs are control or patient.")
+  }
   sbj = sort(unique(data$sampleID))
   if (is.null(pts)) {
     pts = sbj[!(sbj %in% ctrlID)]
