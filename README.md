@@ -14,7 +14,7 @@ library("analysis2Dmtio")
 
 ### Getting data
 Getting data into the correct form is crucial to be able to use the inference and plotting function which are part of this package. The package comes with andexample dataset which is already in the correct form, so to start we will look at this. 
-```{r}
+```{r echo=TRUE include=TRUE}
 exampleData = get_exampleData()
 head(exampleData)
 ```
