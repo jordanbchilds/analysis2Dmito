@@ -7,7 +7,7 @@ install.packages("devtools")
 library("devtools")
 devtools::install_github("jordanbchilds/analysis2Dmito")
 
-library("analysis2Dmtio")
+library("analysis2Dmito")
 ```
 
 ## An Example ClassificationPipe
