@@ -164,18 +164,18 @@ inference = function(dataMats,
             Ysyn_def[k] ~ dnorm(m[nCrl+1]*Xsyn[k]+c[nCrl+1], tau_def)
         }
         for(l in 1:(nCrl+1)){
-          m[l] ~ dnorm(mu_m0, tau_m0)
-          c[l] ~ dnorm(mu_c0, tau_c0)
+          m[l] ~ dnorm(mu_m, tau_m)
+          c[l] ~ dnorm(mu_c, tau_c)
         }
-        m_pred ~ dnorm(mu_m0, tau_m0)
-        c_pred ~ dnorm(mu_c0, tau_m0)
+        m_pred ~ dnorm(mu_m, tau_m)
+        c_pred ~ dnorm(mu_c, tau_m)
 
-        mu_m0 ~ dnorm( mean_mu_m0, prec_mu_m0 )
-        mu_c0 ~ dnorm( mean_mu_c0, prec_mu_c0 )
-        tau_m0 ~ dgamma( shape_tau_m0, rate_tau_m0 )
-        tau_c0 ~ dgamma( shape_tau_c0, rate_tau_c0 )
+        mu_m ~ dnorm( mean_mu_m, prec_mu_m )
+        mu_c ~ dnorm( mean_mu_c, prec_mu_c )
+        tau_m ~ dgamma( shape_tau_m, rate_tau_m )
+        tau_c ~ dgamma( shape_tau_c, rate_tau_c )
         tau_norm ~ dgamma(shape_tau, rate_tau)
-        probdef ~ dlnorm(mu_p, tau_p) T(,1)
+        probdiff ~ dbeta(alpha_pi, beta_pi)
        }
       "
   if (is.null(names(dataMats))) names(dataMats) = c("ctrl", "pts", "indexCtrl", "indexPat")
@@ -202,19 +202,19 @@ inference = function(dataMats,
     indexCtrl = indexCtrl,
     nSyn = nSyn,
     Xsyn = Xsyn,
-    mean_mu_m0 = 1.0,
-    prec_mu_m0 = 1 / 0.25 ^ 2,
-    mean_mu_c0 = 0.0,
-    prec_mu_c0 = 1 / 1.5 ^ 2,
-    shape_tau_m0 = 1.1956,
-    rate_tau_m0 = 0.04889989,
-    shape_tau_c0 = 1.1956,
-    rate_tau_c0 = 0.04889989,
+    mean_mu_m = 1.0,
+    prec_mu_m = 1/0.1^2, #1 / 0.25 ^ 2,
+    mean_mu_c = 0.0,
+    prec_mu_c = 1/0.2^2, #1 / 1.5 ^ 2,
+    shape_tau_m = 27.56372, #1.1956,
+    rate_tau_m = 1.660233, #0.04889989,
+    shape_tau_c = 1.25, #1.1956,
+    rate_tau_c = 0.25, #0.04889989,
     shape_tau = 41.97618,
     rate_tau = 2.048809,
-    mu_p = -2.549677,
-    tau_p = 1 / 1.023315 ^ 2,
-    tau_def = 0.001
+    alpha_pi = 1,
+    beta_pi = 1,
+    tau_def=1e-4
   )
 
   if (!is.null(parameterVals) && is.list(parameterVals)) {
@@ -248,16 +248,15 @@ inference = function(dataMats,
       "c",
       "m_pred",
       "c_pred",
-      "mu_m0",
-      "tau_m0",
-      "mu_c0",
-      "tau_c0",
+      "mu_m",
+      "tau_m",
+      "mu_c",
+      "tau_c",
       "tau_norm",
-      "tau_def",
       "Ysyn_norm",
       "Ysyn_def",
       "class",
-      "probdef"
+      "probdiff"
     )
   )
   output_prior = rjags::coda.samples(
@@ -269,15 +268,14 @@ inference = function(dataMats,
       "c",
       "m_pred",
       "c_pred",
-      'mu_m0',
-      "tau_m0",
-      "mu_c0",
-      "tau_c0",
+      'mu_m',
+      "tau_m",
+      "mu_c",
+      "tau_c",
       "tau_norm",
-      "tau_def",
       "Ysyn_norm",
       "Ysyn_def",
-      "probdef"
+      "probdiff"
     )
   )
 
@@ -293,13 +291,12 @@ inference = function(dataMats,
     paste0("c[", 1:(nCrl + 1), "]"),
     "m_pred",
     "c_pred",
-    "mu_m0",
-    "tau_m0",
-    "mu_c0",
-    "tau_c0",
+    "mu_m",
+    "tau_m",
+    "mu_c",
+    "tau_c",
     "tau_norm",
-    "tau_def",
-    "probdef"
+    "probdiff"
   )]
   postpred_norm = apply(post_out[, paste0("Ysyn_norm[", 1:nSyn, "]")], 2, quantile, probs =
                           c(0.025, 0.5, 0.975))
@@ -320,13 +317,12 @@ inference = function(dataMats,
     paste0("c[", 1:(nCrl + 1), "]"),
     "m_pred",
     "c_pred",
-    "mu_m0",
-    "tau_m0",
-    "mu_c0",
-    "tau_c0",
+    "mu_m",
+    "tau_m",
+    "mu_c",
+    "tau_c",
     "tau_norm",
-    "tau_def",
-    "probdef"
+    "probdiff"
   )]
 
   priorpred_norm = apply(prior_out[, paste0("Ysyn_norm[", 1:nSyn, "]")], 2, quantile, probs =
@@ -343,11 +339,11 @@ inference = function(dataMats,
                           "uprDef")
 
   out_list = list(
-    post = post,
-    postpred = postpred,
-    prior = prior,
-    priorpred = priorpred,
-    classif = classifs
+    POST = post,
+    POSTPRED = postpred,
+    PRIOR = prior,
+    PRIORPRED = priorpred,
+    CLASSIF = classifs
   )
   return(out_list)
 }
