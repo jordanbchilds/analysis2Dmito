@@ -1,13 +1,16 @@
 # analysis2Dmito
 An R package for the classification of fibres by their protein expression levels
 
+## Required Software
+The package uses the statistical computing softer JAGS which must be installed before use. This cannot be done through R or RStudio/Posit but there are many online resources to help install JAGS. It can be installed directly though [sourcefogre.net](https://sourceforge.net/projects/mcmc-jags/files/). A guide to installing R, RStudio, JAGS and R packages can be found [here](https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781119287995.app1). 
+
 ## Installation
 ```{r}
 install.packages("devtools")
 library("devtools")
 devtools::install_github("jordanbchilds/analysis2Dmito")
 
-library("analysis2Dmtio")
+library("analysis2Dmito")
 ```
 
 ## An Example ClassificationPipe
