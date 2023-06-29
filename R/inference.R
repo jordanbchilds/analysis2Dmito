@@ -188,8 +188,9 @@ inference = function(dataMats,
   nCrl = length(unique(indexCtrl))
 
   nSyn = 1e3
-  Xsyn = seq(min(0, min(c(ctrl_mat[,1], pat_mat[,1]))), max(c(ctrl_mat[, 1], pat_mat[, 1])) * 1.5, length.out =
-               nSyn)
+  Xsyn = seq(min(0, min(c(ctrl_mat[,1], pat_mat[,1]))),
+             max(c(ctrl_mat[, 1], pat_mat[, 1])) * 1.5,
+             length.out = nSyn)
 
   data_list = list(
     Yctrl = ctrl_mat[, 2],
