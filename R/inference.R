@@ -157,7 +157,7 @@ inference = function(dataMats,
         for(j in 1:nPat){
             Ypat[j] ~ dnorm(m[nCrl+1]*Xpat[j]+c[nCrl+1], tau_hat[j])
             tau_hat[j] = ifelse(class[j]==1, tau_def, tau_norm)
-            class[j] ~ dbern(probdef)
+            class[j] ~ dbern(probdiff)
         }
         for(k in 1:nSyn){
             Ysyn_norm[k] ~ dnorm(m[nCrl+1]*Xsyn[k]+c[nCrl+1], tau_norm)
