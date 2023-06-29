@@ -58,7 +58,7 @@ getData = function(fname,
 
     newvals = pmax(1.0, oxphos$Value - lu[gsub("_L._C._S._R.", "", oxphos$pch)])
     if (!is.null(noNPCchannels))
-      newvals[oxphos$chan %in% noNPCchannels] = oxphos$value[oxphos$chan %in% noNPCchannels]
+      newvals[oxphos$chan %in% noNPCchannels] = oxphos$Value[oxphos$chan %in% noNPCchannels]
     oxphos$Value = newvals
 
     oxphos$Filename = oxphos$fn
