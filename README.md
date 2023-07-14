@@ -51,7 +51,7 @@ mitochan = "raw_porin"
 channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) )
 
 # extract control sample IDs
-ctrlIDs = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
+ctrlID = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 # extract patient sample IDs
 patIDs = unique( exampleData[exampelData$sbj_type=="patient", "sampleID"] )
 
@@ -88,9 +88,9 @@ exampleData$value = log(exampleData$value)
 pat = patIDs[1]
 
 dataMats = getData_mats(data=exampleData, 
-                        ctrlIDs=ctrlIDs, 
+                        ctrlID=ctrlID, 
                         pts=pat, 
-                        getIndes=TRUE)
+                        getIndex=TRUE)
 
 output = inference(dataMats)
 ```
@@ -103,7 +103,7 @@ The `postpred` and `priorpred` objects are two matrices of the prior and posteri
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor get the average classification and the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function.
 
 ```{r}
-def_prob = apply(output$classif, 2, mean())
+def_prob = apply(output$classif, 2, mean)
 ```
 
 ### Plotting model output
