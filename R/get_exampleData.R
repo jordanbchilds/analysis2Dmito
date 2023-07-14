@@ -38,7 +38,14 @@ get_exampleData = function() {
                                     cols=c("raw_porin", "raw_CI", "raw_CIV"),
                                     names_to="channels")
   colnames(longForm_df) = c("sampleID", "fibreID", "sbj_type", "channel", "value")
-  return(as.data.frame(longForm_df))
+
+  longForm_df = as.data.frame(longForm_df)
+
+  longForm_df$unique_id = paste(longForm_df$channel, longForm_df$fibreID, sep="_")
+  zeroFibs = longForm_df[longForm_df$value == 0.0, "unique_id"]
+  prepped_data = longForm_df[!(longForm_df$unique_id %in% zeroFibs), ]
+
+  return(prepped_data)
 }
 
 
