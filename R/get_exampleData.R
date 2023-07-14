@@ -31,7 +31,7 @@
 #'
 #' @export
 get_exampleData = function() {
-  urlfile = "https://raw.githubusercontent.com/CnrLwlss/Ahmed_2022/master/rawdat_a.csv"
+  urlfile = "https://raw.githubusercontent.com/CnrLwlss/Ahmed_2022/master/rawdat_filtered_a.csv"
   rawData = readr::read_delim(url(urlfile))
 
   rawData_sub = rawData[, c("caseno", "Fibre", "raw_porin", "raw_CI", "raw_CIV", "controls")]
