@@ -53,7 +53,7 @@ channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) 
 # extract control sample IDs
 ctrlIDs = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 # extract patient sample IDs
-patIDs = unqiue( exampleData[exampelData$sbj_type=="patient", "sampleID"] )
+patIDs = unique( exampleData[exampelData$sbj_type=="patient", "sampleID"] )
 
 # plot control data
 for(crl in ctrlIDs){
