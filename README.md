@@ -2,21 +2,29 @@
 An R package for the classification of fibres by their protein expression levels
 
 ## Required Software
-The package uses the statistical computing softer JAGS which must be installed before use. This cannot be done through R or RStudio/Posit but there are many online resources to help install JAGS. It can be installed directly though [sourcefogre.net](https://sourceforge.net/projects/mcmc-jags/files/). A guide to installing R, RStudio, JAGS and R packages can be found [here](https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781119287995.app1). 
+The package uses the statistical computing softer JAGS which must be installed before use. This cannot be done through R or RStudio/Posit but there are many online resources to help install JAGS. It can be installed directly though [sourceforge.net](https://sourceforge.net/projects/mcmc-jags/files/). A guide to installing R, RStudio, JAGS and R packages can be found [here](https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781119287995.app1). 
 
 ## Installation
+To install this package and its dependencies run the following R code. 
 ```{r}
 install.packages("devtools")
 library("devtools")
 devtools::install_github("jordanbchilds/analysis2Dmito")
 
 library("analysis2Dmito")
+
+# install dependencies
+install.packages(c("data.table", "dplyr", "readr", "tidyr"))
+library("data.table")
+library("dplyr")
+library("readr")
+library("tidyr")
 ```
 
 ## An Example ClassificationPipe
 
-### Getting data
-Getting data into the correct form is crucial to be able to use the inference and plotting function which are part of this package. The package comes with an example dataset which is already in the correct form, so to start we will look at this. 
+### Getting Example data
+Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
 ```{r echo=TRUE include=TRUE}
 exampleData = get_exampleData()
 head(exampleData)
@@ -24,33 +32,13 @@ head(exampleData)
 This should show the first six rows of the example dataset, here we have called it `exampleData`. The description of the columns are given in the table below.
 | Variable Name | Description |
 | ------------- | ----------- |
-| `sampleID` | The identifier of the sample e.g. `C01`, `C02`, `P01`, `P02`, ... |
-|`fibreID` | The identifier of that fibre for that sample. The identifier is not unique throughout the whole dataset, it is only unique for the sample it comes from |
-| `sbj_type` | Identifies which sample are control subjects and which are patient subjects |
-| `channel` | The channel or protein on which the measurement is made |
-| `value` | The raw expression level for this particular fibre on this particular channel |
+| `sampleID` | The (unique) identifier of the sample e.g. `C01`, `C02`, `P01`, `P02`, ... |
+|`fibreID` | The identifier of that fibre for that sample. The identifier is not unique throughout the whole dataset, it is only unique for the sample it comes from. |
+| `sbj_type` | Identifies which sample are control subjects and which are patient subjects. Where control samples are labelled as "control" and patietn samples are labelled as "patient". |
+| `channel` | The channel or protein on which the measurement is made, a string.  |
+| `value` | The expression level for this particular fibre on this particular channel. |
 
-This is the format which the data needs to be in. To be able to get the data into this the `get_exampleData` function uses the `tidyr::pivot_longer` function. In it's raw form the data is much wider, the code below prints the top two lines of the data out. The raw form of this dataset also contains columns which are not of interest for this analysis, so they are removed. The reduced dataset is then put into long form using the pivot function and the column names are changed to as needed. 
-```{r echo=TRUE include=TRUE}
-# download some raw data
-urlfile = "https://raw.githubusercontent.com/CnrLwlss/Ahmed_2022/master/rawdat_a.csv"
-rawData = readr::read_delim(url(urlfile))
-
-# print the frist two rows of wide data
-head(rawData,2)
-
-# remove unwanted columns from the data
-rawData_sub = rawData[, c("caseno", "Fibre", "raw_porin", "raw_CI", "raw_CIV", "controls")]
-
-# put the data into long fr
-longFrom_df = tidyr::pivot_longer(rawData_sub, cols = c("raw_porin", "raw_CI", "raw_CIV"), names_to = "channels")
-colnames(longForm_df) = c("sampleID", "fibreID", "sbj_type", "channel", "value")
-
-# print the new dataset
-head(longForm_df)
-```
-__Data must be in this form for the function package functions to be able to work.__
-
+__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is commonly referred to as a long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). 
 
 ### Explore the data
 Before moving on to inference, although not necessary, it is advisable to explore the data. For good results the healthy control data should show a strong linear relationship, if this is not the case the data should be transformed e.g. log or sqrt.
@@ -65,14 +53,14 @@ channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) 
 # extract control sample IDs
 ctrlIDs = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 # extract patient sample IDs
-patIDs = unqiue( exampleData[exampelData$sbj_type=="patient", "sampleID"] )
+patIDs = unique( exampleData[exampelData$sbj_type=="patient", "sampleID"] )
 
 # plot control data
 for(crl in ctrlIDs){
     xDat_crl = exampleData[exampleData$sampleID==crl & exampleData$channel==mitochan, "value"]
   for( chan in channels ){
     yDat_crl = exampleData[exampleData$sampleID==crl & exampleData$channel==chan, "value"]
-    plot(xDat, yDat, pch=20, xlab=mitochan, ylab=chan, main=crl )
+    plot(xDat_crl, yDat_crl, pch=20, xlab=mitochan, ylab=chan, main=crl )
   }
 }
 
@@ -80,10 +68,10 @@ for(crl in ctrlIDs){
 for( chan in channels ){
   xDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==mitochan, "value"]
   yDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==chan, "value"]
+
   for( pat in patIDs ){
-    xDat_pat = exampleData[exampleData$sbj_type=="patient" & exampleData$channel==mitochan, "value"]
-    yDat_pat = exampleData[exampleData$sbj_type=="patient" & exampleData$channel==chan, "value"]
-    
+    xDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==mitochan, "value"]
+    yDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==chan, "value"]
     plot( xDat_ctrl, pch=20, col="black",
           yDat_ctrl, xlab=mitochan, ylab=chan, main=pat,
           xlims=range(xDat_ctrl, xDat_pat), ylims=range(yDat_ctrl, yDat_pat) )
