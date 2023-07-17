@@ -34,11 +34,11 @@ This should show the first six rows of the example dataset, here we have called 
 | ------------- | ----------- |
 | `sampleID` | The (unique) identifier of the sample e.g. `C01`, `C02`, `P01`, `P02`, ... |
 |`fibreID` | The identifier of that fibre for that sample. The identifier is not unique throughout the whole dataset, it is only unique for the sample it comes from. |
-| `sbj_type` | Identifies which sample are control subjects and which are patient subjects. Where control samples are labelled as "control" and patietn samples are labelled as "patient". |
+| `sbj_type` | Identifies which sample are control subjects and which are patient subjects. Where control samples are labelled as "control" and patient samples are labelled as "patient". |
 | `channel` | The channel or protein on which the measurement is made, a string.  |
 | `value` | The expression level for this particular fibre on this particular channel. |
 
-__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is commonly referred to as a long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). 
+__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is commonly referred to as a long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on this see [this blog](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Explore the data
 Before moving on to inference, although not necessary, it is advisable to explore the data. For good results the healthy control data should show a strong linear relationship, if this is not the case the data should be transformed e.g. log or sqrt.
