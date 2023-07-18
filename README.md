@@ -38,7 +38,7 @@ This should show the first six rows of the example dataset, here we have called 
 | `channel` | The channel or protein on which the measurement is made, a string.  |
 | `value` | The expression level for this particular fibre on this particular channel. |
 
-__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is commonly referred to as a long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on the `pivot_longer` function and examples see [this blog](https://tidyr.tidyverse.org/reference/pivot_longer.html).
+__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is commonly referred to as a long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on the `pivot_longer` function and examples see this [blog post](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Explore the data
 Before moving on to inference, although not necessary, it is advisable to explore the data. For good results the healthy control data should show a strong linear relationship, if this is not the case the data should be transformed e.g. log or sqrt.
