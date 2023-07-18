@@ -53,7 +53,7 @@ channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) 
 # extract control sample IDs
 ctrlID = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 # extract patient sample IDs
-patIDs = unique( exampleData[exampelData$sbj_type=="patient", "sampleID"] )
+patIDs = unique( exampleData[exampleData$sbj_type=="patient", "sampleID"] )
 
 # plot control data
 for(crl in ctrlIDs){
@@ -74,7 +74,7 @@ for( chan in channels ){
     yDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==chan, "value"]
     plot( xDat_ctrl, pch=20, col="black",
           yDat_ctrl, xlab=mitochan, ylab=chan, main=pat,
-          xlims=range(xDat_ctrl, xDat_pat), ylims=range(yDat_ctrl, yDat_pat) )
+          xlim=range(exampleData$value), ylim=range(exampleData$value) )
     points( xDat_pat, yDat_pat, pch=20, col="green")
   }
 }
@@ -85,10 +85,12 @@ If the data is transformed so that healthy fibres show a linear relationship and
 
 ```{r echo=TRUE}
 exampleData$value = log(exampleData$value)
+chan = channels[1]
 pat = patIDs[1]
 
 dataMats = getData_mats(data=exampleData, 
-                        ctrlID=ctrlID, 
+                        ctrlID=ctrlID,
+                        channels=c(mitochan, chan),
                         pts=pat, 
                         getIndex=TRUE)
 
@@ -103,7 +105,7 @@ The `postpred` and `priorpred` objects are two matrices of the prior and posteri
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor get the average classification and the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function.
 
 ```{r}
-def_prob = apply(output$classif, 2, mean)
+def_prob = apply(output$CLASSIF, 2, mean)
 ```
 
 ### Plotting model output
@@ -118,10 +120,9 @@ To be able to visualise the prior and posterior densities for all variables we c
 ```{r}
 # plotting grid: 3x3
 op = par(mfrow=c(3,3))
-
-postPlot(post=output$post,
-         prior=output$prior,
-         postpred=output$postpred,
+postPlot(post=output$POST,
+         prior=output$PRIOR,
+         postpred=output$POSTPRED,
          dataMats=dataMats,
          classifs=def_prob,
          var.names=c("mu_m0", "tau_m0", "m", "mu_c0", "tau_c0", "c", "prebdef", "tau_norm"))
@@ -135,7 +136,7 @@ If you just want to see the classification, then we can use the `classif_plot()`
 ```{r}
 classif_plot(dataMats=dataMats,
              classifs=def_prob,
-             postpred=output$postpred)
+             postpred=output$POSTPRED)
 ```
 
 
