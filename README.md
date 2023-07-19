@@ -202,9 +202,9 @@ output = inference(dataMats, parameterVals=paramVals)
 ```
 
 ### Understanding inference output
-The inference function outputs several things in a list. The first of which are the `post` and `prior` matrices. This contains a list of posterior draws for each parameter in the model in the form of a matrix where each column is a different parameter. 
+The inference function outputs several things in a list. The first of which are the `POST` and `PRIOR` matrices. This contains a list of posterior draws for each parameter in the model in the form of a matrix where each column is a different parameter. 
 
-The `postpred` and `priorpred` objects are two matrices of the prior and posterior predictive interval - marginalised over parameter uncertainty. The first column in this is called `mitochan` and is the values of the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy, lie control patient fibres and the deficient fibres. This is found by calculating the predicitive distribution of the y variable (protein expression) at each value stored in the `mitochan` column. 
+The `POSTPRED` and `PRIORPRED` objects are two matrices of the prior and posterior predictive interval - marginalised over parameter uncertainty. The first column in this is called `mitochan` and is the values of the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy, lie control patient fibres and the deficient fibres. This is found by calculating the predicitive distribution of the y variable (protein expression) at each value stored in the `mitochan` column. 
 
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor get the average classification and the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function.
 
@@ -215,8 +215,8 @@ def_prob = apply(output$CLASSIF, 2, mean)
 ### Plotting model output
 There a few functions which help to visualise the output of the inference. The first of which, `MCMCplot()` is used to check some diagnostics of the MCMC output. The function produces trace plots, autocorrelation (ACF) plots and kernel density estimates an MCMC output that is passed to it. A key thing to look for are that successive posteriors are not highly correlated. This is seen in the ACF plots. 
 ```{r echo=TRUE}
-MCMCplot(post=output$post, 
-         prior=output$prior,
+MCMCplot(post=output$POST, 
+         prior=output$PRIOR,
          nRow=3)
 ```
 
