@@ -90,7 +90,7 @@ chan = channels[1]
 pat = patIDs[1]
 
 dataMats = getData_mats(data=exampleData, 
-                        ctrlIDs=ctrlIDs,
+                        ctrlID=ctrlIDs,
                         channels=c(mitochan, chan),
                         pts=pat, 
                         getIndex=TRUE)
