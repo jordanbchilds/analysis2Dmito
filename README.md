@@ -56,7 +56,7 @@ ctrlID = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 patIDs = unique( exampleData[exampleData$sbj_type=="patient", "sampleID"] )
 
 # plot control data
-for(crl in ctrlIDs){
+for(crl in ctrlID){
     xDat_crl = exampleData[exampleData$sampleID==crl & exampleData$channel==mitochan, "value"]
   for( chan in channels ){
     yDat_crl = exampleData[exampleData$sampleID==crl & exampleData$channel==chan, "value"]
