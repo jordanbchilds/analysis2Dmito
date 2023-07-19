@@ -189,7 +189,6 @@ paramVals = list(shape_tau=shape_tau, rate_tau=rate_tau,
 If the data is transformed so that healthy fibres show a linear relationship and in the correct form then we can now fit the model. Before doing this we must pass the data through the `getData_mats` function which organises the data into matrices to be passed to `rjags`. The following code snippet should run the inference for the first patient in `patIDs` defined above. We use the parameter values defined in the previous section, without this the function will use a default set of parameters. 
 
 ```{r echo=TRUE}
-exampleData$value = log(exampleData$value)
 chan = channels[1]
 pat = patIDs[1]
 
@@ -209,20 +208,20 @@ The `postpred` and `priorpred` objects are two matrices of the prior and posteri
 
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor get the average classification and the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function.
 
-```{r}
+```{r echo=TRUE}
 def_prob = apply(output$CLASSIF, 2, mean)
 ```
 
 ### Plotting model output
 There a few functions which help to visualise the output of the inference. The first of which, `MCMCplot()` is used to check some diagnostics of the MCMC output. The function produces trace plots, autocorrelation (ACF) plots and kernel density estimates an MCMC output that is passed to it. A key thing to look for are that successive posteriors are not highly correlated. This is seen in the ACF plots. 
-```{r}
+```{r echo=TRUE}
 MCMCplot(post=output$post, 
          prior=output$prior,
          nRow=3)
 ```
 
 To be able to visualise the prior and posterior densities for all variables we can use the `postPlot()` function. The function plots all the priors, posteriors, and predictives (from hierarchical distributions) as well as the model classifications and posterior predictive for the healthy patient data. Unlike `MCMCplot()` this does not automatically create a plotting environment, so we have to define this before calling the function.
-```{r}
+```{r echo=TRUE}
 # plotting grid: 3x3
 op = par(mfrow=c(3,3))
 postPlot(post=output$POST,
@@ -238,12 +237,11 @@ par(op)
 
 If you just want to see the classification, then we can use the `classif_plot()` function. 
 
-```{r}
+```{r echo=TRUE}
 classif_plot(dataMats=dataMats,
              classifs=def_prob,
              postpred=output$POSTPRED)
 ```
-
 
 
 
