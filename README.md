@@ -51,12 +51,13 @@ mitochan = "raw_porin"
 channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) )
 
 # extract control sample IDs
-ctrlID = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
+ctrlIDs = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 # extract patient sample IDs
 patIDs = unique( exampleData[exampleData$sbj_type=="patient", "sampleID"] )
+patIDs = sort(patIDs)
 
 # plot control data
-for(crl in ctrlID){
+for(crl in ctrlIDs){
     xDat_crl = exampleData[exampleData$sampleID==crl & exampleData$channel==mitochan, "value"]
   for( chan in channels ){
     yDat_crl = exampleData[exampleData$sampleID==crl & exampleData$channel==chan, "value"]
@@ -89,7 +90,7 @@ chan = channels[1]
 pat = patIDs[1]
 
 dataMats = getData_mats(data=exampleData, 
-                        ctrlID=ctrlID,
+                        ctrlIDs=ctrlIDs,
                         channels=c(mitochan, chan),
                         pts=pat, 
                         getIndex=TRUE)
