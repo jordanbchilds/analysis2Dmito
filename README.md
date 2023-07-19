@@ -80,9 +80,113 @@ for( chan in channels ){
   }
 }
 ```
+Before choosing values to summarise prior beliefs about parameter values, we transform the data. Here, we choose a log (to base e) transformation and replot the data to examine the relationship between the transformed variables. 
+```{r echo=TRUE}
+
+exampleData$value = log(exampleData$value)
+exampleData$channel = gsub("raw_", "log_", exampleData$channel)
+
+mitochan = gsub("raw_", "log_", mitochan)
+channels = gsub("raw_", "log_", channels)
+
+for( chan in channels ){
+  xDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==mitochan, "value"]
+  yDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==chan, "value"]
+  
+  for( pat in patIDs ){
+    xDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==mitochan, "value"]
+    yDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==chan, "value"]
+    plot( xDat_ctrl, pch=20, col="black",
+          yDat_ctrl, xlab=mitochan, ylab=chan, main=pat,
+          xlim=range(exampleData$value), ylim=range(exampleData$value) )
+    points( xDat_pat, yDat_pat, pch=20, col="green")
+  }
+}
+
+```
+Prior information can choose by examination of the control data. By fitting linear models to the control samples individually we know what are likely values of the parameters of Bayesian model. For ease this can be done in a frequentist setting. The code snippet below fits a linear model each control sample for each protein and saves relavent output. 
+```{r echo=TRUE}
+slopes = matrix(NA, nrow=length(channels), ncol=length(ctrlIDs))
+rownames(slopes) = channels
+colnames(slopes) = ctrlIDs
+
+intercepts = slopes
+errors = slopes
+
+for(chan in channels){
+  for(crl in ctrlIDs){
+    x = exampleData[exampleData$sampleID==crl & exampleData$channel==mitochan, "value"]
+    y = exampleData[exampleData$sampleID==crl & exampleData$channel==chan, "value"]
+    
+    df = data.frame(mitochan=x, chan=y)
+    
+    lnmod = lm(chan~mitochan, data=df)
+    
+    slopes[chan, crl] = lnmod$coefficients[1]
+    intercepts[chan, crl] = lnmod$coefficients[2]
+    errors[chan, crl] = summary(lnmod)$sigma
+    
+    xSyn = seq(min(exampleData$value)-2, max(exampleData$value)+2, length.out=1000)
+    df_pred = data.frame(mitochan=xSyn)
+    
+    pred = predict.lm(lnmod, newdata=df_pred, interval="prediction")
+    
+    plot(df, 
+         pch=20,
+         col=alphaBlack(0.1),
+         xlab=mitochan, 
+         ylab=chan,
+         xlim=range(exampleData$value),
+         ylim=range(exampleData$value))
+    lines(xSyn, pred[,"lwr"], lty=2, col=alphaPink(0.9), lwd=2)
+    lines(xSyn, pred[,"upr"], lty=2, col=alphaPink(0.9), lwd=2)
+    lines(xSyn, pred[,"fit"], lty=1, col=alphaPink(0.9), lwd=2)
+  }
+}
+```
+The matrices; `slopes`, `intercepts` and `errors`, contain the frequentist estimates for each channel and control sample of their name sakes. The for a specific channel and we can specify priors using the mean and variance of these values. The snippet below calculates the means and standard deviations of the slopes, intercepts and errors, as fitted to the control samples, for each channel. 
+```{r echo=TRUE}
+slope_mean = apply(slopes, 1, mean)
+inter_mean = apply(intercepts, 1, mean)
+prec_mean = apply(precisions, 1, mean)
+
+slope_sd = apply(slopes, 1, sd)
+inter_sd = apply(intercepts, 1, sd)
+prec_sd = apply(precisions, 1, sd)
+```
+We may choose to set the exprected values of our parameters _a priori_ to the means calculated above and their variances to be small, as we are confident in out beliefs. For the channel, `chan`, here specified to be the first channels in the `channels` vector we can calculate our prior parameters as follows. Savingn them in list called `paramVals` allows them to be passed to the inference function. The names of the parameter values in the list have to be the same as their names used in the model discription otherwise the function would not know what parameter you are tryinng to define. 
+
+```{r echo=TRUE}
+
+chan = channels[1]
+
+mean_mu_m = slope_mean[chan]
+prec_mu_m = 1 / 0.01^2
+mean_mu_c = inter_mean[chan]
+prec_mu_c = 1 / 0.02^2
+tau_mode_c = 1/inter_sd[chan]^2
+tau_var_c = 0.1
+rate_tau_c = 0.5 * (tau_mode_c + sqrt(tau_mode_c ^ 2 + 4 * tau_var_c)) / tau_var_c
+shape_tau_c = 1 + tau_mode_c * rate_tau_c
+tau_mode_m = 1/slope_sd[chan]^2
+tau_var_m = 0.1
+rate_tau_m = 0.5 * (tau_mode_m + sqrt(tau_mode_m ^ 2 + 4 * tau_var_m)) / tau_var_m
+shape_tau_m = 1 + tau_mode_m * rate_tau_m
+tau_mode = prec_mean[chan]
+tau_var = 1
+rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
+shape_tau = 1 + tau_mode * rate_tau
+
+
+paramVals = list(shape_tau=shape_tau, rate_tau=rate_tau, 
+                 shape_tau_c=shape_tau_c, rate_tau_c=rate_tau_c, 
+                 shape_tau_m=shape_tau_m, rate_tau_m=rate_tau_m,
+                 mean_mu_m=mean_mu_m, prec_mu_m=prec_mu_m, 
+                 mean_mu_c=mean_mu_c, prec_mu_c=prec_mu_c)
+```
 
 ### Fit the model
-If the data is transformed so that healthy fibres show a linear relationship and in the correct form then we can now fit the model. Before doing this we must pass the data through the `getData_mats` function which organises the data into matrices to be passed to `rjags`. The following code snippet should run the inference for the first patient in `patIDs` defined above. It will run with the default parameter set, but these can be altered using the `parameterValue` argument to the function. 
+If the data is transformed so that healthy fibres show a linear relationship and in the correct form then we can now fit the model. Before doing this we must pass the data through the `getData_mats` function which organises the data into matrices to be passed to `rjags`. The following code snippet should run the inference for the first patient in `patIDs` defined above. We use the parameter values defined in the previous section, without this the function will use a default set of parameters. 
 
 ```{r echo=TRUE}
 exampleData$value = log(exampleData$value)
@@ -95,7 +199,7 @@ dataMats = getData_mats(data=exampleData,
                         pts=pat, 
                         getIndex=TRUE)
 
-output = inference(dataMats)
+output = inference(dataMats, parameterVals=paramVals)
 ```
 
 ### Understanding inference output
