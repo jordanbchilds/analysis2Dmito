@@ -5,9 +5,9 @@
 #' To be able to transform the data into long form, we suggest using the [tidyverse] package and the [tidyr::pivot_longer()] function.
 #'
 #' @param data A data.frame object of the protein expression data. See details for the format the data should be in to be able to parse to the data.
-#' @param channels A vector of strings or a single string containing the channels which will form the columns of the returned matrix.
+#' @param channels A vector of strings or a single string containing the channels which will form the columns of the returned matrices.
 #' @param ctrlID A character vector denoting the ID for the control samples in the 'sampleID' column of data.
-#' @param pts A vector of subject names or a single subject name, whose expression levels are wished to be returned. The defualt value is NULL, if this is the case the protein expression levels for all subjects within the dataset are returned.
+#' @param pts A vector of subject names or a single subject name, whose expression levels are to be returned. The default value is NULL, if this is the case the protein expression levels for all samples within the dataset are returned.
 #' @param ctrl_only A boolean variable indicating whether to return only patient data, the default is FALSE. If this is TRUE and getIndex=FALSE the function will return a single matrix otherwise it will return a list containing all outputs.
 #' @param getINDEX A boolean parameter, if TRUE two vectors of indexes, one for the control data and one for the patient data, are returned. Each indicating which observations came from the same sample by grouping them from 1 upto the number of samples in the data requested. The default is FALSE.
 #'
