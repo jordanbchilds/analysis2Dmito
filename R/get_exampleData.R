@@ -43,7 +43,7 @@ get_exampleData = function() {
   longForm_df = as.data.frame(longForm_df)
 
   longForm_df$unique_id = paste(longForm_df$sampleID, longForm_df$fibreID, sep="_")
-  zeroFibs = longForm_df[longForm_df$value == 0.0, "unique_id"]
+  zeroFibs = longForm_df[longForm_df$value<=0.0, "unique_id"]
   prepped_data = longForm_df[!(longForm_df$unique_id %in% zeroFibs), ]
   prepped_data$unique_id = NULL
 
