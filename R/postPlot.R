@@ -119,11 +119,10 @@ postPlot = function(post,
       post_var = post[, grepl(paste0(var, "\\["), colnames)]
       post_dens = list()
 
-      priorParent = prior[, min(grep(paste0(var, "\\["), colnames))]
+      priorParent = prior[, paste0(var, "_pred")]
       priorParent_dens = stats::density(priorParent)
 
-      postParent = rnorm(nrow(post_var), post[, paste0("mu_", var)], 1 /
-                           sqrt(post[, paste0("tau_", var)]))
+      postParent = post[, paste0(var, "_pred")]
       postParent_dens = stats::density(postParent)
 
       xlim_varMin = min(postParent_dens$x)
