@@ -70,7 +70,7 @@ getData_mats = function(data,
 
   if (ctrl_only) {
     if (getIndex) {
-      return(list(ctrl = ctrl_mat, index = index))
+      return(list(ctrl = ctrl_mat, index = indexCtrl))
     } else {
       return(ctrl_mat)
     }
