@@ -30,10 +30,13 @@ get_exampleData = function() {
   urlfile = "https://raw.githubusercontent.com/jordanbchilds/AV_mitocyto/main/Data_prepped.csv"
   rawData = readr::read_delim(url(urlfile))
 
+  mitochan = "VDAC"
+  channels = c("NDUFB8", "CYB", "MTCO1")
+
   rawData = rawData[,c("ID", "patient_id", mitochan, channels)]
   colnames(rawData) = c("fibreID", "sampleID", mitochan, channels)
 
-  data = tidyr::pivot_longer(rawData, cols=c("VDAC", "NDUFB8", "CYB", "MTCO1"), names_to="channel")
+  data = tidyr::pivot_longer(rawData, cols=c(mitochan, channels), names_to="channel")
 
   data_df= as.data.frame(data)
 
