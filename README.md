@@ -2,26 +2,26 @@
 An R package for the classification of fibres by their protein expression levels
 
 ## Required Software
-The package uses the statistical computing softer JAGS which must be installed before use. This cannot be done through R or RStudio/Posit but there are many online resources to help install JAGS. It can be installed directly though [sourceforge.net](https://sourceforge.net/projects/mcmc-jags/files/). A guide to installing R, RStudio, JAGS and R packages can be found [here](https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781119287995.app1). 
+The package uses the statistical computing software JAGS which must be installed before use. This cannot be done through R or RStudio/Posit but there are many online resources to help install JAGS. It can be installed directly though [sourceforge.net](https://sourceforge.net/projects/mcmc-jags/files/). A guide to installing R, RStudio, JAGS and R packages can be found [here](https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781119287995.app1). 
 
-## Installation
+## Installationt
 To install this package and its dependencies run the following R code. 
 ```{r}
-install.packages("devtools")
-library("devtools")
-devtools::install_github("jordanbchilds/analysis2Dmito")
-
-library("analysis2Dmito")
-
 # install dependencies
 install.packages(c("data.table", "dplyr", "readr", "tidyr"))
 library("data.table")
 library("dplyr")
 library("readr")
 library("tidyr")
+
+install.packages("devtools")
+library("devtools")
+devtools::install_github("jordanbchilds/analysis2Dmito")
+
+library("analysis2Dmito")
 ```
 
-## An Example ClassificationPipe
+## An Example Classification Pipe
 
 ### Getting Example data
 Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
@@ -38,7 +38,7 @@ This should show the first six rows of the example dataset, here we have called 
 | `channel` | The channel or protein on which the measurement is made, a string.  |
 | `value` | The expression level for this particular fibre on this particular channel. |
 
-__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is commonly referred to as a long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on the `pivot_longer` function and examples see this [blog post](https://tidyr.tidyverse.org/reference/pivot_longer.html).
+__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is in a format commonly referred to as long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on the `pivot_longer` function and examples see this [blog post](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Explore the data
 Before moving on to inference, although not necessary, it is advisable to explore the data. For good results the healthy control data should show a strong linear relationship, if this is not the case the data should be transformed e.g. by log or square root tranformations.
@@ -102,16 +102,15 @@ for( chan in channels ){
     points( xDat_pat, yDat_pat, pch=20, col="green")
   }
 }
-
 ```
-Prior information can choose by examination of the control data. By fitting linear models to the control samples individually we know what are likely values of the parameters of Bayesian model. For ease this can be done in a frequentist setting. The code snippet below fits a linear model each control sample for each protein and saves relavent output. 
+Prior beliefs can be chosen by inspection of control data. By fitting linear models to the control samples individually we know what are likely values of the parameters used in the model. For ease this can be done in a frequentist setting. The code snippet below fits a linear model each control sample for each protein and saves relavent output. 
 ```{r echo=TRUE}
 slopes = matrix(NA, nrow=length(channels), ncol=length(ctrlIDs))
 rownames(slopes) = channels
 colnames(slopes) = ctrlIDs
 
-intercepts = slopes
-errors = slopes
+intercepts = slopes # defines an empty matrix with row and col names as wanted
+precisions = slopes
 
 for(chan in channels){
   for(crl in ctrlIDs){
@@ -124,7 +123,7 @@ for(chan in channels){
     
     slopes[chan, crl] = lnmod$coefficients[1]
     intercepts[chan, crl] = lnmod$coefficients[2]
-    errors[chan, crl] = summary(lnmod)$sigma
+    precisions[chan, crl] = summary(lnmod)$sigma
     
     xSyn = seq(min(exampleData$value)-2, max(exampleData$value)+2, length.out=1000)
     df_pred = data.frame(mitochan=xSyn)
@@ -154,7 +153,7 @@ slope_sd = apply(slopes, 1, sd)
 inter_sd = apply(intercepts, 1, sd)
 prec_sd = apply(precisions, 1, sd)
 ```
-We may choose to set the exprected values of our parameters _a priori_ to the means calculated above and their variances to be small, as we are confident in out beliefs. For the channel, `chan`, here specified to be the first channels in the `channels` vector we can calculate our prior parameters as follows. Savingn them in list called `paramVals` allows them to be passed to the inference function. The names of the parameter values in the list have to be the same as their names used in the model discription otherwise the function would not know what parameter you are tryinng to define. 
+We may choose to set the expected values of our parameters _a priori_ to the means calculated above and their variances to be small, as we are confident in our beliefs. For the channel, `chan`, here specified to be the first channel in the `channels` vector we can calculate our prior parameters and save them in list to be passed to the inference function. The names of the parameter values in the list have to be the same as their names used in the model description otherwise the function would not know what parameter you are trying to define. 
 
 ```{r echo=TRUE}
 
@@ -204,7 +203,7 @@ output = inference(dataMats, parameterVals=paramVals)
 ### Understanding inference output
 The inference function outputs several things in a list. The first of which are the `POST` and `PRIOR` matrices. This contains a list of posterior draws for each parameter in the model in the form of a matrix where each column is a different parameter. 
 
-The `POSTPRED` and `PRIORPRED` objects are two matrices of the prior and posterior predictive interval - marginalised over parameter uncertainty. The first column in this is called `mitochan` and is the values of the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy, lie control patient fibres and the deficient fibres. This is found by calculating the predicitive distribution of the y variable (protein expression) at each value stored in the `mitochan` column. 
+The `POSTPRED` and `PRIORPRED` objects are two matrices of the prior and posterior predictive interval - marginalised over parameter uncertainty. The first column in this is called `mitochan` and are the values of the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy patient fibres and the deficient patient fibres. This is found by calculating the predicitive distribution of the protein expression at each value stored in the `mitochan` column and then calculating its quantiles. 
 
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor get the average classification and the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function.
 
