@@ -27,7 +27,7 @@
 #'
 #' @export
 get_exampleData = function() {
-  urlfile = "https://raw.githubusercontent.com/jordanbchilds/AV_mitocyto/Data_prepped,.csv"
+  urlfile = "https://raw.githubusercontent.com/jordanbchilds/AV_mitocyto/Data_prepped.csv"
   rawData = readr::read_delim(url(urlfile))
 
   rawData = rawData[,c("ID", "patient_id", mitochan, channels)]
