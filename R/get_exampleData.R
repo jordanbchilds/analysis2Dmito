@@ -27,15 +27,17 @@
 #'
 #' @export
 get_exampleData = function() {
-  urlfile = "https://raw.githubusercontent.com/jordanbchilds/AV_mitocyto/Data_prepped,.csv"
+  urlfile = "https://raw.githubusercontent.com/jordanbchilds/AV_mitocyto/main/Data_prepped.csv"
   rawData = readr::read_delim(url(urlfile))
 
   rawData = rawData[,c("ID", "patient_id", mitochan, channels)]
   colnames(rawData) = c("fibreID", "sampleID", mitochan, channels)
 
   data = tidyr::pivot_longer(rawData, cols=c("VDAC", "NDUFB8", "CYB", "MTCO1"), names_to="channel")
-
   data_df= as.data.frame(data)
+
+  data_df$sbj_type = "control"
+  data_df$sbj_type[grep("C", data_df$sampleID, invert=TRUE)] = "patient"
 
   return( data_df )
 }
