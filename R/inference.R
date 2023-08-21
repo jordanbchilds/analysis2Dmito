@@ -8,7 +8,7 @@
 #' diverges from this is not like control.
 #'
 #' @details
-#' The inference is implemented using [rjags::jags.model()]. The model itself
+#' The inference is implemented using [rjags::jags.model]. The model itself
 #' cannot be changed however the parameters and hyper parameters which govern
 #' the model can be updated by using the `parameterVals` variable in the
 #' function. This allows for a vast array of different prior beliefs and
@@ -57,11 +57,11 @@
 #'  - rate_tau_m0 : the rate parameter of a Gamma distribution of the precision of a slope. Default: 0.04889989.
 #'  - shape_tau_c0 : the shape parameter of a Gamma distribution of the precision of an intercept. Default: 1.1956.
 #'  - rate_tau_c0 : the rate parameter of a Gamma distribution of the precision of an intercept. Default: 0.04889989.
-#'  - shape_tau : shape parameter of a Gamma distribution of the precision in the model for healthy, like-control, fibres. Defualt: 41.048809.
+#'  - shape_tau : shape parameter of a Gamma distribution of the precision in the model for healthy, like-control, fibres. Default: 41.048809.
 #'  - rate_tau : the rate parameter of a Gamma distribution of the precision in the model for healthy, like-control, fibres. Default: 2.048809.
 #'  - mu_p : the expected value for the proportion of deficiency in the dataset. Default: -2.549677.
 #'  - tau_p : the precision for the proportion of deficiency in the dataset. Default: 0.9549515.
-#'  - tau_def : the precision used to classif fibres which are not like control. Default: 0.0001.
+#'  - tau_def : the precision used to classify fibres which are not like control. Default: 0.0001.
 #'
 #' The model is implemented in JAGS using the following model string:
 #' ```{R}

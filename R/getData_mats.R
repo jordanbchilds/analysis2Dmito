@@ -1,8 +1,8 @@
-#' @title Data preparation for [analysis2Dmito::inference()].
+#' @title Data preparation for [analysis2Dmito::inference].
 #'
 #' @description The function aggregates the data into the form needed for [analysis2Dmito::inference]. To be able to do this the data passed to the function must in a specific form, see details for more info.
 #' The data.frame object passed to the function must be in long form and have the following columns; 'value', 'channel', 'sampleID' and 'fibreID'. Where 'value' is the protein expression value, 'channel' is the protein or channel that the value expresses, 'sampleID' is the identifying name associated with the sample the expression is from and'fibreID' is the fibre identification from that sample. Other columns can be present but are not needed.
-#' To be able to transform the data into long form, we suggest using the [tidyverse] package and the [tidyr::pivot_longer()] function.
+#' To be able to transform the data into long form, we suggest using the [tidyverse] package and the [tidyr::pivot_longer] function.
 #'
 #' @param data A data.frame object of the protein expression data. See details for the format the data should be in to be able to parse to the data.
 #' @param channels A vector of strings or a single string containing the channels which will form the columns of the returned matrices.
@@ -11,7 +11,7 @@
 #' @param ctrl_only A boolean variable indicating whether to return only patient data, the default is FALSE. If this is TRUE and getIndex=FALSE the function will return a single matrix otherwise it will return a list containing all outputs.
 #' @param getINDEX A boolean parameter, if TRUE two vectors of indexes, one for the control data and one for the patient data, are returned. Each indicating which observations came from the same sample by grouping them from 1 upto the number of samples in the data requested. The default is FALSE.
 #'
-#' @returns If ctrl_only=TRUE and getIndex=FALSE then a matrix is returned of just the control sample fibre expressiosn. The columns of the matrix correspond to the channels requested. Otherwise a list is returned containing the requested elements.
+#' @returns If ctrl_only=TRUE and getIndex=FALSE then a matrix is returned of just the control sample fibre expression. The columns of the matrix correspond to the channels requested. Otherwise a list is returned containing the requested elements.
 #' - ctrl : The control sample data matrix.
 #' - pts : The patient sample data matrix.
 #' - indexCtrl : A vector of control sample indexes.
