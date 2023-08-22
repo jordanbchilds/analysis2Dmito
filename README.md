@@ -163,7 +163,7 @@ plot(density( ms ), col=alphaPink(1.0), lwd=2,
 
 The resulting densities are seen in the below figure.
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/m_prior_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/m_priors_ex.png?raw=true)
 
 The rest of the prior parameters can be inspected in much the same way, although this is not done here. The remaining parameters must be defined and all parameter values must be stored in a list to be passed to the inference function. The names of the parameters in the list must be the same as those used in the function otherwise the function will not be able to identify them. 
 
@@ -226,8 +226,7 @@ lines( dPost, col=alphaGreen(0.7), lwd=2)
 legend("topright", legend=c("prior", "post"), lty='l', col=c(alphaGreen(1.0), alphaPink(1.0)))
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/probdiff_priorpost_ex.png?raw=true)
-
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/pi_postprior_ex.png?raw=true)
 
 The `POSTPRED` and `PRIORPRED` matrices in the output list contain prior and posterior predictive interval - marginalised over parameter uncertainty - for the patient sample passed to the model. The first column in this is called `mitochan` and are the values on the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy patient fibres and the deficient patient fibres. This is found by calculating the predictive distribution of the protein expression at each value stored in the `mitochan` column and then calculating its quantiles. 
 
@@ -243,7 +242,7 @@ lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"uprNorm"],
       lty=2, col=alphaPink(0.9))
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/probdiff_priorpost_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/postpred_ex.png?raw=true)
 
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor find the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function, as seen below. 
 
