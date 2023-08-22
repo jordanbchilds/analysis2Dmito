@@ -85,7 +85,7 @@ par(op)
 ```
 A comparison of the log and log-log transformations are shown in the figure below, for a specific channel and patient in the example dataset. Healthy control fibres are shown in black and patient fibres (both healthy and deficient) are shown in green. The log-log transform increases the difference in lowest expression fibres but reduces the difference in the higher expression fibres. Depending on the data one may be more appropriate than the other. Here we will choose the log transform and the data is transformed at the beginning of the next code snippet. 
 
-![plot](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/data_trasnformation_ex.png)
+![plot](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/data_trasnformation_ex.png?raw=true)
 
 Once a transformation has been chosen the expression data can be changed and prior beliefs about parameters can be considered. By fitting linear models to the control samples individually we know what values of model parameters might be likely and can gain an idea the expected value of model parameters. For ease the linear models can be fit in a frequentist setting. The code snippet below fits a linear model to each control sample, for each protein, and saves relevant output in three matrices; `slopes`, `intercepts`, and `precisions`.
 
