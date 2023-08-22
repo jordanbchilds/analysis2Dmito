@@ -8,11 +8,12 @@ The package uses the statistical computing software JAGS which must be installed
 To install this package and its dependencies run the following R code. 
 ```{r}
 # install dependencies
-install.packages(c("data.table", "dplyr", "readr", "tidyr"))
+install.packages(c("data.table", "dplyr", "readr", "tidyr", "rjags"))
 library("data.table")
 library("dplyr")
 library("readr")
 library("tidyr")
+library("rjags")
 
 install.packages("devtools")
 library("devtools")
