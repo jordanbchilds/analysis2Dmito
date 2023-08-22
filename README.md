@@ -163,7 +163,7 @@ plot(density( ms ), col=alphaPink(1.0), lwd=2,
 
 The resulting densities are seen in the below figure.
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/m_prior_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/m_prior_ex.png?raw=true)
 
 The rest of the prior parameters can be inspected in much the same way, although this is not done here. The remaining parameters must be defined and all parameter values must be stored in a list to be passed to the inference function. The names of the parameters in the list must be the same as those used in the function otherwise the function will not be able to identify them. 
 
@@ -226,7 +226,7 @@ lines( dPost, col=alphaGreen(0.7), lwd=2)
 legend("topright", legend=c("prior", "post"), lty='l', col=c(alphaGreen(1.0), alphaPink(1.0)))
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/probdiff_priorpost_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/probdiff_priorpost_ex.png?raw=true)
 
 
 The `POSTPRED` and `PRIORPRED` matrices in the output list contain prior and posterior predictive interval - marginalised over parameter uncertainty - for the patient sample passed to the model. The first column in this is called `mitochan` and are the values on the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy patient fibres and the deficient patient fibres. This is found by calculating the predictive distribution of the protein expression at each value stored in the `mitochan` column and then calculating its quantiles. 
@@ -243,7 +243,7 @@ lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"uprNorm"],
       lty=2, col=alphaPink(0.9))
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/probdiff_priorpost_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/probdiff_priorpost_ex.png?raw=true)
 
 The last item in the list is called `classif` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the classifications for a different fibre. We can therefor find the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function, as seen below. 
 
@@ -259,7 +259,7 @@ plot(dataMats$pts, pch=20, col=classcols(def_prob),
      main="Posterior Predictive")
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/classif_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_ex.png?raw=true)
 
 ### Plotting model output
 There are a few plotting functions in the package which are designed to reduce the effort needed by the user. The first of which is plot we have not seen before, it plots the MCMC output of the inference. Checking the MCMC output is important to make sure the inference has worked and that there are no major issues with it. There are a number of other metrics which can be used, see [this blog](https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo-diagnostics#:~:text=The%20simplest%20way%20to%20diagnose,results%20on%20all%20the%20chunks.) for more information. 
@@ -279,9 +279,9 @@ MCMCplot(post=output$POST,
          nRow=1)
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/mcmc_m1_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/mcmc_m1_ex.png?raw=true)
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/mcmc_m1_thin_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/mcmc_m1_thin_ex.png?raw=true)
 
 
 To be able to visualise the prior and posterior densities for all variables we can use the `postPlot()` function. The function plots all the priors, posteriors, and predictives (for hierarchical distributions) as well as the model classifications and posterior predictive for the healthy patient data. Unlike `MCMCplot` this does not automatically create a plotting environment, so we have to define this before calling the function. For this inference there are multiple slopes and intercepts but one is of particular interest, those for the patient sample, as such this one is in a solid colour while the others are more transulcent. 
@@ -301,7 +301,7 @@ postPlot(post=output$POST,
 par(op) # end plotting grid 
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/postPlot_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/postPlot_ex.png?raw=true)
 
 To just see the fibre classification, the `classif_plot` function can be used. The function creates a plot similar to that which was seen before but allows you to plot the posterior predictive without tediously writing the `lines` function. The function also automatically plots the control data in a translucent black colour. 
 
@@ -311,7 +311,7 @@ classif_plot(dataMats=dataMats,
              postpred=output$POSTPRED)
 ```
 
-![alt text](https://github.com/jordanbchilds/analysis2Dmito/main/readme_png/classif_plot_ex.png?raw=true)
+![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_plot_ex.png?raw=true)
 
 
 
