@@ -49,7 +49,7 @@ Before moving on to inference, although not necessary, it is advisable to explor
 
 ```{r echo=TRUE include=TRUE}
 # the 2Dmito plot x-axis - known for your dataset
-mitochan = "raw_porin"
+mitochan = "VDAC"
 # return all channels which are not mitochan
 channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) )
 
@@ -112,8 +112,8 @@ for(chan in channels){
     
     lnmod = lm(chan~mitochan, data=df)
     
-    slopes[chan, crl] = lnmod$coefficients[1]
-    intercepts[chan, crl] = lnmod$coefficients[2]
+    slopes[chan, crl] = lnmod$coefficients["mitochan"]
+    intercepts[chan, crl] = lnmod$coefficients["(Intercept)"]
     precisions[chan, crl] = 1 / summary(lnmod)$sigma^2
   }
 }
@@ -175,7 +175,7 @@ The rest of the prior parameters can be inspected in much the same way, although
 mean_mu_c = inter_mean[chan]
 prec_mu_c = 1 / 0.02^2
 
-tau_mode_c = 1/inter_sd[chan]^2
+tau_mode_c = 1/inter_var[chan]
 tau_var_c = 0.1
 rate_tau_c = 0.5 * (tau_mode_c + sqrt(tau_mode_c ^ 2 + 4 * tau_var_c)) / tau_var_c
 shape_tau_c = 1 + tau_mode_c * rate_tau_c
@@ -233,7 +233,7 @@ plot(dPrior, col=alphaPink(0.7), lwd=2,
     xlim=xlims, ylim=ylims,
      main="Proportion of Deficiency", xlab="")
 lines( dPost, col=alphaGreen(0.7), lwd=2)
-legend("topright", legend=c("prior", "post"), lty='l', col=c(alphaGreen(1.0), alphaPink(1.0)))
+legend("topright", legend=c("prior", "post"), lty=1, col=c(alphaGreen(1.0), alphaPink(1.0)))
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/pi_postprior_ex.png?raw=true)
