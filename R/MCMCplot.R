@@ -7,10 +7,10 @@
 #'
 #' @details
 #' If a file path is passed to the function it is read using the
-#' [data.table::fread()] function and then coverted to a [data.frame]. The plotting environment is created within
-#' the function using the [par()] command, it is also ended within the function.
+#' [data.table::fread] function and then converted to a [data.frame]. The plotting environment is created within
+#' the function using the [par] command, it is also ended within the function.
 #' The kernel density estimates (KDEs) of the priors and posteriors are
-#' calculated using the default [density()] function.
+#' calculated using the default [density] function.
 #'
 #'
 #' @param post A file path to saved output file or a [data.frame] containing the MCMC output. Where each column represents a different variable.
@@ -26,18 +26,19 @@
 #' @examples
 #' exampleData = get_exampleData()
 #' #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
-#' mitochan = "raw_porin"
+#' mitochan = "VDAC"
 #' # all channels available in the dataset
 #' channelsAll = unique(exampleData[,"channel"])
 #' # remove mitochan from the channels of interest
 #' channels = channelsAll[ channelsAll!=mitochan ]
 #' sbj = unique(exampleData$sampleID)
-#' ctrlid = c("C01", "C02", "C03", "C04", "C05")
-#' pts = sbj[ !(sbj %in% ctrlid) ]
+#' ctrlID = grep("C", sbj, value=TRUE)
+#' pts = grep("C", sbj, value=TRUE, invert=TRUE)
+#'
 #' chan = channels[1]
 #' pat = pts[1]
 #'
-#' data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+#' data_mat = getData_mats(exampleData, cjhannels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 #'
 #' infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
 #'

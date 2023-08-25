@@ -13,11 +13,6 @@
 #' The data is returned as a [data.frame] object in the correct form required for
 #' use in the [anaylsis2Dmito::getData_mats] function.
 #'
-#' @details
-#' Pre-processing of the data here is only to remove values which are less than
-#' or equal to zero. This so that the data can be logged transformed without
-#' problem. Assuming the original dataset will not be updated this results in
-#' the removal of two fibres.
 #'
 #' @author Amy Vincent et al.
 #'

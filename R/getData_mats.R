@@ -1,39 +1,83 @@
 #' @title Data preparation for [analysis2Dmito::inference].
 #'
-#' @description The function aggregates the data into the form needed for [analysis2Dmito::inference]. To be able to do this the data passed to the function must in a specific form, see details for more info.
-#' The data.frame object passed to the function must be in long form and have the following columns; 'value', 'channel', 'sampleID' and 'fibreID'. Where 'value' is the protein expression value, 'channel' is the protein or channel that the value expresses, 'sampleID' is the identifying name associated with the sample the expression is from and'fibreID' is the fibre identification from that sample. Other columns can be present but are not needed.
-#' To be able to transform the data into long form, we suggest using the [tidyverse] package and the [tidyr::pivot_longer] function.
+#' @description The function aggregates the data into the form needed for
+#' [analysis2Dmito::inference]. To be able to do this the data passed to the
+#' function must be in a specific form, see details for more info.
 #'
-#' @param data A data.frame object of the protein expression data. See details for the format the data should be in to be able to parse to the data.
-#' @param channels A vector of strings or a single string containing the channels which will form the columns of the returned matrices.
-#' @param ctrlID A character vector denoting the ID for the control samples in the 'sampleID' column of data.
-#' @param pts A vector of subject names or a single subject name, whose expression levels are to be returned. The default value is NULL, if this is the case the protein expression levels for all samples within the dataset are returned.
-#' @param ctrl_only A boolean variable indicating whether to return only patient data, the default is FALSE. If this is TRUE and getIndex=FALSE the function will return a single matrix otherwise it will return a list containing all outputs.
-#' @param getINDEX A boolean parameter, if TRUE two vectors of indexes, one for the control data and one for the patient data, are returned. Each indicating which observations came from the same sample by grouping them from 1 upto the number of samples in the data requested. The default is FALSE.
+#' @details
+#' The data frame passed to the function must be in long form and have
+#' the following columns; 'value', 'channel', 'sampleID' and 'fibreID'. Where
+#' 'value' is the protein expression level, 'channel' is the protein or channel
+#' that the value expresses, 'sampleID' is the identifying name associated with
+#' the tissue sample on which the measurement was made and 'fibreID' is the
+#' fibre identification from that sample. Other columns can be present but are
+#' not needed. One column which is helpful is a column identifying which samples
+#' are from control subjects and which are from patients. For this to be used
+#' the column must be called "sbj_type" and the each value must be labelled
+#' "control" or "patient". To be able to transform the data into long form, we
+#' suggest using the [tidyverse] package and the [tidyr::pivot_longer] function.
 #'
-#' @returns If ctrl_only=TRUE and getIndex=FALSE then a matrix is returned of just the control sample fibre expression. The columns of the matrix correspond to the channels requested. Otherwise a list is returned containing the requested elements.
-#' - ctrl : The control sample data matrix.
-#' - pts : The patient sample data matrix.
-#' - indexCtrl : A vector of control sample indexes.
-#' - indexPts : A vector of patient sample indexes.
+#' @param data A data.frame object of the protein expression data. See details
+#' for the format the data should be in.
+#' @param channels A vector of strings or a single string containing the
+#' channels which will form the columns of the returned matrices.
+#' @param ctrlID A character vector denoting the ID for the control samples in
+#' the 'sampleID' column of data. If this is not given the data must have a
+#' "sbj_type" column specifying which samples are control or patient.
+#' @param pts A vector of subject names or a single subject name, whose
+#' expression levels are to be returned. The default value is NULL, if this is
+#' the case the protein expression levels for all samples within the dataset are
+#' returned.
+#' @param ctrl_only A boolean variable indicating whether to return only control
+#' subject data, the default is FALSE.
+#' @param getINDEX A boolean parameter. If TRUE, a vector is returned for both
+#' the control and patient data matrices indicating which observations come the
+#' same sample.
+#'
+#'
+#' @returns If `ctrl_only=TRUE` and `getIndex=FALSE` then a matrix is returned of
+#' just the control sample fibre expression otherwise a list is returned
+#' containing data matrices and index vectors. The columns of the data matrices
+#' correspond to the channels requested, in the order they are given in channels
+#' argument. The possible elements in the list are:
+#' - `ctrl` : The control sample data matrix.
+#' - `pts` : The patient sample data matrix.
+#' - `indexCtrl` : A vector of indexes for the control data matrix, where the i-th
+#' element corresponds to the i-th row of the matrix, indicating which
+#' observations belong to the same sample.
+#' - `indexPts` : A vector of indexes for the patient data matrix, where the i-th
+#' element corresponds to the i-th row of the matrix, indicating which
+#' observations belong to the same sample.
+#'
+#' The indexes, in the `indexPts` and `indexCtrl` vectors, range from 1 to the total
+#' number of samples being . For example, if four control samples are in the dataset (and their
+#' sample IDs passed to the `ctrlID` argument) then observations with an index
+#' of 1 will be associated with the first element in `ctrlID`, an index of 2 will
+#' be observations from the second element in `ctrlID` etc. The patient indexes
+#' will start at 5 (as there are four control sample) and will increase
+#' similarly depending on the number of patient samples being outputted, which
+#' can is controlled by the `pts` argument.
+#' dataset.
 #'
 #' @export
 #'
 #' @examples
 #' exampleData = get_exampleData()
 #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
-#' mitochan = "raw_porin"
+#' mitochan = "VDAC"
 #' # all channels available in the dataset
 #' channelsAll = unique(exampleData[,"channel"])
 #' # remove mitochan from the channels of interest
 #' channels = channelsAll[ channelsAll!=mitochan ]
+#'
 #' sbj = unique(exampleData$sampleID)
-#' ctrlid = c("C01", "C02", "C03", "C04", "C05")
-#' pts = sbj[ !(sbj %in% ctrlid) ]
+#' ctrlID = grep("C", sbj, value=TRUE )
+#' pts = grep("C", sbj, value=TRUE, invert=TRUE)
+#'
 #' chan = channels[1]
 #' pat = pts[1]
 #'
-#' data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+#' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlid, pts=pat)
 #'
 
 

@@ -1,31 +1,43 @@
 #' @title 2Dmito Plot with Classifications
 #'
 #' @description
-#' Plots control and patient data with patient data classifications on a scale from blue to red.
+#' Plots control and patient data with patient data classifications on a scale from blue to red (healthy to deficient).
 #'
-#' @param dataMats A list of matrices containing the control data, named 'ctrl', and the patient data, named 'pts'. Where the first column represents the data for protein along the x-axis of the 2Dmito plot and the second column is the y-axis data.
-#' @param classifs A numeric vector where the i-th element is the probability that the fibre in the i-th row of the patient fibre matrix is not like control. The default is NULL, if this is the case the fibres are plotted as green.
-#' @param postpred A [data.frame] outputted from whose columns contain the 95\% posterior predictive interval and the corresponding x-axis values for a linear regression model for this dataset. The columns should be labelled; 'mitochan', 'lwrNorm', 'medNorm' and 'uprNorm'. This is the form of the output given by [analysis2Dmito::inference()].
+#' @param dataMats A list of matrices containing the control data, named 'ctrl',
+#' and the patient data, 'pts'. Where the first column represents the data
+#' for protein along the x-axis of the 2Dmito plot and the second column is the
+#' y-axis data.
+#' @param classifs A numeric vector where the i-th element is the probability
+#' that the fibre in the i-th observation of the patient data matrix is
+#' deficient The default is NULL, if this is the case the fibres are plotted as
+#' green.
+#' @param postpred A [data.frame] whose columns contain the
+#' 95\% posterior predictive interval and the corresponding x-axis values for a
+#' linear regression model for this dataset. The columns should be labelled;
+#' 'mitochan', 'lwrNorm', 'medNorm' and 'uprNorm'. This is the form of the
+#' output given by [analysis2Dmito::inference], in the `POSTPRED`.
 #'
 #' @return NULL.
 #'
 #' @examples
 #' exampleData = get_exampleData()
-#' mitochan = "raw_porin"
+#' mitochan = "VDAC"
 #' # all channels available in the dataset
 #' channelsAll = unique(exampleData[,"channel"])
 #' # remove mitochan from the channels of interest
 #' channels = channelsAll[ channelsAll!=mitochan ]
 #' sbj = unique(exampleData$sampleID)
-#' ctrlid = c("C01", "C02", "C03", "C04", "C05")
-#' pts = sbj[ !(sbj %in% ctrlid) ]
+#' ctrlID = grep("C", sbj, value=TRUE)
+#' pts = grep("C", sbj, value=TRUE, invert=TRUE)
+#'
 #' chan = channels[1]
 #' pat = "P01"
+#'
 #' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
 #' data_mat$ctrl = data_mat$ctrl
 #' data_mat$pts = data_mat$pts
 #'
-#' infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+#' infOut = inference( data_mat )
 #' class = apply(infOut$classif, 2, mean)
 #'
 #' classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred,
