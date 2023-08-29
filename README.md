@@ -88,7 +88,7 @@ for( chan in channels ){
   }
 }
 ```
-A comparison of the log and log-log transformations are shown in the figure below, for a specific channel and patient in the example dataset. Healthy control fibres are shown in black and patient fibres (both healthy and deficient) are shown in green. The log-log transform increases the difference between healthy and deficient populations in lowest expression fibres but reduces the difference in fibres with higher expressions. Depending on the data one may be more appropriate than the other. Here we will choose the log transform and the data is transformed at the beginning of the next code snippet. 
+A comparison of the untransformed data and the log and log-log transformations are shown in the figure below, for a specific channel and patient in the example dataset. Fibres from healthy control subjects are shown in black and patient fibres (both healthy and deficient) are shown in green. The log and log-log transforms increase the difference between healthy and deficient populations fibres with the lowest expression levels but reduces the difference in fibres with higher expression levels. Depending on the data, one may be more appropriate than the other. Here we will choose the log transform and the data is transformed at the beginning of the next code snippet. 
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/transformations_ex.png?raw=true)
 
