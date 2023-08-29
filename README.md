@@ -314,7 +314,9 @@ To just see the fibre classification, the `classif_plot` function can be used. T
 ```{r echo=TRUE}
 classif_plot(dataMats=dataMats,
              classifs=def_prob,
-             postpred=output$POSTPRED)
+             postpred=output$POSTPRED,
+             xlab="log(VDAC)",
+             ylab="log(MTCO1)")
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_plot_ex.png?raw=true)
