@@ -25,7 +25,7 @@ library("analysis2Dmito")
 ## An Example Classification Pipe
 
 ### Getting Example data
-Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
+Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The particular format of data used in this package have been chosen for consistency with historical datasets generated in our group.  The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
 ```{r echo=TRUE include=TRUE}
 exampleData = get_exampleData()
 head(exampleData)
