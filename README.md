@@ -235,7 +235,7 @@ plot(dPrior, col=alphaPink(0.7), lwd=2,
     xlim=xlims, ylim=ylims,
      main="Proportion of Deficiency", xlab="")
 lines( dPost, col=alphaGreen(0.7), lwd=2)
-legend("topright", legend=c("prior", "post"), lty=1, col=c(alphaGreen(1.0), alphaPink(1.0)))
+legend("topright", legend=c("post", "prior"), lty=1, col=c(alphaGreen(1.0), alphaPink(1.0)))
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/pi_postprior_ex.png?raw=true)
