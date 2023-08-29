@@ -245,7 +245,7 @@ The `POSTPRED` and `PRIORPRED` matrices in the output list contain prior and pos
 ```{r echo=TRUE}
 plot(dataMats$pts, pch=20, col=alphaBlack(0.2),
      xlab=paste0("log(", mitochan ,")"), ylab="log(MTCO1)", 
-     main="Posterior Predictive")
+     main="Posterior predictive linear regression")
 lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"medNorm"], 
       lty=1, col=alphaPink(0.9))
 lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"lwrNorm"], 
@@ -262,7 +262,7 @@ The last item in the list is called `CLASSIF` and is matrix of every posterior c
 def_prob = apply(output$CLASSIF, 2, mean)
 plot(dataMats$pts, pch=20, col=classcols(def_prob),
      xlab=paste0("log(", mitochan ,")"), ylab="log(MTCO1)", 
-     main="Posterior Predictive")
+     main="Posterior fibre classifications")
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_ex.png?raw=true)
