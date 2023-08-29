@@ -301,7 +301,7 @@ postPlot(post=output$POST,
          classifs=def_prob,
          var.names=c("mu_m", "tau_m", "m", "mu_c", "tau_c", "c", "probdiff", "tau_norm"), 
          mitoPlot_xlab="log(VDAC)",
-         mitoPlot_ylab="log(NDUFB8)"
+         mitoPlot_ylab="log(MTCO1)"
          )
 
 par(op) # end plotting grid 
@@ -314,7 +314,9 @@ To just see the fibre classification, the `classif_plot` function can be used. T
 ```{r echo=TRUE}
 classif_plot(dataMats=dataMats,
              classifs=def_prob,
-             postpred=output$POSTPRED)
+             postpred=output$POSTPRED,
+             xlab="log(VDAC)",
+             ylab="log(MTCO1)")
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_plot_ex.png?raw=true)
