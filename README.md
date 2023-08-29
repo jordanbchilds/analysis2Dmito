@@ -121,7 +121,7 @@ for(chan in channels){
 }
 ```
 
-The matrices; `slopes`, `intercepts` and `precisions`, contain the frequentist estimates of the respective parameters for each control sample in each channel. One way to specify prior beliefs would be to set the expected value of a parameter to the mean of the appropriate values from the frequentist fits and give the parameter a low prior variance. Choosing a small prior variance implies that we have a high level of confidence in our prior beliefs, which should be true in this case as we expect that healthy patient fibres resemble heatlhy control subject fibres strongly. Below we calculate the mean slope, intercept and precision for each channel to use as the prior expectations for their respective parameters. We also calculate the variance of the frequentist estimates, to use as the prior expectations for the parameters variance. By splitting the data by channel we can specify a different prior belief for each channel in the dataset, although it is not necessary to do so and the same prior may be set for all channels.
+The matrices; `slopes`, `intercepts` and `precisions` contain the frequentist estimates of the respective parameters for each control sample in each channel. One way to specify prior beliefs would be to set the expected value of a parameter to the mean of the appropriate values from the frequentist fits and give the parameter a low prior variance. Choosing a small prior variance implies that we have a high level of confidence in our prior beliefs, which should be true in this case as we expect that patient fibres that are healthy strongly resemble fibres from healthy control subjects. Below we calculate the mean slope, intercept and precision for each channel to use as the prior expectations for their respective parameters. We also calculate the variance of the frequentist estimates to use as the prior expectations for the parameters variance. By splitting the data by channel we can specify a different prior belief for each channel in the dataset, although it is not necessary to do so and the same prior may be set for all channels.
 
 ```{r echo=TRUE}
 slope_mean = apply(slopes, 1, mean)
@@ -133,7 +133,7 @@ inter_var = apply(intercepts, 1, var)
 prec_var = apply(precisions, 1, var)
 ```
 
-Before constructing the rest of the prior beliefs, let us inspect the prior beliefs for the slope, 'm'. Is is defined by two parameters; `mu_m` and `tau_m`, both unknown with a normal and gamma prior distribution placed on them respectively. The expected value of `mu_m` can be set to the mean of the frequentist estimates of the slope and its precision chosen by us. Similarly, the expected value of `tau_m` can be chosen by the precision of the frequentist estimates of the slope by setting this to the mode of the prior distribution and its variance chosen by us. For a specified channel, `chan`, the snippet below plots the prior densities for `mu_m`, `tau_m` and `m`. The prior density for `m` is found by repeatedly sampling a value of `mu_m` and `tau_m` from their prior distributions and then sampling a value of `m` from its distribution, using the sampled `mu_m` and `tau_m` as its expectation and precision. By sampling `m` this way we can account for the uncertainty in its governing parameters. The resulting densities are seen in the below figure.
+Before constructing the rest of the prior beliefs, let us inspect the prior beliefs for the control sample slope, `m`. Our beliefs about `m` are defined by two parameters; `mu_m` and `tau_m`, both unknown with a normal and gamma prior distribution placed on them respectively. The expected value of `mu_m` can be set to the mean of the frequentist estimates of the slope and its precision chosen by us. Similarly, the expected value of `tau_m` can be chosen based on the precision of the frequentist estimates of the slope by setting this to the mode of the prior distribution and its variance chosen by us. For a specified channel, `chan`, the snippet below plots the prior densities for `mu_m`, `tau_m` and `m`. The prior density for `m` is found by repeatedly sampling a value of `mu_m` and `tau_m` from their prior distributions and then sampling a value of `m` from its distribution, using the sampled `mu_m` and `tau_m` as its expectation and precision. By sampling `m` this way we can account for the uncertainty in its governing parameters. The resulting densities are seen in the below figure.
 
 ```{r echo=TRUE}
 chan = "MTCO1"
@@ -159,11 +159,11 @@ curve(dgamma(x, shape_tau_m, rate_tau_m), from=0, to=50,
       main="Prior tau_m", xlab="tau_m", ylab="Density")
 
 # sample from priors of mu_m and tau_m 
-mu_ms = rnorm(1e4, mean_mu_m, 1/sqrt(prec_mu_m))
-tau_ms = rgamma(1e4, shape_tau_m, rate_tau_m)
+mu_ms = rnorm(1e6, mean_mu_m, 1/sqrt(prec_mu_m))
+tau_ms = rgamma(1e6, shape_tau_m, rate_tau_m)
 
 # sample from m prior and plot its density estimate
-ms = rnorm(1e4, mu_ms, 1/sqrt(tau_ms))
+ms = rnorm(1e6, mu_ms, 1/sqrt(tau_ms))
 plot(density( ms ), col=alphaPink(1.0), lwd=2, 
      main="Prior m", xlab="m", ylab="Density")
 
