@@ -301,7 +301,7 @@ postPlot(post=output$POST,
          classifs=def_prob,
          var.names=c("mu_m", "tau_m", "m", "mu_c", "tau_c", "c", "probdiff", "tau_norm"), 
          mitoPlot_xlab="log(VDAC)",
-         mitoPlot_ylab="log(NDUFB8)"
+         mitoPlot_ylab="log(MTCO1)"
          )
 
 par(op) # end plotting grid 
