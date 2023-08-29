@@ -269,14 +269,14 @@ plot(dataMats$pts, pch=20, col=classcols(def_prob),
 
 ### Plotting model output
 
-There are a few plotting functions in the package which are designed to reduce the effort needed by the user. The first of which is a plot which was not seen in the previous section, it plots the MCMC output of the inference. Checking the MCMC output is important to make sure the inference has worked and that there are no major issues with it. There are a number of metrics which can be used, see [this blog](https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo-diagnostics#:~:text=The%20simplest%20way%20to%20diagnose,results%20on%20all%20the%20chunks.) for more information. 
+There are a few plotting functions in the package which are designed to make things easier for the user. The first of which is a plot which was not seen in the previous section, it plots the MCMC output of the inference. Checking the MCMC output is important to make sure the inference has worked and that there are no major issues with it. There are a number of metrics which can be used, see [this blog](https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo-diagnostics#:~:text=The%20simplest%20way%20to%20diagnose,results%20on%20all%20the%20chunks.) for more information. 
 
-The diagnostic plotter, `MCMCplot`, in this package plots three things per parameter; trace plot, autocorrelation plot (ACF) and a density estimate of the posterior (and prior if given). The trace plot plots each posterior draw in order and the autocorrelation shows the correlation between draws for a range of lags. The density estimate is like that which has been already seen, a kernel density estimate of distribution given a number of draws from it. Using these plots it is important to check some key elements of the output.
+The diagnostic plotter, `MCMCplot`, in this package plots three things per parameter; trace plot, autocorrelation plot (ACF) and a density estimate of the posterior (and prior if given). The trace plot plots each posterior draw in the order they were generated and the autocorrelation shows the correlation between draws for a range of lags. The density estimate is like that which has been already seen, a kernel density estimate of distribution given a number of draws from it. Using these plots it is important to check some key elements of the output.
 
 1. Has the chain reached a stationary distribution?
 2. Are the draws (almost) independent?
 
-To check that the chain has reached a stationary distribution, check the trace plots. An ideal chain would look like a thick straight black line with whiskers coming off it. If the chain is curved at beginning and then flattens out, increase the `MCMCburnin` parameter in the `inference` function. A chain that has not reached a stationary distribution will look like a single jagged line (similar to a stock), again increasing `MCMCburnin` may solve the problem. If the chain is jumping between two or more stationary distributions this will be clear as the density plot will be bimodal. A harder issue to solve, however if there are strong reasons to believe that the parameter should be the lower of higher peak then changing the prior to reflect should help. 
+To check that the chain has reached a stationary distribution, check the trace plots. An ideal chain would look like a thick straight black line with whiskers coming off it. If the chain is curved at beginning and then flattens out, increase the `MCMCburnin` parameter in the `inference` function. A chain that has not reached a stationary distribution will look like a single jagged line (similar to a stock price), again increasing `MCMCburnin` may solve the problem. If the chain is jumping between two or more stationary distributions this will be clear as the density plot will be bimodal. A harder issue to solve, however if there are strong reasons to believe that the parameter should be the lower of higher peak then changing the prior to reflect should help. 
 
 Autocorrelated samples can be quickly diagnosed in the ACF plot. A sample of uncorrelated draws will have no slope in the autocorrelations, showing a spike at a lag of zero and then small random correlations there after. Generally a small amount of correlation in successive samples is fine, when samples are extremely autocorrelated the resulting model can suffer. The amount of correlation can be reduced by increasing the `MCMCthin` parameter in the `inference` function. Below is an example of the `MCMCplot` use and results for the same parameter before and after increasing thinning. A larger amount of thinning resulted in the correlations betwen successive draws being massively decreased. Note: increasing thinning will increase inference time. 
 
@@ -285,9 +285,10 @@ MCMCplot(post=output$POST,
          prior=output$PRIOR,
          nRow=1)
 ```
-
+An example of an MCMCPlot with autocorrelated samples (increase `MCMCthin` in `inference` function to improve this):
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/mcmc_m1_ex.png?raw=true)
 
+An example of an MCMCPlot with no autocorrelation problems:
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/mcmc_m1_thin_ex.png?raw=true)
 
 
