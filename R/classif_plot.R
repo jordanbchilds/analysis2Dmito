@@ -21,29 +21,6 @@
 #' @return
 #' `NULL`
 #'
-#' @examples
-#' exampleData = get_exampleData()
-#' mitochan = "VDAC"
-#' # all channels available in the dataset
-#' channelsAll = unique(exampleData[,"channel"])
-#' # remove mitochan from the channels of interest
-#' channels = channelsAll[ channelsAll!=mitochan ]
-#' sbj = unique(exampleData$sampleID)
-#' ctrlID = grep("C", sbj, value=TRUE)
-#' pts = grep("C", sbj, value=TRUE, invert=TRUE)
-#'
-#' chan = channels[1]
-#' pat = "P01"
-#'
-#' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
-#' data_mat$ctrl = data_mat$ctrl
-#' data_mat$pts = data_mat$pts
-#'
-#' infOut = inference( data_mat )
-#' class = apply(infOut$classif, 2, mean)
-#'
-#' classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred, xlab=mitochan, ylab=chan)
-#'
 #' @export
 classif_plot = function(dataMats,
                         classifs = NULL,
