@@ -45,7 +45,7 @@ __Any dataset used with the functions in this package must have at least these f
 
 #### Transforming the data
 
-Before moving on to inference, although not necessary, it is advisable to explore the data. For good results the healthy control data should show a linear relationship and constant variance, two assumptions made during linear modelling. The healthy and deficient fibres should also appear to be distinct populations although the shape of the deficient population is less important. This may be achieved by data transformation. The usual transformation seen in literature is the log transformation, this works well for many datasets although it may not be the best for all datasets. For example, data that shows a strong V-shape, where one branch of the V is healthy and the other deficient, a log-log transformation (logging the expression values twice) may separate the two branches better than a log transformation. The log-log transformations requires all raw expression values to be greater than 1.0, if this is not the case simply adding 1.0 to all expression values would not affect classification. The code snippet below plots each patient data with the control data, for the raw, log transformed and log-log transformed data, for the example dataset.
+Before moving on to inference it is advisable to explore the data. For good results the healthy control data should show a linear relationship and constant variance, two assumptions made during linear modelling. The healthy and deficient fibres should also appear to be distinct populations although the shape of the deficient population is less important. This may be achieved by data transformation. The usual transformation seen in literature is the log transformation, this works well for many datasets although it may not be the best for all datasets. For example, data that shows a strong V-shape, where one branch of the V is healthy and the other deficient, a log-log transformation (logging the expression values twice) may separate the two branches better than a log transformation. The log-log transformations requires all raw expression values to be greater than 1.0, if this is not the case simply adding 1.0 to all expression values would not affect classification. The code snippet below plots each patient data with the control data, for the raw, log transformed and log-log transformed data, for the example dataset.
 
 ```{r echo=TRUE include=TRUE}
 # the 2Dmito plot x-axis - known for your dataset
@@ -59,18 +59,19 @@ ctrlIDs = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
 patIDs = unique( exampleData[exampleData$sbj_type=="patient", "sampleID"] )
 patIDs = sort(patIDs)
 
-op = par(mfrow=c(1,3))
 # plot patient data and control data
 for( chan in channels ){
   xDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==mitochan, "value"]
   yDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==chan, "value"]
 
   for( pat in patIDs ){
+    png(paste0("ExploratoryAnalysis_",chan,"_",pat,".png"), type = "cairo-png", width=1920, height=1080,pointsize=36)
+    op = par(mfrow=c(1,3))
     xDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==mitochan, "value"]
     yDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==chan, "value"]
     plot( xDat_ctrl, yDat_ctrl, pch=20, col="black",
           xlab=mitochan, ylab=chan, main=pat,
-          xlim=range(exampleData$value), ylim=range(exampleData$value) )
+          xlim=range(c(xDat_ctrl, xDat_pat)), ylim=range(c(yDat_ctrl, yDat_pat)) )
     points( xDat_pat, yDat_pat, pch=20, col="green")
     
     plot( log(xDat_ctrl), log(yDat_ctrl),  pch=20, col="black",
@@ -82,9 +83,10 @@ for( chan in channels ){
           xlab=mitochan, ylab=chan, main=paste("log log", pat),
           xlim=log(log(range(c(xDat_ctrl, xDat_pat)))), ylim=log(log(range(c(yDat_ctrl, yDat_pat)))) )
     points( log(log(xDat_pat)), log(log(yDat_pat)), pch=20, col="green")
+    par(op)
+    dev.off()
   }
 }
-par(op)
 ```
 A comparison of the log and log-log transformations are shown in the figure below, for a specific channel and patient in the example dataset. Healthy control fibres are shown in black and patient fibres (both healthy and deficient) are shown in green. The log-log transform increases the difference between healthy and deficient populations in lowest expression fibres but reduces the difference in fibres with higher expressions. Depending on the data one may be more appropriate than the other. Here we will choose the log transform and the data is transformed at the beginning of the next code snippet. 
 
