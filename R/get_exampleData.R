@@ -11,7 +11,7 @@
 #'
 #' @description
 #' The data is returned as a [data.frame] object in the correct form required for
-#' use in the [anaylsis2Dmito::getData_mats] function.
+#' use in the [analysis2Dmito::getData_mats] function.
 #'
 #'
 #' @author Amy Vincent et al.

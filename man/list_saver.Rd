@@ -7,7 +7,9 @@
 list_saver(
   df_list,
   root,
+  ext = ".txt",
   replace = TRUE,
+  nameSep = "_",
   sep = "\\t",
   col.names = TRUE,
   row.names = FALSE,
@@ -15,17 +17,21 @@ list_saver(
 )
 }
 \arguments{
-\item{df_list}{A list of dataframes to be saved.}
+\item{df_list}{A list of data.frame objects to be saved.}
 
-\item{root}{A character vector of the root paths to which the names of the list will be added. If this is a single character then the same root will be used for files.}
+\item{root}{A character vector of the root path to which the names of the
+list will be added. If this is a single character then the same root will be
+used for files.}
 
-\item{replace}{A boolean variable. If TRUE the function will overwrite any file that exists under the same name.}
+\item{replace}{A boolean variable. If \code{TRUE} the function will overwrite any file that exists under the same name, default = \code{TRUE}.}
 
-\item{sep}{A character of an appropriate separator value.}
+\item{nameSep}{A string which is used to join the data name and the file path, its default is "_". A vector of different joiners is allowed.}
 
-\item{col.names, row.names}{A boolean, passed directly to \code{\link[=write.table]{write.table()}}.}
+\item{sep}{A character of an appropriate separator value, default=\verb{\\t}.}
 
-\item{...}{Any additional parameters to be passed to write.table.}
+\item{col.names, row.names}{A boolean, passed directly to \link{write.table}, default \code{TRUE} for column names and \code{FALSE} for row names.}
+
+\item{...}{Any additional parameters to be passed to \link{write.table}.}
 }
 \description{
 Saves all data frames stored within a list by suffixing the name of the
@@ -33,12 +39,18 @@ dataframe, as written in the list,  onto the end of a root file path. The
 files are saved as .txt files defaulted to the tab separator.
 }
 \details{
-The function uses the \code{\link[=write.table]{write.table()}} function to save the files.
+The function uses \link{write.table} to save the files. By default files are saved
+with a \code{.txt} extension and overwrite any file with the same name. The name
+of the data frame is combined with the root file path by a \verb{_} by default
+before adding the extension e.g. if the name of the data frame was
+"datasetOne" and the root file path was "data/processed" then the complete
+file path, under which the file is saved, would be
+"data/processed_datasetOne.txt".
 }
 \examples{
 data_list = list(fileOne = data.frame(a=1:20, b=21:40), fileTwo=data.frame(x=1:1000, y=rnorm(1000)))
 dir.create("dir")
 rootFile = "data/sourceOne"
-output_saver(data_list, rootFile, replace=FALSE)
+output_saver(data_list, rootFile, replace=FALSE, nameSep="__")
 
 }

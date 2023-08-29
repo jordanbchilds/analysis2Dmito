@@ -1,20 +1,38 @@
 #' @title Plot Posteriors, Predictions and Classifications for [analysis2Dmito::inference()]
 #'
 #' @description
-#' For plotting the model output of the [analysis2Dmito::inference()]
+#' For plotting the model output of the [analysis2Dmito::inference]
 #' function. Plotted are the priors/parent distributions and posteriors of
 #' variables in the model as well as the 95\% predictive posterior for the
 #' like-control linear model and the classifications.
 #'
-#' @param post Either a [data.frame] containing the posterior draws of the model or the a filepath to a saved file, whose columns are the posterior draws from the output. Both should be output of the [analysis2Dmito::inference()].
-#' @param prior Either a [data.frame] containing draws from the prior beliefs about model parameters or the a filepath to a saved file, whose columns are the prior draws. Both should be output from the output of the [analysis2Dmito::inference()]. The default is NULL. If this is true, the prior beliefs are not added to the plots.
-#' @param postpred A [data.frame] containing posterior predictions from the model, as outputed from [analysis2Dmito::inference()], or a filepath to a saved file of this output.
-#' @param priorpred A [data.frame] containing prior predictions from the model, as outputed from [analysis2Dmito::inference()], or a filepath to a saved file of this output. The default is NULL. If this is true, no prior predictions will be plotted.
-#' @param dataMats A character vector describing the names of the variables to be plotted as passed to [rjags] during inference. The default list is the full list of parameters in the model.
-#' @param classifs A numeric vector of the probabilies that each fibre in the patient datasets are not like control.
-#' @param var.names A named character vector the name of the variables to be plotted on the density plots. The default is NULL, if this is TRUE then names as given in 'var.names' will be plotted.
-#' @param xlabs A character vector of names of variables as they should be added to the plot.
-#' @param ... Any additional parameters to be passed to the plotting functions e.g. lwd, cex, etc.
+#' @param post Either a [data.frame] containing the posterior draws of the model
+#' or the a filepath to a saved file, whose columns are the posterior draws from
+#' the output. Both should be output of the [analysis2Dmito::inference].
+#' @param prior Either a [data.frame] containing draws from the prior beliefs
+#' about model parameters or the a filepath to a saved file, whose columns are
+#' the prior draws. Both should be output from the output of the
+#' [analysis2Dmito::inference]. The default is NULL. If this is true, the
+#' prior beliefs are not added to the plots.
+#' @param postpred A [data.frame] containing posterior predictions from the
+#' model, as outputed from [analysis2Dmito::inference], or a filepath to a
+#' saved file of this output.
+#' @param priorpred A [data.frame] containing prior predictions from the model,
+#' as outputed from [analysis2Dmito::inference], or a filepath to a saved file
+#' of this output. The default is NULL. If this is true, no prior predictions
+#' will be plotted.
+#' @param dataMats A character vector describing the names of the variables to
+#' be plotted as passed to [rjags] during inference. The default list is the
+#' full list of parameters in the model.
+#' @param classifs A numeric vector of the probabilies that each fibre in the
+#' patient datasets are not like control.
+#' @param var.names A named character vector the name of the variables to be
+#' plotted on the density plots. The default is NULL, if this is TRUE then names
+#' as given in 'var.names' will be plotted.
+#' @param xlabs A character vector of names of variables as they should be added
+#' to the plot.
+#' @param ... Any additional parameters to be passed to the plotting functions
+#' e.g. lwd, cex, etc.
 #'
 #' @return NULL.
 #'
@@ -39,7 +57,6 @@
 #'
 #' postPlot(post=infOut$post, prior=infOut$prior, postpred=infOut$postpred,
 #'     dataMats=data_mat, classifs=class)
-#'
 #'
 #' @importFrom data.table fread
 #' @importFrom stats density

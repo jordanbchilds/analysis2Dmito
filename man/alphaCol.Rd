@@ -7,13 +7,13 @@
 alphaCol(alpha, name = NULL, rgbVals = NULL, maxValue = 1)
 }
 \arguments{
-\item{alpha}{The level of transparency}
+\item{alpha}{The level of transparency, in the range \link{0,1}.}
 
-\item{name}{A valid colour name, as listed by \code{\link[=colors]{colors()}}.}
+\item{name}{A valid colour name, as listed by \link{colors} function.}
+
+\item{rgbVals}{A numeric vector of RGB values.}
 
 \item{maxValue}{The maximum colour value, default to 1.}
-
-\item{rgb}{A numeic vector of RGB values.}
 }
 \value{
 A character vector of the hexidecimal value defining the colour.
@@ -21,7 +21,11 @@ A character vector of the hexidecimal value defining the colour.
 \description{
 Defining a transparent version of a given colour.
 }
+\details{
+Either a valid colour name or RGB values must be passed to the function.
+}
 \examples{
 myBlue = alphaCol(0.5, name="blue")
 myRed = alphaCol(0.1, rgb=c(240, 20, 2-), maxValue=255)
+
 }

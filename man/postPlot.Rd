@@ -11,36 +11,79 @@ postPlot(
   priorpred = NULL,
   dataMats,
   classifs,
-  var.names = c("mu_m0", "tau_m0", "tau_norm", "mu_c0", "tau_c0", "probdef", "m", "c"),
+  var.names = c("mu_m", "tau_m", "tau_norm", "mu_c", "tau_c", "probdiff", "m", "c"),
   xlabs = NULL,
+  mitoPlot_xlab = "",
+  mitoPlot_ylab = "",
   ...
 )
 }
 \arguments{
-\item{post}{Either a \link{data.frame} containing the posterior draws of the model or the a filepath to a saved file, whose columns are the posterior draws from the output. Both should be output of the \code{\link[=inference]{inference()}}.}
+\item{post}{Either a \link{data.frame} containing the posterior draws of the model
+or the a filepath to a saved file, whose columns are the posterior draws from
+the output. Both should be output of the \link{inference}.}
 
-\item{prior}{Either a \link{data.frame} containing draws from the prior beliefs about model parameters or the a filepath to a saved file, whose columns are the prior draws. Both should be output from the output of the \code{\link[=inference]{inference()}}. The default is NULL. If this is true, the prior beliefs are not added to the plots.}
+\item{prior}{Either a \link{data.frame} containing draws from the prior beliefs
+about model parameters or the a filepath to a saved file, whose columns are
+the prior draws. Both should be output from the output of the
+\link{inference}. The default is NULL. If this is true, the
+prior beliefs are not added to the plots.}
 
-\item{postpred}{A \link{data.frame} containing posterior predictions from the model, as outputed from \code{\link[=inference]{inference()}}, or a filepath to a saved file of this output.}
+\item{postpred}{A \link{data.frame} containing posterior predictions from the
+model, as outputed from \link{inference}, or a filepath to a
+saved file of this output.}
 
-\item{priorpred}{A \link{data.frame} containing prior predictions from the model, as outputed from \code{\link[=inference]{inference()}}, or a filepath to a saved file of this output. The default is NULL. If this is true, no prior predictions will be plotted.}
+\item{priorpred}{A \link{data.frame} containing prior predictions from the model,
+as outputed from \link{inference}, or a filepath to a saved file
+of this output. The default is NULL. If this is true, no prior predictions
+will be plotted.}
 
-\item{dataMats}{A character vector describing the names of the variables to be plotted as passed to \link{rjags} during inference. The default list is the full list of parameters in the model.}
+\item{dataMats}{A character vector describing the names of the variables to
+be plotted as passed to \link{rjags} during inference. The default list is the
+full list of parameters in the model.}
 
-\item{classifs}{A numeric vector of the probabilies that each fibre in the patient datasets are not like control.}
+\item{classifs}{A numeric vector of the probabilies that each fibre in the
+patient datasets are not like control.}
 
-\item{var.names}{A named character vector the name of the variables to be plotted on the density plots. The default is NULL, if this is TRUE then names as given in 'var.names' will be plotted.}
+\item{var.names}{A named character vector the name of the variables to be
+plotted on the density plots. The default is NULL, if this is TRUE then names
+as given in 'var.names' will be plotted.}
 
-\item{xlabs}{A character vector of names of variables as they should be added to the plot.}
+\item{xlabs}{A character vector of names of variables as they should be added
+to the plot.}
 
-\item{...}{Any additional parameters to be passed to the plotting functions e.g. lwd, cex, etc.}
+\item{...}{Any additional parameters to be passed to the plotting functions
+e.g. lwd, cex, etc.}
 }
 \value{
 NULL.
 }
 \description{
-For plotting the model output of the \code{\link[=inference]{inference()}}
+For plotting the model output of the \link{inference}
 function. Plotted are the priors/parent distributions and posteriors of
 variables in the model as well as the 95\\% predictive posterior for the
 like-control linear model and the classifications.
+}
+\examples{
+exampleData = get_exampleData()
+# the measure of mitochondrial mass - the x-axis of the 2D mito plot
+mitochan = "raw_porin"
+# all channels available in the dataset
+channelsAll = unique(exampleData[,"channel"])
+# remove mitochan from the channels of interest
+channels = channelsAll[ channelsAll!=mitochan ]
+sbj = unique(exampleData$sampleID)
+ctrlid = c("C01", "C02", "C03", "C04", "C05")
+pts = sbj[ !(sbj \%in\% ctrlid) ]
+chan = channels[1]
+pat = pts[1]
+
+data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+
+infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+class = apply(infOut$classif, 2, mean)
+
+postPlot(post=infOut$post, prior=infOut$prior, postpred=infOut$postpred,
+    dataMats=data_mat, classifs=class)
+
 }

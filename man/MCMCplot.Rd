@@ -39,8 +39,30 @@ of rows in the plotting environment can be user defined.
 }
 \details{
 If a file path is passed to the function it is read using the
-\code{\link[data.table:fread]{data.table::fread()}} function and then coverted to a \link{data.frame}. The plotting environment is created within
-the function using the \code{\link[=par]{par()}} command, it is also ended within the function.
+\link[data.table:fread]{data.table::fread} function and then converted to a \link{data.frame}. The plotting environment is created within
+the function using the \link{par} command, it is also ended within the function.
 The kernel density estimates (KDEs) of the priors and posteriors are
-calculated using the default \code{\link[=density]{density()}} function.
+calculated using the default \link{density} function.
+}
+\examples{
+exampleData = get_exampleData()
+#' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
+mitochan = "VDAC"
+# all channels available in the dataset
+channelsAll = unique(exampleData[,"channel"])
+# remove mitochan from the channels of interest
+channels = channelsAll[ channelsAll!=mitochan ]
+sbj = unique(exampleData$sampleID)
+ctrlID = grep("C", sbj, value=TRUE)
+pts = grep("C", sbj, value=TRUE, invert=TRUE)
+
+chan = channels[1]
+pat = pts[1]
+
+data_mat = getData_mats(exampleData, cjhannels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
+
+infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+
+MCMCplot(infOut$post, infOut$prior, nRow=3)
+
 }
