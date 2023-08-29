@@ -1,5 +1,5 @@
-# analysis2Dmito
-An R package for the classification of fibres by their protein expression levels
+# Classifying the OXPHOS status of skeletal muscle fibres
+An R package for the Bayesian classification of myofibres according to OXPHOS protein expression profiles.
 
 ## Required Software
 The package uses the statistical computing software JAGS which must be installed before use. This cannot be done through R or RStudio/Posit but there are many online resources to help install JAGS. It can be installed directly though [sourceforge.net](https://sourceforge.net/projects/mcmc-jags/files/). A guide to installing R, RStudio, JAGS and R packages can be found [here](https://onlinelibrary.wiley.com/doi/pdf/10.1002/9781119287995.app1). 
