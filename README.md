@@ -24,7 +24,7 @@ library("analysis2Dmito")
 
 ## An Example Classification Pipe
 
-### Getting Example data
+### Getting example data
 Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The particular format of data used in this package have been chosen for consistency with historical datasets generated in our group.  The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
 ```{r echo=TRUE include=TRUE}
 exampleData = get_exampleData()
@@ -33,13 +33,13 @@ head(exampleData)
 This should show the first six rows of the example dataset, here we have called it `exampleData`. The description of the columns are given in the table below.
 | Variable Name | Description |
 | ------------- | ----------- |
-| `sampleID` | The (unique) identifier of the sample e.g. `C01`, `C02`, `P01`, `P02`, ... |
-|`fibreID` | The identifier of that fibre for that sample. The identifier is not unique throughout the whole dataset, it is only unique for the sample it comes from. |
-| `sbj_type` | Identifies which sample are control subjects and which are patient subjects, control samples must be labelled as "control" and patient samples labelled as "patient". |
-| `channel` | The channel or protein on which the measurement is made, a string.  |
-| `value` | The expression level for this particular fibre on this particular channel. |
+| `sampleID` | A (unique) string identifying of the sample e.g. `C01`, `C02`, `P01`, `P02`, ... |
+|`fibreID` | An integer identifying of a single fibre from that sample. This identifier is not unique throughout the whole dataset, it is only unique within the sample it comes from. |
+| `sbj_type` | A string identifying which samples are control subjects and which are patients. Control samples must be labelled as "control" and patient samples labelled as "patient". |
+| `channel` | A string labelling the channel or protein measured.  |
+| `value` | A numerical value representing the expression level (average pixel intensity) for this particular fibre on this particular channel. |
 
-__Any dataset used with the functions in this package must have these five columns__, other columns are allowed but are not necessary. The data is in a format commonly referred to as long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on the `pivot_longer` function and examples see this [blog post](https://tidyr.tidyverse.org/reference/pivot_longer.html).
+__Any dataset used with the functions in this package must have at least these five columns__, other columns are allowed but are not necessary. The data is in a format commonly referred to as long form, a helpful function to be able to get data in this form is the `tidyr::pivot_longer` function (from the `tidyr` package). For information on the `pivot_longer` function and examples see this [blog post](https://tidyr.tidyverse.org/reference/pivot_longer.html).
 
 ### Explore the data
 
