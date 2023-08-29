@@ -256,7 +256,7 @@ lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"uprNorm"],
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/postpred_ex.png?raw=true)
 
-The last item in the list is called `CLASSIF` and is matrix of every posterior classification for every patient fibre. Each column of the matrix are the posterior classifications of a fibre. We can find the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function, as seen below. The classifications themselves can be plotted using these probabilities and the `classcols` function which converts the the probabilities to a colour on a scale between blue and red, where a deficiency probability of 0.0 is strongly blue and a probability of 1.0 is strongly red.  
+The last item in the list is called `CLASSIF` and is matrix of every posterior classification for every patient fibre. Each column of the matrix includes our posterior belief about the classification of a fibre and the many repeated measures include our uncertainty about that classification. We can find the probability that an individual fibre is deficient by calculating the mean of the column. This can be done using the `apply` function, as seen below. The classifications themselves can be plotted using these probabilities and the `classcols` function which converts the the probabilities to a colour on a scale between blue and red, where a deficiency probability of 0.0 is strongly blue and a probability of 1.0 is strongly red.  
 
 ```{r echo=TRUE}
 def_prob = apply(output$CLASSIF, 2, mean)
