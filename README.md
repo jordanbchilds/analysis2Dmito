@@ -22,9 +22,12 @@ devtools::install_github("jordanbchilds/analysis2Dmito")
 library("analysis2Dmito")
 ```
 
-## An Example Classification Pipe
+## Example Script 
+An example analysis script can be found in the main repo folder and is called `example_analysis.R`. The script peforms inference for each channel separately, this is to make setting different priors per channel easier, it then executes the inference for the patients in parallel, using the `parallel`, and saves the output in a folder called "Output", in the working directory. The output is saved in, hopefully, a fairly self explanatory manor. The output for each patient is saved separately and split across five files; posterior draws, prior draws, posterior predictives, prior predictives and classifications. In the following section the analysis pipeline for a single patient is gone through in a little detail. 
 
-### Getting Example data
+## Example Classification Pipe
+
+### Getting example data
 Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
 ```{r echo=TRUE include=TRUE}
 exampleData = get_exampleData()
