@@ -16,7 +16,7 @@ getData(fname, cord, correctnpc = TRUE, noNPCchannels = NULL)
 \item{noNPCchannels}{If \code{correctnpc=TRUE} then the}
 }
 \value{
-A dataframe of the
+\code{NULL}
 }
 \description{
 The function aggregates the data into the form needed for \code{\link[=inference]{inference()}}. To be able to do this the data passed to the function must in a specific form, see details for more info.
@@ -25,9 +25,7 @@ To be able to transform the data into long form, we suggest using the \link{tidy
 }
 \details{
 The file is read using the \link[data.table:fread]{data.table::fread} function. If the file does not
-exist in the path suggested the function check the filepath "../\if{html}{\out{<fname>}}", if
-the file does not exist here then an error is returned stating no such file
-exists.
+exist here then an error is returned stating as such.
 
 For NPC correction to take place the \code{filenames} column in the dataset must
 be apprropriately labelled as "\if{html}{\out{<sampleID>}} NPC" or "\if{html}{\out{<sampleID>}} OXPHOS"

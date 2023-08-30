@@ -1,7 +1,8 @@
 #' @title 2Dmito Plot with Classifications
 #'
 #' @description
-#' Plots control and patient data with patient data classifications on a scale from blue to red (healthy to deficient).
+#' Plots control and patient data with patient data classifications on a scale
+#' from blue to red (healthy to deficient).
 #'
 #' @param dataMats A list of matrices containing the control data, named `ctrl`,
 #' and the patient data, `pts`. Where the first column represents the data
@@ -9,14 +10,15 @@
 #' y-axis data.
 #' @param classifs A numeric vector where the i-th element is the probability
 #' that the fibre in the i-th observation of the patient data matrix is
-#' deficient The default is NULL, if this is the case the fibres are plotted as
+#' deficient The default is `NULL`, if this is the case the fibres are plotted as
 #' green.
-#' @param postpred A [data.frame] whose columns contain the
-#' 95\% posterior predictive interval and the corresponding x-axis values for a
+#' @param postpred A [data.frame] whose columns contain the 95-th percentile
+#' posterior predictive interval and the corresponding x-axis values for a
 #' linear regression model for this dataset. The columns should be labelled;
 #' `mtiochan`, `lwrNorm`, `medNorm` and `uprNorm`. This is the form of the
 #' output given by [analysis2Dmito::inference], in the `POSTPRED`.
 #'
+#' @return NULL.
 #'
 #' @examples
 #' exampleData = get_exampleData()
@@ -42,10 +44,6 @@
 #' classif_plot(dataMats=data_mat, classifs=class, postpred=infOut$postpred, xlab=mitochan, ylab=chan)
 #'
 #' @export
-#'
-#' @returns
-#' NULL.
-#'
 classif_plot = function(dataMats,
                         classifs = NULL,
                         postpred = NULL,

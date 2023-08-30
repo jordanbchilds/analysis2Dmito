@@ -24,6 +24,7 @@
 #' @importFrom stats aggregate
 #'
 #' @return
+#' `NULL`
 #'
 #' @export
 

@@ -4,17 +4,17 @@
 \alias{alphaBlack}
 \title{Transparent Black}
 \usage{
-alphaBlack(alpha)
+alphaBlack(alpha = 0.5)
 }
 \arguments{
 \item{alpha}{The level of opacity, between 0.0 and 1.0, 0.0 being completely
-transparent and 1.0 being opaque.}
+transparent and 1.0 being opaque. Default = 0.5.}
 }
 \value{
 A character object of the hex value colour name created.
 }
 \description{
-Create a black with a specified level of opacity.
+Create a black with a specified level of transparency.
 }
 \details{
 The RGB values for alphaBlack are 0,0,0.

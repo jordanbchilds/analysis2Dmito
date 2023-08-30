@@ -4,16 +4,16 @@
 \alias{alphaBlue}
 \title{Transparent Blue}
 \usage{
-alphaBlue(alpha)
+alphaBlue(alpha = 0.5)
 }
 \arguments{
-\item{alpha}{The level of opacity, between 0.0 and 1.0, 0.0 being completely transparent and 1.0 being opaque.}
+\item{alpha}{The level of opacity, between 0.0 and 1.0, 0.0 being completely transparent and 1.0 being opaque. Default = 0.5.}
 }
 \value{
 A character object of the hex value colour name created.
 }
 \description{
-Create a blue with a specified level of opacity.
+Create a blue with a specified level of transparency.
 }
 \details{
 The RGB values used for alphaBlue are 0,0 and 128, where the maximum is 255.
