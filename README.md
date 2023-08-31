@@ -22,11 +22,14 @@ devtools::install_github("jordanbchilds/analysis2Dmito")
 library("analysis2Dmito")
 ```
 
-## Example Script 
-An example analysis script can be found in the main repo folder and is called `example_analysis.R`. The script peforms inference for each channel separately, this is to make setting different priors per channel easier, it then executes the inference for the patients in parallel, using the `parallel`, and saves the output in a folder called "Output", in the working directory. The output is saved in, hopefully, a fairly self explanatory manor. The output for each patient is saved separately and split across five files; posterior draws, prior draws, posterior predictives, prior predictives and classifications. In the following section the analysis pipeline for a single patient is gone through in a little detail. 
+## Example Scripts
 
+There are two example scripts in the main folder of the repo; `example_analysis.R` and `example_plotter.R`. The first fits the model to an example dataset and saves the output while the second plots and saves key aspects of the output for visual inspection. The analysis script uses a different prior per channel, as such the inference is separated by channel using a for loop. The output from each model fit is saved and split across five files; posterior draws, prior draws, posterior predictive, prior predictive and fibre classifications, with the suffixes; "POST", "PRIOR", "POSTPRED", "PRIORPRED" and "CLASSIF" respectively. The plotting script plots three key aspects of the output; MCMC output, prior and posterior comparisons and fibre classifications. The pipeline used in the example scripts and plots produced are discussed in more detail in the following sections and the scripts themselves have some minimal comments throughout. 
+
+## Example Pipeline
 
 ### Getting example data
+
 Getting data into the correct form is crucial to be able to use the inference and plotting functions which are part of this package. The particular format of data used in this package have been chosen for consistency with historical datasets generated in our group.  The package comes with an example dataset which is already in the correct form, so to start we will look at this. The function `get_exampleData` loads the example dataset. 
 
 ```{r echo=TRUE include=TRUE}
