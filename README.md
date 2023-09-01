@@ -100,7 +100,7 @@ A comparison of the untransformed data and the log and log-log transformations a
 
 #### Choosing prior beliefs
 
-Once a transformation has been chosen the expression data can be changed and prior beliefs about parameters can be considered. By fitting linear models to the control samples individually we know what values of model parameters might be likely and can gain an idea the expected value of model parameters. For ease the linear models can be fit in a frequentist setting. The code snippet below fits a linear model to each control sample and each protein, and saves relevant output in three matrices; `slopes`, `intercepts`, and `precisions`.
+Once a transformation has been chosen the expression data can be changed and prior beliefs about parameters can be considered. By fitting linear models to the control samples individually we know what values of model parameters might be likely and can gain an idea the expected value of model parameters. For ease the linear models can be fit in a frequentist setting. The code snippet below fits a linear model to each control sample and each protein, and saves relevant output in three matrices; `slopes`, `intercepts`, and `precisions`, (precision being the inverse of variance).
 
 ```{r echo=TRUE}
 exampleData$value = log( exampleData$value )
@@ -317,6 +317,8 @@ par(op) # end plotting grid
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/postPlot_ex.png?raw=true)
+
+In the above output we see that little is learnt about the parameters `mu_m`, `tau_m`, `mu_c` and `tau_c`. This is due to the strong prior beliefs placed on them, they do, however, still allow for a range of slopes and intercepts to be fitted to different datasets as can be seen in their respective posterior distributionss. Our prior beliefs about the model precision, `tau_norm`, are also strong and so this has only been updated marginally. Our prior beliefs about the proportion of deficient samples were completely uniformed, being flat on the interval [0,1], and have been updated a lot. The prior beliefs placed on parameters may affect the resulting model fitted to the data.
 
 To just see the fibre classification, the `classif_plot` function can be used. The function creates a plot similar to that which was seen before but allows you to plot the posterior predictive without tediously writing the `lines` function. The function also automatically plots the control data in a translucent black colour. 
 
