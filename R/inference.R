@@ -127,7 +127,7 @@ inference = function(dataMats,
           c[l] ~ dnorm(mu_c, tau_c)
         }
         m_pred ~ dnorm(mu_m, tau_m)
-        c_pred ~ dnorm(mu_c, tau_m)
+        c_pred ~ dnorm(mu_c, tau_c)
 
         mu_m ~ dnorm( mean_mu_m, prec_mu_m )
         mu_c ~ dnorm( mean_mu_c, prec_mu_c )
@@ -163,18 +163,18 @@ inference = function(dataMats,
     nSyn = nSyn,
     Xsyn = Xsyn,
     mean_mu_m = 1.0,
-    prec_mu_m = 1/0.1^2, #1 / 0.25 ^ 2,
+    prec_mu_m = 1/0.1^2,
     mean_mu_c = 0.0,
-    prec_mu_c = 1/0.2^2, #1 / 1.5 ^ 2,
-    shape_tau_m = 27.56372, #1.1956,
-    rate_tau_m = 1.660233, #0.04889989,
-    shape_tau_c = 1.25, #1.1956,
-    rate_tau_c = 0.25, #0.04889989,
+    prec_mu_c = 1/0.2^2,
+    shape_tau_m = 27.56372,
+    rate_tau_m = 1.660233,
+    shape_tau_c = 1.25,
+    rate_tau_c = 0.25,
     shape_tau = 41.97618,
     rate_tau = 2.048809,
     alpha_pi = 1,
     beta_pi = 1,
-    tau_def=1e-4
+    tau_def = 1e-4
   )
 
   if (!is.null(parameterVals) && is.list(parameterVals)) {
