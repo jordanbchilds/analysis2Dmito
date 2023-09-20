@@ -147,7 +147,7 @@ postPlot = function(post,
       ylim_var = max(postParent_dens$y)
 
       for (param in colnames(post_var)) {
-        post_dens[[paste(param)]] = stats::density(post_var[[param]])
+        post_dens[[paste(param)]] = stats::density(post_var[,param])
 
         ylim_var = max(c(ylim_var, post_dens[[param]]$y))
         xlim_varMax = max(c(xlim_varMax, post_dens[[param]]$x))
