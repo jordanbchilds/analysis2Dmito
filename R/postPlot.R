@@ -81,7 +81,7 @@ postPlot = function(post,
                     xlabs = NULL,
                     mitoPlot_xlab="",
                     mitoPlot_ylab="",
-                    MCMCout=NULL
+                    MCMCout=NULL,
                     ...) {
   if (!is.null(xlabs)) {
     if (is.null(names(xlabs)))
