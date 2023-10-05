@@ -81,6 +81,7 @@ postPlot = function(post,
                     xlabs = NULL,
                     mitoPlot_xlab="",
                     mitoPlot_ylab="",
+                    MCMCout=NULL
                     ...) {
   if (!is.null(xlabs)) {
     if (is.null(names(xlabs)))
@@ -222,6 +223,9 @@ postPlot = function(post,
   xlims = range((c(dataMats$ctrl[, 1], dataMats$pts[, 1])))
   ylims = range((c(dataMats$ctrl[, 2], dataMats$pts[, 2])))
 
+  if( is.null(MCMCout) ) MCMCout = nrow(post)
+  nChains = nrow(post) / MCMCout
+
   plot(
     NULL,
     xlab = mitoPlot_xlab,
@@ -243,25 +247,29 @@ postPlot = function(post,
     col = classcols(classifs),
     ...
   )
-  graphics::lines(
-    postpred[,"mitochan"],
-    postpred[,"lwrNorm"],
-    lty = 2,
-    col = alphaGreen(1.0),
-    ...
-  )
-  graphics::lines(
-    postpred[,"mitochan"],
-    postpred[,"medNorm"],
-    lty = 1,
-    col = alphaGreen(1.0),
-    ...
-  )
-  graphics::lines(
-    postpred[,"mitochan"],
-    postpred[,"uprNorm"],
-    lty = 2,
-    col = alphaGreen(1.0),
-    ...
-  )
+
+  for( i in 1:nChains ){
+    chain_ind = ( (i-1)*MCMCout + 1 ):( i*MCMCout )
+    graphics::lines(
+      postpred[chain_ind,"mitochan"],
+      postpred[chain_ind,"lwrNorm"],
+      lty = 2,
+      col = alphaGreen(1.0),
+      ...
+    )
+    graphics::lines(
+      postpred[chain_ind,"mitochan"],
+      postpred[chain_ind,"medNorm"],
+      lty = 1,
+      col = alphaGreen(1.0),
+      ...
+    )
+    graphics::lines(
+      postpred[chain_ind,"mitochan"],
+      postpred[chain_ind,"uprNorm"],
+      lty = 2,
+      col = alphaGreen(1.0),
+      ...
+    )
+  }
 }
