@@ -22,20 +22,20 @@
 #' myBlue = alphaCol(0.5, name="blue")
 #' myRed = alphaCol(0.1, rgb=c(240, 20, 2-), maxValue=255)
 #'
-alphaCol = function(alpha, name = NULL, rgbVals = NULL, maxValue=1) {
+alphaCol = function(alpha, name = NULL, rgbVals = NULL, maxValue=255) {
   if (is.null(name) && is.null(rgbVals)) {
-    stop("Either a valid colour name of a vector RGB values must be passed.")
+    stop("Either a valid colour name OR a vector of RGB values must be passed.")
   }
-  if (!is.null(name) && (name %in% color()) ) {
+  if (!is.null(name) && (name %in% colors()) ) {
     rgbVals = as.vector(col2rgb(name))
   } else {
-    stop("`name` is not a valid colour. Use color() funciton to check for valid colour names.")
+    stop("`name` is not a valid colour. Use colors() funciton to check for valid colour names.")
   }
   if ( sum(rgbVals > maxValue)>=1 ){
-    stop("rgbVals must be be smaller than the maximum specified value, `maxValue`.")
+    stop("`rgbVals` must be smaller than the maximum specified value, `maxValue`.")
   }
   if( alpha>1 || alpha<0 ){
-    stop("alpha must be in the range [0,1].")
+    stop("`alpha` must be in the range [0,1].")
   }
 
   return(rgb(rgbVals[1]/maxValue, rgbVals[2]/maxValue, rgbVals[3]/maxValue, alpha))
