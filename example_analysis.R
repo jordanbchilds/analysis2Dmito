@@ -64,9 +64,6 @@ prec_var = apply(precisions, 1, var)
 # create matrix to store output
 dir.create("Output")
 
-tau_m_var = c(10,10,1)
-names(tau_m_var) = c("NDUFB8", "CYB", "MTCO1")
-
 # cycle through channels to fit model
 for( chan in channels ){
   data_list = list()
@@ -83,7 +80,7 @@ for( chan in channels ){
   prec_mu_c = 1 / 0.05 ^ 2
 
   tau_m_mode = 1 / slope_var[chan]
-  tau_m_var = tau_m_var
+  tau_m_var = 5
   rate_tau_m = 0.5 * (tau_m_mode + sqrt(tau_m_mode ^ 2 + 4 * tau_m_var)) / tau_m_var
   shape_tau_m = 1 + tau_m_mode * rate_tau_m
 
