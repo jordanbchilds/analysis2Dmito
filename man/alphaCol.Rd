@@ -4,7 +4,7 @@
 \alias{alphaCol}
 \title{Transparent Colour Creator}
 \usage{
-alphaCol(alpha, name = NULL, rgbVals = NULL, maxValue = 1)
+alphaCol(alpha, name = NULL, rgbVals = NULL, maxValue = 255)
 }
 \arguments{
 \item{alpha}{The level of transparency, in the range \link{0,1}.}

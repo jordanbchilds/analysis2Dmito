@@ -89,7 +89,7 @@
 #' chan = channels[1]
 #' pat = pts[1]
 #'
-#' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat
+#' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 #'
 #' tau_mode = 100
 #' tau_var = 10
@@ -103,6 +103,7 @@
 #' @importFrom rjags coda.samples
 #'
 #' @export
+
 inference = function(dataMats,
                      parameterVals=NULL,
                      MCMCout = 1000,

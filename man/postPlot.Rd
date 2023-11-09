@@ -15,6 +15,7 @@ postPlot(
   xlabs = NULL,
   mitoPlot_xlab = "",
   mitoPlot_ylab = "",
+  MCMCout = NULL,
   ...
 )
 }

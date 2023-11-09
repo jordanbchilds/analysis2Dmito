@@ -35,20 +35,22 @@
 #' @export
 
 list_saver = function(df_list,
-                      root,
+                      root = "",
                       ext = ".txt",
                       replace = TRUE,
-                      nameSep = "_",
+                      rootSep = "",
                       sep = "\t",
                       col.names = TRUE,
                       row.names = FALSE,
                       ...) {
+  if (length(rootSep) == 1) {
+    nameSep = rep(rootSep, length(df_list))
+  }
+  if (root==""){ rootSep = "" }
   if (length(root) == 1) {
     root = rep(root, length(df_list))
   }
-  if (length(nameSep) == 1) {
-    nameSep = rep(nameSep, length(df_list))
-  }
+
   names(root) = names(df_list)
   names(nameSep) = names(df_list)
   for (df in names(df_list)) {
