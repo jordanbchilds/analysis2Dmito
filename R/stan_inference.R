@@ -122,20 +122,19 @@ stan_inference = function(dataMats,
              max(c(dataMats$ctrl[,1], dataMats$pts[,1]))+2,
              length.out=nSyn)
 
-  grad = vector("numeric", length=length(unique(ctrl_index)))
-  names(grad) = ctrlID
+  grad = vector("numeric", length=nCrl)
   inter = grad
   prec = grad
 
-  for( i in unique(ctrl_index) ){
+  for( i in 1:nCrl ){
     xCtrl = ctrl_mat[ctrl_index==i, 1]
     yCtrl = ctrl_mat[ctrl_index==i, 2]
     dd = data.frame(mitochan=xCtrl, chan=yCtrl)
 
     mod = lm(chan ~ mitochan, data=dd)
-    grad[ctrlID[i]] = mod$coefficients[2]
-    inter[ctrlID[i]] = mod$coefficients[1]
-    prec[ctrlID[i]] = 1 / summary(mod)$sigma^2
+    grad[i] = mod$coefficients[2]
+    inter[i] = mod$coefficients[1]
+    prec[i] = 1 / summary(mod)$sigma^2
   }
 
   tau_mode = mean( prec )
@@ -162,7 +161,7 @@ stan_inference = function(dataMats,
     nCtrl = nCtrl,
     nCrl = nCrl,
     nPat = nPat,
-    nPts=1,
+    nPts = 1,
     ctrlIndex = dataMats$indexCtrl,
     nSyn = nSyn,
     xSyn = xSyn,

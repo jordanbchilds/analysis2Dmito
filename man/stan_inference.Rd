@@ -12,8 +12,9 @@ stan_inference(
   nChains = 10,
   nCores = 1,
   parameterVals = NULL,
-  save = TRUE,
-  saveOnly = TRUE
+  save = FALSE,
+  saveOnly = FALSE,
+  saveRoot = ""
 )
 }
 \arguments{

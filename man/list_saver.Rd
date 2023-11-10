@@ -6,10 +6,10 @@
 \usage{
 list_saver(
   df_list,
-  root,
+  root = "",
   ext = ".txt",
   replace = TRUE,
-  nameSep = "_",
+  rootSep = "",
   sep = "\\t",
   col.names = TRUE,
   row.names = FALSE,
@@ -25,13 +25,13 @@ used for files.}
 
 \item{replace}{A boolean variable. If \code{TRUE} the function will overwrite any file that exists under the same name, default = \code{TRUE}.}
 
-\item{nameSep}{A string which is used to join the data name and the file path, its default is "_". A vector of different joiners is allowed.}
-
 \item{sep}{A character of an appropriate separator value, default=\verb{\\t}.}
 
 \item{col.names, row.names}{A boolean, passed directly to \link{write.table}, default \code{TRUE} for column names and \code{FALSE} for row names.}
 
 \item{...}{Any additional parameters to be passed to \link{write.table}.}
+
+\item{nameSep}{A string which is used to join the data name and the file path, its default is "_". A vector of different joiners is allowed.}
 }
 \description{
 Saves all data frames stored within a list by suffixing the name of the

@@ -8,8 +8,26 @@ Description: Classifies individual as being like control or not from a 2Dmito pl
 License: use_mit_license()
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3.9000
+RoxygenNote: 7.2.3
 ImportFrom: plyr match_df
-Imports:  plyr (>= 1.8.8),  readr (>= 2.1.4),  tidyr (>= 1.3.0),
-  data.table (>= 1.14.8)
-
+Imports:
+    data.table (>= 1.14.8),
+    methods,
+    plyr (>= 1.8.8),
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    readr (>= 2.1.4),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.3.1.1),
+    tidyr (>= 1.3.0)
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+SystemRequirements: GNU make
