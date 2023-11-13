@@ -202,7 +202,7 @@ stan_inference = function(dataMats,
     init_list[[i]] = c(gen_list, m_init, c_init)
   }
 
-  output = stan("./inst/stan/bhlmm_stan.stan", data=param_list, chains=nChains,
+  output = stan("../inst/stan/bhlmm_stan.stan", data=param_list, chains=nChains,
                 init=init_list, cores=nCores,
                 iter=(MCMCout+MCMCburnin)*MCMCthin, warmup=MCMCburnin, thin=MCMCthin)
 
