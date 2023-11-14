@@ -6,15 +6,14 @@
 \usage{
 stan_inference(
   dataMats,
-  MCMCout = 1000,
-  MCMCburnin = 1000,
-  MCMCthin = 1,
-  nChains = 10,
-  nCores = 1,
   parameterVals = NULL,
   save = FALSE,
   saveOnly = FALSE,
-  saveRoot = ""
+  saveRoot = "",
+  chains = 1,
+  iter = 12000,
+  warmup = 10000,
+  ...
 )
 }
 \arguments{
@@ -25,13 +24,13 @@ or the elements should be in the following order.
 - indexCtrl : a numeric vector indicating which rows of the control subject matrix belong to the same subject.
 - indexPat : a numeric vector indicating which rows of the patient subject matrix belong to the same subject.}
 
+\item{parameterVals}{A list of named values to replace the parameter values used to define prior distributions.}
+
 \item{MCMCout}{The final number of posterior draws (disregarding burn-in and thinning). Default is 1000.}
 
 \item{MCMCburnin}{The number of posterior draws discarded for burn-in. Default is 1000.}
 
 \item{MCMCthin}{The lag at which to the thin the posterior draws. Default is 1 i.e. no thinning.}
-
-\item{parameterVals}{A list of named values to replace the parameter values used to define prior distributions.}
 }
 \value{
 A list of different components of the MCMC output:
@@ -126,12 +125,12 @@ pat = pts[1]
 
 data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 
-tau_mode = 100
+tau_mode = 50
 tau_var = 10
 rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
 shape_tau = 1 + tau_mode * rate_tau
 
-infOut = stan_inference(data_mat, parameterVals=list(shape_tau=shape_tau, rate_tau=rate_tau))
+infOut = stan_inference(data_mat, data=list(shape_tau=shape_tau, rate_tau=rate_tau))
 
 
 }
