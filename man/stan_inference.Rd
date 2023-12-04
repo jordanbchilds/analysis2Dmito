@@ -26,20 +26,26 @@ or the elements should be in the following order.
 
 \item{parameterVals}{A list of named values to replace the parameter values used to define prior distributions.}
 
-\item{MCMCout}{The final number of posterior draws (disregarding burn-in and thinning). Default is 1000.}
+\item{save}{A boolean, indicating whether to save the output. Default FALSE.}
 
-\item{MCMCburnin}{The number of posterior draws discarded for burn-in. Default is 1000.}
+\item{saveOnly}{A boolean, if TRUE the output is saved and the function returns NULL. Default FALSE.}
 
-\item{MCMCthin}{The lag at which to the thin the posterior draws. Default is 1 i.e. no thinning.}
+\item{saveRoot}{A string, the file path root of the saved files. The default is "".}
+
+\item{iter}{The final number of posterior draws (disregarding burn-in and thinning). Default is 2000.}
+
+\item{warmup}{The number of posterior draws discarded for burn-in. This passed directly to the \link[rstan:stanmodel-method-sampling]{rstan::sampling} function, a default value is given to the longer burn-ins usually required for this model. Default is 10000.}
+
+\item{...}{Extra parameters to be passed to the \link[rstan:stanmodel-method-sampling]{rstan::sampling} function.}
 }
 \value{
 A list of different components of the MCMC output:
 \itemize{
-\item post : a data frame of the posterior draws for all variables, where each column is a different variable
-\item prior : a data frame of draws from the prior distribution for all variables.
-\item postpred : a data frame of posterior predictions for the patient subject linear model, with a column for x values and columns for 95\% predictive interval and expected values for both the like control and not control models.
-\item priorpred : a data frame of prior predictions for the patient subject model, similar to postpred.
-\item classif : a data frame of whose columns correspond to patient fibres and rows are classifications from individual draws from the posterior distirbution
+\item POST : a data frame of the posterior draws for all variables, where each column is a different variable
+\item PRIOR : a data frame of draws from the prior distribution for all variables.
+\item POSTPRED : a data frame of posterior predictions for the patient subject linear model, with a column for x values and columns for 95\% predictive interval and expected values for both the like control and not control models.
+\item PRIORPRED : a data frame of prior predictions for the patient subject model, similar to postpred.
+\item CLASSIF : a data frame of whose columns correspond to patient fibres and rows are classifications from individual draws from the posterior distirbution
 }
 }
 \description{
@@ -54,7 +60,7 @@ prior distributions can be changed to account for different prior beliefs. See
 details for more a list of parameters whose value can be changed.
 }
 \details{
-The inference is implemented using \link[rstan:stan]{rstan::stan}. The model itself
+The inference is implemented using \link[rstan:stanmodel-method-sampling]{rstan::sampling}. The model itself
 cannot be changed however the parameters and hyper parameters which govern
 the model can be updated by using the \code{parameterVals} argument in the
 function. This allows for a vast array of different prior beliefs and
@@ -68,69 +74,70 @@ tau_m. The prior densities for the two parameters are normal and gamma
 distributions respectively. In the model the hyper-parameters which define
 these distributions are:
 \itemize{
-\item mean_mu_m : the expected value of mu_m, default = 1.0
-\item prec_mu_m : the precision of mu_m, default = 100
-\item shape_mu_m : the shape parameter of the tau_m distribution, default = 27.56372
-\item rate_mu_m : the rate parameter of the tau_m gamma distribution, default = 1.660233
+\item mean_mu_m : the expected value of mu_m
+\item prec_mu_m : the precision of mu_m
+\item shape_mu_m : the shape parameter of the tau_m distribution
+\item rate_mu_m : the rate parameter of the tau_m gamma distribution
 }
 
 Similarly, the intercept is summarised by a normal distribution whose
 parameters are not known and follow normal and gamma distributions a priori.
 \itemize{
-\item mean_mu_c : the expected value of mu_c, default = 0.0
-\item prec_mu_c : the precision of mu_c, default = 25
-\item shape_mu_c : the shape parameter of the tau_c distribution, default = 1.25
-\item rate_mu_c : the rate parameter of the tau_c gamma distribution, default = 0.25
+\item mean_mu_c : the expected value of mu_c
+\item prec_mu_c : the precision of mu_c
+\item shape_mu_c : the shape parameter of the tau_c distribution
+\item rate_mu_c : the rate parameter of the tau_c gamma distribution
 }
 
 The model error for healthy patients is considered unknown and follows a
 gamma distribution a priori.
 \itemize{
-\item shape_tau : the shape parameter for tau, default = 41.97618
-\item rate_tau : the rate parameter for tau, default = 2.048809
+\item shape_tau : the shape parameter for tau
+\item rate_tau : the rate parameter for tau
 }
 
 The error for the second component, which classifies deficient fibres, is
 fixed.
 \itemize{
-\item tau_def : the precision of the second component, default = 1e-4
+\item tau_def : the precision of the second component
 }
 
 The proportion of deficiency follows a beta distribution, with two shape
 parameters.
 \itemize{
-\item alpha_pi : the first shape parameter, default = 1.0
-\item beta_pi : the second shape parameter, default = 1.0
+\item alpha_pi : the first shape parameter
+\item beta_pi : the second shape parameter
 }
 
-Any subset of these parameters can be changed for inference by storing their
-value in a list and passing it to \code{parameterVals}. If nothing is passed to
-\code{parameterVals} the model uses the default parameters, which may in
-inappropriate for your data set.
+The default values of the parameters mean_mu_c and mean_mu_m depend on the
+data which is passed to the function, the default values for the rest of the
+parameters are const scalars. More information about this can be found in
+LINK TO PAPER. Any subset of these parameters can be changed for
+inference by storing their value in a list and passing it to \code{parameterVals}.
+If nothing is passed to \code{parameterVals} the model uses the default
+parameters, which may in inappropriate for your data set.
 }
 \examples{
 exampleData = get_exampleData()
-#' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
+# DEFINE MITO MASS - the x-axis of the 2Dmito plot
 mitochan = "VDAC"
-# all channels available in the dataset
-channelsAll = unique(exampleData[,"channel"])
-# remove mitochan from the channels of interest
-channels = channelsAll[ channelsAll!=mitochan ]
-sbj = unique(exampleData$sampleID)
-ctrlID = grep("C", sbj, value=TRUE)
-pts = grep("C", sbj, value=TRUE, invert=TRUE)
+channelsAll = unique(exampleData[,"channel"]) # all channels present in the data
+channels = channelsAll[ channelsAll!=mitochan ] # all channels excpet mitochan present in the data
+sbj = unique(exampleData$sampleID) # all subject IDs present in the data
+ctrlID = grep("C", sbj, value=TRUE) # all control subject IDs (those which begin with "C")
+pts = grep("C", sbj, value=TRUE, invert=TRUE) # patient subject IDs are all those which are not the controls
 
 chan = channels[1]
 pat = pts[1]
 
-data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
+data_mat = analysis2Dmito::getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 
 tau_mode = 50
 tau_var = 10
 rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
 shape_tau = 1 + tau_mode * rate_tau
 
-infOut = stan_inference(data_mat, data=list(shape_tau=shape_tau, rate_tau=rate_tau))
+infOut = analysis2Dmito::stan_inference(data_mat, parameterVals=list(shape_tau=shape_tau, rate_tau=rate_tau))
 
 
 }

@@ -38,9 +38,9 @@
 #' chan = channels[1]
 #' pat = pts[1]
 #'
-#' data_mat = getData_mats(exampleData, cjhannels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
+#' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 #'
-#' infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+#' infOut = stan_inference(data_mat)
 #'
 #' MCMCplot(infOut$post, infOut$prior, nRow=3)
 #'
@@ -53,6 +53,7 @@ MCMCplot = function(post,
                     nRow = NULL,
                     colPost = alphaPink(1.0),
                     colPrior = alphaGreen(1.0),
+                    main_title = "",
                     ...) {
   if (is.character(post)) {
     if (file.exists(post)) {
@@ -134,8 +135,8 @@ MCMCplot = function(post,
       ylab = "Density",
       main = ""
     )
-    if (!is.null(prior))
-      lines(density(prior[, param]), lwd = 2, col = alphaPink(1.0))
+    if (!is.null(prior)) lines(density(prior[, param]), lwd = 2, col = alphaPink(1.0))
+    if (!is.null(main_title)) title(main=main_title, outer=TRUE, line=-1)
   }
   par(op)
 }

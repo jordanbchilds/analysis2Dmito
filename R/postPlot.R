@@ -39,24 +39,29 @@
 #' @examples
 #' exampleData = get_exampleData()
 #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
-#' mitochan = "raw_porin"
+#' mitochan = "VDAC"
 #' # all channels available in the dataset
 #' channelsAll = unique(exampleData[,"channel"])
 #' # remove mitochan from the channels of interest
 #' channels = channelsAll[ channelsAll!=mitochan ]
 #' sbj = unique(exampleData$sampleID)
-#' ctrlid = c("C01", "C02", "C03", "C04", "C05")
+#' ctrlid = c("C01", "C02", "C03", "C04")
 #' pts = sbj[ !(sbj %in% ctrlid) ]
+#'
 #' chan = channels[1]
 #' pat = pts[1]
 #'
-#' data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+#' data_mat = getData_mats(exampleData,
+#'                         cord=c(mitochan, chan),
+#'                         ctrlID=ctrlid,
+#'                         pts=pat,
+#'                         getIndex=TRUE)
 #'
-#' infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+#' infOut = stan_inference( data_mat )
 #' class = apply(infOut$classif, 2, mean)
 #'
-#' postPlot(post=infOut$post, prior=infOut$prior, postpred=infOut$postpred,
-#'     dataMats=data_mat, classifs=class)
+#' postPlot(post=infOut$POST, prior=infOut$PRIOR, classifs=class, postpred=infOut$POSTPRED,
+#'          dataMats=data_mat)
 #'
 #' @importFrom data.table fread
 #' @importFrom stats density
@@ -81,6 +86,7 @@ postPlot = function(post,
                     xlabs = NULL,
                     mitoPlot_xlab="",
                     mitoPlot_ylab="",
+                    main_title="",
                     MCMCout=NULL,
                     ...) {
   if (!is.null(xlabs)) {

@@ -11,6 +11,7 @@ MCMCplot(
   nRow = NULL,
   colPost = alphaPink(1),
   colPrior = alphaGreen(1),
+  main_title = "",
   ...
 )
 }
@@ -59,9 +60,9 @@ pts = grep("C", sbj, value=TRUE, invert=TRUE)
 chan = channels[1]
 pat = pts[1]
 
-data_mat = getData_mats(exampleData, cjhannels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
+data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 
-infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+infOut = stan_inference(data_mat)
 
 MCMCplot(infOut$post, infOut$prior, nRow=3)
 

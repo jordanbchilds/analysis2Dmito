@@ -12,7 +12,7 @@
 #' details for more a list of parameters whose value can be changed.
 #'
 #' @details
-#' The inference is implemented using [rstan::stan]. The model itself
+#' The inference is implemented using [rstan::sampling]. The model itself
 #' cannot be changed however the parameters and hyper parameters which govern
 #' the model can be updated by using the `parameterVals` argument in the
 #' function. This allows for a vast array of different prior beliefs and
@@ -25,36 +25,39 @@
 #' tau_m. The prior densities for the two parameters are normal and gamma
 #' distributions respectively. In the model the hyper-parameters which define
 #' these distributions are:
-#'  - mean_mu_m : the expected value of mu_m, default = 1.0
-#'  - prec_mu_m : the precision of mu_m, default = 100
-#'  - shape_mu_m : the shape parameter of the tau_m distribution, default = 27.56372
-#'  - rate_mu_m : the rate parameter of the tau_m gamma distribution, default = 1.660233
+#'  - mean_mu_m : the expected value of mu_m
+#'  - prec_mu_m : the precision of mu_m
+#'  - shape_mu_m : the shape parameter of the tau_m distribution
+#'  - rate_mu_m : the rate parameter of the tau_m gamma distribution
 #'
 #' Similarly, the intercept is summarised by a normal distribution whose
 #' parameters are not known and follow normal and gamma distributions a priori.
-#'  - mean_mu_c : the expected value of mu_c, default = 0.0
-#'  - prec_mu_c : the precision of mu_c, default = 25
-#'  - shape_mu_c : the shape parameter of the tau_c distribution, default = 1.25
-#'  - rate_mu_c : the rate parameter of the tau_c gamma distribution, default = 0.25
+#'  - mean_mu_c : the expected value of mu_c
+#'  - prec_mu_c : the precision of mu_c
+#'  - shape_mu_c : the shape parameter of the tau_c distribution
+#'  - rate_mu_c : the rate parameter of the tau_c gamma distribution
 #'
 #' The model error for healthy patients is considered unknown and follows a
 #' gamma distribution a priori.
-#'  - shape_tau : the shape parameter for tau, default = 41.97618
-#'  - rate_tau : the rate parameter for tau, default = 2.048809
+#'  - shape_tau : the shape parameter for tau
+#'  - rate_tau : the rate parameter for tau
 #'
 #' The error for the second component, which classifies deficient fibres, is
 #' fixed.
-#'  - tau_def : the precision of the second component, default = 1e-4
+#'  - tau_def : the precision of the second component
 #'
 #' The proportion of deficiency follows a beta distribution, with two shape
 #' parameters.
-#'  - alpha_pi : the first shape parameter, default = 1.0
-#'  - beta_pi : the second shape parameter, default = 1.0
+#'  - alpha_pi : the first shape parameter
+#'  - beta_pi : the second shape parameter
 #'
-#' Any subset of these parameters can be changed for inference by storing their
-#' value in a list and passing it to `parameterVals`. If nothing is passed to
-#' `parameterVals` the model uses the default parameters, which may in
-#' inappropriate for your data set.
+#' The default values of the parameters mean_mu_c and mean_mu_m depend on the
+#' data which is passed to the function, the default values for the rest of the
+#' parameters are const scalars. More information about this can be found in
+#' LINK TO PAPER. Any subset of these parameters can be changed for
+#' inference by storing their value in a list and passing it to `parameterVals`.
+#' If nothing is passed to `parameterVals` the model uses the default
+#' parameters, which may in inappropriate for your data set.
 #'
 #' @param dataMats A list consisting of four elements. The list should be named
 #' or the elements should be in the following order.
@@ -63,46 +66,46 @@
 #'     - indexCtrl : a numeric vector indicating which rows of the control subject matrix belong to the same subject.
 #'     - indexPat : a numeric vector indicating which rows of the patient subject matrix belong to the same subject.
 #' @param parameterVals A list of named values to replace the parameter values used to define prior distributions.
-#' @param MCMCout The final number of posterior draws (disregarding burn-in and thinning). Default is 1000.
-#' @param MCMCburnin The number of posterior draws discarded for burn-in. Default is 1000.
-#' @param MCMCthin The lag at which to the thin the posterior draws. Default is 1 i.e. no thinning.
-#'
+#' @param iter The final number of posterior draws (disregarding burn-in and thinning). Default is 2000.
+#' @param warmup The number of posterior draws discarded for burn-in. This passed directly to the [rstan::sampling] function, a default value is given to the longer burn-ins usually required for this model. Default is 10000.
+#' @param save A boolean, indicating whether to save the output. Default FALSE.
+#' @param saveOnly A boolean, if TRUE the output is saved and the function returns NULL. Default FALSE.
+#' @param saveRoot A string, the file path root of the saved files. The default is "".
+#' @param ... Extra parameters to be passed to the [rstan::sampling] function.
+
 #' @returns A list of different components of the MCMC output:
-#'    - post : a data frame of the posterior draws for all variables, where each column is a different variable
-#'    - prior : a data frame of draws from the prior distribution for all variables.
-#'    - postpred : a data frame of posterior predictions for the patient subject linear model, with a column for x values and columns for 95% predictive interval and expected values for both the like control and not control models.
-#'    - priorpred : a data frame of prior predictions for the patient subject model, similar to postpred.
-#'    - classif : a data frame of whose columns correspond to patient fibres and rows are classifications from individual draws from the posterior distirbution
+#'    - POST : a data frame of the posterior draws for all variables, where each column is a different variable
+#'    - PRIOR : a data frame of draws from the prior distribution for all variables.
+#'    - POSTPRED : a data frame of posterior predictions for the patient subject linear model, with a column for x values and columns for 95% predictive interval and expected values for both the like control and not control models.
+#'    - PRIORPRED : a data frame of prior predictions for the patient subject model, similar to postpred.
+#'    - CLASSIF : a data frame of whose columns correspond to patient fibres and rows are classifications from individual draws from the posterior distirbution
 #'
 #' @examples
 #' exampleData = get_exampleData()
-#' #' # the measure of mitochondrial mass - the x-axis of the 2D mito plot
+#' # DEFINE MITO MASS - the x-axis of the 2Dmito plot
 #' mitochan = "VDAC"
-#' # all channels available in the dataset
-#' channelsAll = unique(exampleData[,"channel"])
-#' # remove mitochan from the channels of interest
-#' channels = channelsAll[ channelsAll!=mitochan ]
-#' sbj = unique(exampleData$sampleID)
-#' ctrlID = grep("C", sbj, value=TRUE)
-#' pts = grep("C", sbj, value=TRUE, invert=TRUE)
+#' channelsAll = unique(exampleData[,"channel"]) # all channels present in the data
+#' channels = channelsAll[ channelsAll!=mitochan ] # all channels excpet mitochan present in the data
+#' sbj = unique(exampleData$sampleID) # all subject IDs present in the data
+#' ctrlID = grep("C", sbj, value=TRUE) # all control subject IDs (those which begin with "C")
+#' pts = grep("C", sbj, value=TRUE, invert=TRUE) # patient subject IDs are all those which are not the controls
 #'
 #' chan = channels[1]
 #' pat = pts[1]
 #'
-#' data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
+#' data_mat = analysis2Dmito::getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 #'
 #' tau_mode = 50
 #' tau_var = 10
 #' rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
 #' shape_tau = 1 + tau_mode * rate_tau
 #'
-#' infOut = stan_inference(data_mat, data=list(shape_tau=shape_tau, rate_tau=rate_tau))
+#' infOut = analysis2Dmito::stan_inference(data_mat, parameterVals=list(shape_tau=shape_tau, rate_tau=rate_tau))
 #'
 #'
 #' @importFrom rstan sampling
 #'
 #' @export
-
 stan_inference = function(dataMats,
                           parameterVals=NULL,
                           save=FALSE,
@@ -118,6 +121,7 @@ stan_inference = function(dataMats,
   ctrl_index = dataMats$indexCtrl
   nPat = nrow( dataMats$pts )
   nCrl = length( unique( dataMats$indexCtrl) )
+  MCMCout = iter - warmup
 
   nSyn = 1e3
   xSyn = seq(min(c(dataMats$ctrl[,1], dataMats$pts[,1]))-2,
@@ -221,25 +225,26 @@ stan_inference = function(dataMats,
     postpred = NULL
     priorpred = NULL
 
-    for( i in 1:nChains ){
+    for( i in 1:chains ){
       chain_ind = ((i - 1)*MCMCout + 1):(i*MCMCout)
       postpred_chain = apply(postpred_mat[chain_ind, ], 2, quantile, probs=c(0.025, 0.5, 0.975))
       priorpred_chain = apply(priorpred_mat[chain_ind, ], 2, quantile, probs=c(0.025, 0.5, 0.975))
       postpred = rbind(postpred, t(postpred_chain))
       priorpred = rbind(priorpred, t(priorpred_chain))
     }
-    postpred = cbind(rep(xSyn, nChains), postpred)
-    priorpred = cbind(rep(xSyn, nChains), priorpred)
+    postpred = cbind(rep(xSyn, chains), postpred)
+    priorpred = cbind(rep(xSyn, chains), priorpred)
     colnames(postpred) = c("mitochan", "lwrNorm", "medNorm", "uprNorm")
     colnames(priorpred) = c("mitochan", "lwrNorm", "medNorm", "uprNorm")
   }
 
   outList = list(POST=post, POSTPRED=postpred, CLASSIF=classifs_mat,
                  PRIOR=prior, PRIORPRED=priorpred)
-  if( save ){
+  if( saveOnly ){
     list_saver(outList, root = saveRoot)
-    if( saveOnly ){ return( NULL ) }
+    return( NULL )
   }
+  if( save ) list_saver(outList, root=saveRoot)
   return( outList )
 }
 

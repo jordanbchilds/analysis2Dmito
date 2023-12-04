@@ -43,23 +43,22 @@ list_saver = function(df_list,
                       col.names = TRUE,
                       row.names = FALSE,
                       ...) {
+  if (root==""){ rootSep = "" }
   if (length(rootSep) == 1) {
     nameSep = rep(rootSep, length(df_list))
   }
-  if (root==""){ rootSep = "" }
   if (length(root) == 1) {
     root = rep(root, length(df_list))
   }
 
-  names(root) = names(df_list)
-  names(nameSep) = names(df_list)
-  for (df in names(df_list)) {
-    filePath = paste0(paste(root[df], df, sep = nameSep[df]), ext)
+  file_names = names(df_list)
+  for (ii in seq_along(file_names)) {
+    filePath = paste0(paste(root[ii], file_names[ii], sep = rootSep[ii]), ext)
     if (file.exists(filePath) && !replace) {
       message("File exists and has NOT been replaced.")
     } else {
       utils::write.table(
-        df_list[[df]],
+        df_list[[ii]],
         filePath,
         sep = sep,
         row.names = row.names,
