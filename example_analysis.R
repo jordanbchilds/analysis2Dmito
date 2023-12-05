@@ -94,11 +94,6 @@ stopCluster(cl)
 # --- The names of the list elements are such that if it is the output for
 # --- channel, 'Ch1', and patient, 'P01', then its names is 'Ch1_P01'.
 
-# --- save output
-for( root in names(output) ){
-  save_list(output[[root]], root=paste0(root,"_"))
-}
-
 # ------------------- #
 # --- SAVE OUTPUT --- #
 # ------------------- #
@@ -111,7 +106,7 @@ dir.create("Output")
 # --- The output is saved such that for channel, Ch1, and patient, P01, the
 # --- posterior files are saved with the file path `./Output/Ch1_P01__POST.txt`
 for (root in names(output)) {
-  list_saver(output[[root]], file.path("Output", root), nameSep = "__")
+  analysis2Dmito::list_saver(output[[root]], file.path("Output", root), rootSep = "_")
 }
 
 # ------------------- #
@@ -121,7 +116,7 @@ for (root in names(output)) {
 dir.create(file.path("PDF"), showWarnings = FALSE)
 
 # ------ MCMC plot
-pdf(file.path("PDF", folder, "MCMCplot.pdf"), width=13, height=8)
+pdf(file.path("PDF", "MCMCplot.pdf"), width=13, height=8)
 {
   for( root in names(output) ){
     post = output[[root]]$POST
@@ -134,63 +129,70 @@ pdf(file.path("PDF", folder, "MCMCplot.pdf"), width=13, height=8)
 dev.off()
 
 # ------ postPlot
-pdf(file.path("PDF", folder, "postPlot.pdf"), width=13, height=8)
+pdf(file.path("PDF", "postPlot.pdf"), width=13, height=8)
 {
-  for( root in names(output) ){
-    post = output[[root]]$POST
-    prior = output[[root]]$PRIOR
-    postpred = output[[root]]$POSTPRED
-    class = apply(output[[root]]$CLASSIF, 2, mean)
+  for( chan in channels ){
+    for( pat in pts ){
+      root = paste0(chan, "_", pat)
+      post = output[[root]]$POST
+      prior = output[[root]]$PRIOR
+      postpred = output[[root]]$POSTPRED
+      class = colMeans(output[[root]]$CLASSIF)
 
+      dataMats = analysis2Dmito::getData_mats(data=data,
+                                              channels=c(mitochan, chan),
+                                              ctrlID=ctrlIDs,
+                                              pts=pat)
 
-    dataMats = analysis2Dmito::getData_mats(data=data,
-                                            channels=c(mitochan, chan),
-                                            ctrlID=ctrlID,
-                                            pts=pat)
-
-    op = par(mfrow=c(3,3), mar=c(4,4,3,3), cex.main=2, cex.lab=1.5, cex.axis=1.5)
-    analysis2Dmito::postPlot(post=post, prior=prior,
-                             postpred=postpred[1:1000,],
-                             classifs=class,
-                             dataMats = dataMats,
-                             var.names=c("mu_m", "tau_m", "tau_norm", "mu_c", "tau_c", "probdiff", "m", "c"),
-                             mitoPlot_xlab=paste0("log(", mitochan, ")"),
-                             mitoPlot_ylab=paste0("log(", chan, ")"),
-                             main_title=root)
-    par(op)
+      op = par(mfrow=c(3,3), mar=c(4.1,3,1,2), cex.main=1.5, cex.lab=1.5, cex.axis=1.5)
+      postPlot(post=post, prior=prior,
+                               postpred=postpred,
+                               classifs=class,
+                               dataMats = dataMats,
+                               var.names=c("mu_m", "tau_m", "tau_norm", "mu_c", "tau_c", "probdiff", "m", "c"),
+                               mitoPlot_xlab=paste0("log(", mitochan, ")"),
+                               mitoPlot_ylab=paste0("log(", chan, ")"))
+      title(main=root, line=-1, outer=TRUE)
+      par(op)
+    }
   }
 }
 dev.off()
 
 # ------ Classif plot
-pdf(file.path("PDF", folder, "classif.pdf"), width=13, height=8)
+pdf(file.path("PDF", "classif.pdf"), width=13, height=8)
 {
-  op = par(mfrow=c(1,1), mar=c(6,6,6,3), cex.main=2, cex.axis=1.5, cex.lab=2)
-  for( root in names(output) ){
-    root_split = strsplit(root, split="_")[[1]]
-    chan = root_split[1]
-    pat = root_split[2]
+  op = par( mfrow = c(1, 1), mar = c(6, 6, 6, 3), cex.main = 2, cex.axis = 1.5, cex.lab = 2)
+  for (chan in channels) {
+    for (pat in pts) {
+      root = paste0(chan, "_", pat)
 
-    class = apply(output[[root]]$CLASSIF, 2, mean)
-    post = output[[root]]$POST
+      class = apply(output[[root]]$CLASSIF, 2, mean)
+      post = output[[root]]$POST
 
-    pi_est = round(mean( post[,"probdiff"] ), 3)
+      pi_est = round(mean(post[, "probdiff"]), 3)
 
-    postpred = output[[root]]$POSTPRED
+      postpred = output[[root]]$POSTPRED
 
-    dataMats = analysis2Dmito::getData_mats(data=data,
-                                            channels=c(mitochan, chan),
-                                            ctrlID=ctrlID,
-                                            pts=pat)
+      dataMats = analysis2Dmito::getData_mats(
+        data = data,
+        channels = c(mitochan, chan),
+        ctrlID = ctrlIDs,
+        pts = pat
+      )
 
-    analysis2Dmito::classif_plot(dataMats=dataMats,
-                                 postpred=NULL,
-                                 classifs=class,
-                                 xlab=mitochan,
-                                 ylab=chan)
-    title(main=bquote(atop(.(pat),"nPat:"~.(nrow(dataMats$pts))*",   E("*pi*"|X)="*.(pi_est))))
+      analysis2Dmito::classif_plot(
+        dataMats = dataMats,
+        postpred = NULL,
+        classifs = class,
+        xlab = mitochan,
+        ylab = chan
+      )
+      title(main = bquote(atop(.(pat), "nPat:" ~ .(nrow(dataMats$pts)) * ",   E(" * pi * "|X)=" * .(pi_est))))
+    }
+    par(op)
+
   }
-  par(op)
 }
 dev.off()
 

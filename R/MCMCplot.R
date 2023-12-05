@@ -51,8 +51,8 @@ MCMCplot = function(post,
                     prior = NULL,
                     lag = 20,
                     nRow = NULL,
-                    colPost = alphaPink(1.0),
-                    colPrior = alphaGreen(1.0),
+                    colPost = analysis2Dmito::alphaPink(1.0),
+                    colPrior = analysis2Dmito::alphaGreen(1.0),
                     main_title = "",
                     ...) {
   if (is.character(post)) {
@@ -90,8 +90,7 @@ MCMCplot = function(post,
   }
 
   col.names = colnames(post)
-  if (is.null(nRow))
-    nRow = length(col.names)
+  if (is.null(nRow)) nRow = length(col.names)
   op = par(mfrow = c(nRow, 3), ...)
   for (param in col.names) {
     post_vec = post[, param]
@@ -130,12 +129,12 @@ MCMCplot = function(post,
       density(post[, param]),
       xlim = xlims,
       lwd = 2,
-      col = alphaGreen(1.0),
+      col = analysis2Dmito::alphaGreen(1.0),
       xlab = paste(param),
       ylab = "Density",
       main = ""
     )
-    if (!is.null(prior)) lines(density(prior[, param]), lwd = 2, col = alphaPink(1.0))
+    if (!is.null(prior)) lines(density(prior[, param]), lwd = 2, col = analysis2Dmito::alphaPink(1.0))
     if (!is.null(main_title)) title(main=main_title, outer=TRUE, line=-1)
   }
   par(op)

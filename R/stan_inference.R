@@ -66,8 +66,10 @@
 #'     - indexCtrl : a numeric vector indicating which rows of the control subject matrix belong to the same subject.
 #'     - indexPat : a numeric vector indicating which rows of the patient subject matrix belong to the same subject.
 #' @param parameterVals A list of named values to replace the parameter values used to define prior distributions.
-#' @param iter The final number of posterior draws (disregarding burn-in and thinning). Default is 2000.
-#' @param warmup The number of posterior draws discarded for burn-in. This passed directly to the [rstan::sampling] function, a default value is given to the longer burn-ins usually required for this model. Default is 10000.
+#' @param iter The final number of posterior draws including warmup and thinning,
+#' the argmuent is passed directly to the `rstan::sampling` function. The default is 22000.
+#' @param warmup The number of posterior draws discarded for burn-in. This is passed
+#' directly to the [rstan::sampling] function. The default is 20,000.
 #' @param save A boolean, indicating whether to save the output. Default FALSE.
 #' @param saveOnly A boolean, if TRUE the output is saved and the function returns NULL. Default FALSE.
 #' @param saveRoot A string, the file path root of the saved files. The default is "".
@@ -112,8 +114,8 @@ stan_inference = function(dataMats,
                           saveOnly=FALSE,
                           saveRoot="",
                           chains=1,
-                          iter=12000,
-                          warmup=10000,
+                          iter=22000,
+                          warmup=20000,
                           ...){
 
   nCtrl = nrow( dataMats$ctrl )

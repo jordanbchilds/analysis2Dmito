@@ -33,6 +33,23 @@
 #' to the plot.
 #' @param ... Any additional parameters to be passed to the plotting functions
 #' e.g. lwd, cex, etc.
+#' @param mitoPlot_xlab x axis label to be placed on the final classification
+#' and posterior predictive model for the patient sample. Default is "".
+#' @param mitoPlot_ylab y axis label to be placed on the final classification
+#' and posterior predictive model for the patient sample. Default is "".
+#' @param main_title Title to be placed over at the top of the plotting window.
+#' Default is "".
+#' @param chains The number of chains present in the posterior draws. The
+#' default is 1.
+#'
+#' @details
+#' If multiple chains are present in the posterior files, then the density plots
+#' ignore this and plot all draws as though they were one - assuming that if the
+#' the chains do not converge to the same stationary distribution this would be
+#' evident and produce a multi-modal plot. The posterior predictive plot does
+#' not ignore this and will plot each posterior predictive over the
+#' classification plot. This will indicate if there are differences in the
+#' chains as the posterior predictives will different.
 #'
 #' @return NULL.
 #'
@@ -87,7 +104,7 @@ postPlot = function(post,
                     mitoPlot_xlab="",
                     mitoPlot_ylab="",
                     main_title="",
-                    MCMCout=NULL,
+                    chains=1,
                     ...) {
   if (!is.null(xlabs)) {
     if (is.null(names(xlabs)))
@@ -171,13 +188,13 @@ postPlot = function(post,
       )
       graphics::lines(
         priorParent_dens,
-        col = alphaPink(1.0),
+        col = analysis2Dmito::alphaPink(1.0),
         lty = 4,
         ...
       )
       graphics::lines(
         postParent_dens,
-        col = alphaGreen(1.0),
+        col = analysis2Dmito::alphaGreen(1.0),
         lty = 4,
         ...
       )
@@ -189,13 +206,13 @@ postPlot = function(post,
       for (param in colnames(post_var)[paste0(var, "[", max_ind, "]") != colnames(post_var)]) {
         graphics::lines(
           post_dens[[param]],
-          col = alphaGreen(0.4),
+          col = analysis2Dmito::alphaGreen(0.4),
           ...
         )
       }
       graphics::lines(
         post_dens[[paste0(var, "[", max_ind, "]")]],
-        col = alphaGreen(1.0),
+        col = analysis2Dmito::alphaGreen(1.0),
         ...
       )
     } else {
@@ -215,12 +232,12 @@ postPlot = function(post,
       )
       graphics::lines(
         prior_den,
-        col = alphaPink(1.0),
+        col = analysis2Dmito::alphaPink(1.0),
         ...
       )
       graphics::lines(
         post_den,
-        col = alphaGreen(1.0),
+        col = analysis2Dmito::alphaGreen(1.0),
         ...
       )
     }
@@ -228,9 +245,6 @@ postPlot = function(post,
 
   xlims = range((c(dataMats$ctrl[, 1], dataMats$pts[, 1])))
   ylims = range((c(dataMats$ctrl[, 2], dataMats$pts[, 2])))
-
-  if( is.null(MCMCout) ) MCMCout = nrow(post)
-  nChains = nrow(post) / MCMCout
 
   plot(
     NULL,
@@ -244,37 +258,37 @@ postPlot = function(post,
   graphics::points(
     dataMats$ctrl,
     pch = 20,
-    col = alphaBlack(0.05),
+    col = analysis2Dmito::alphaBlack(0.05),
     ...
   )
   graphics::points(
     dataMats$pts,
     pch = 20,
-    col = classcols(classifs),
+    col = analysis2Dmito::classcols(classifs),
     ...
   )
 
-  for( i in 1:nChains ){
-    chain_ind = ( (i-1)*MCMCout + 1 ):( i*MCMCout )
+  for( i in 1:chains ){
+    chain_ind = ( (i-1)*1000 + 1 ):( i*1000 )
     graphics::lines(
       postpred[chain_ind,"mitochan"],
       postpred[chain_ind,"lwrNorm"],
       lty = 2,
-      col = alphaGreen(1.0),
+      col = analysis2Dmito::alphaGreen(1.0),
       ...
     )
     graphics::lines(
       postpred[chain_ind,"mitochan"],
       postpred[chain_ind,"medNorm"],
       lty = 1,
-      col = alphaGreen(1.0),
+      col = analysis2Dmito::alphaGreen(1.0),
       ...
     )
     graphics::lines(
       postpred[chain_ind,"mitochan"],
       postpred[chain_ind,"uprNorm"],
       lty = 2,
-      col = alphaGreen(1.0),
+      col = analysis2Dmito::alphaGreen(1.0),
       ...
     )
   }
