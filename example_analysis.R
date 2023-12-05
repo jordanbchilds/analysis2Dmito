@@ -196,7 +196,26 @@ pdf(file.path("PDF", "classif.pdf"), width=13, height=8)
 }
 dev.off()
 
+# --- Calculating ESS
+install.packges("coda")
+install.packages("mcmcse")
+library("coda")
+library("mcmcse")
 
+ess_list = list()
+multiESS = list()
+for( chan in channels ){
+  for( pat in pts ){
+    root = paste0(chan, "_", pat)
+    post = output[[root]]$POST
+    ess_list[[root]] = coda::effectiveSize( post )
+    multiESS[[root]] = mcmcse::multiESS( post )
+
+    print(root)
+    print(multiESS[[root]])
+    print(ess_list[[root]])
+  }
+}
 
 
 

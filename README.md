@@ -315,10 +315,113 @@ classif_plot(dataMats=dataMats,
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_plot_ex.png?raw=true)
 
+# Checking model output
+The inference is run by default with a 10,000 iteration burn-in period, it is not
+guaranteed that this is enough to effectively explore the parameter space (find 
+the posterior distribution). If the output of the analysis appears to be wrong 
+this could be the problem. There are a few things which can be done to solve this
+issue. 
 
+## Assessing output  
 
+### Multiple chains
+Running multiple chains is a good idea in general. The `stan_inference` function
+allows this by passing arguments to the sampling function in `rstan`. 
+using the `chains` argument and they can be split across cores using 
+the `cores` argument, following the style of `rstan` sampling functions. The 
+following code snippet will execute five chains, each with a 100,000 iteration 
+burn-in period and produce 2,000 draws from the posterior and split the chains
+across two cores. 
 
+```{R echo=TRUE}
+output = stan_inference(dataMats, chains=5, ncores=2)
+```
 
+Once multiple chains have run, we can check have reached the same posterior
+distribution using the `rstan::Rhat` function. It is suggested that if the value
+of rhat is greater than 1.05 then the chains have NOT converged to the same 
+distribution. The function requires a matrix of the draws for a specific parameter. 
+More information about the `Rhat` (and other metrics for convergence) can be
+found in the function documentation. The code snippet below loops through the 
+parameters and calculates its rhat value, storing them in a vector called `rhat_vec`.
+
+```{R echo=TRUE}
+post = output$POST
+chains = 5
+mcmcOut = 2000
+rhat_vec = vector("numeric", length=ncol(post))
+names(rhat_vec) = colnames(post)
+for( param in colnames(post) ){
+  param_mat = matrix(post[,param], nrow=mcmcOut, ncol=chains, byrow=FALSE)
+  rhat_vec[param] = Rhat(param_mat)
+}
+print(rhat_vec)
+```
+If there are no signs that the chains have reached different posterior distributions,
+then the chains can be combined and all draws can be considered to be from the 
+same distribution. 
+
+### Effective sample size
+
+The effective sample size (ESS) is an estimate of the number of __uncorrelated__
+draws from the posterior distribution that the inference has produced. Ideally,
+this number would be close to the number of posterior draws as possible (or even
+larger). STAN usually produces a large effective sample size but if the chain has 
+not converged this will result in a low ESS. 
+
+There are no exact rules to follow as to what is an acceptable ESS. However, here
+we can use the large amount of datasets to guide us. By choosing a dataset whose
+inference shows no signs of non-convergence, we have a decent idea of what a good 
+ESS looks like for the model. From experience inference that has not converged 
+have drastically different ESS to those which have, resulting in a noticeable 
+divide if the ESS is calculated for all output. 
+
+Usually the ESS is calculated for a single parameter but we can also calculate 
+multivariate ESS. This gives an estimated effective sample size for the whole 
+inference. Multivariate ESS can be inspected and though of much the same way 
+single variate ESS can and a poor Multivariate ESS will stand out amongst a set
+of good ones. 
+
+The following snippet uses the `coda` and `mcmcse` packages to calculate the 
+single and multivariate ESS for an output from the `stan_inference` function.
+
+```{R echo=TRUE}
+install.packges("coda")
+install.packages("mcmcse")
+library("coda")
+library("mcmcse")
+
+(ess = coda::effectiveSize( output$POST ))
+(multiESS = mcmcse::multiESS( output$POST ))
+```
+For the example dataset provided with the package an acceptable multivariate ESS
+was at least 95\% of the number of posterior draws and an acceptable univariate
+ESS was approximately greater than 70\% of posterior draws. 
+
+## Improving output
+
+### Increasing burn-in
+
+If testing has shown that there are lack of convergence in your model output, be
+it from multiple chains or just one, increasing the burn-in period should be the
+first step to try. Increasing burn-in gives the inference scheme a longer time 
+to explore the parameter space and find the posterior distribution. By default,
+when using the `stan_inference` function, the burn-in period is 20,000. It can 
+be increased by setting the `warmup` argument of the function, if this is done the
+`iter` argument must also be updated as this is the total number of interations 
+and therefore must always be greater than `warmup`. 
+
+```{R echo=TRUE}
+output = stan_inference(dataMats, warmup=100000, iter=105000)
+```
+
+### Changing prior beliefs
+
+If the inference is still not converging to a posterior distribution it is 
+possible to change the prior beliefs to make them more precise. 
+It is also possible to use truncated prior densities to remove the possibility 
+of some values even being suggested. This is not guaranteed to work and is not 
+advisable unless there is good reason to do so.
 
 
 
