@@ -386,7 +386,7 @@ The following snippet uses the `coda` and `mcmcse` packages to calculate the
 single and multivariate ESS for an output from the `stan_inference` function.
 
 ```{R echo=TRUE}
-install.packges("coda")
+install.packages("coda")
 install.packages("mcmcse")
 library("coda")
 library("mcmcse")
