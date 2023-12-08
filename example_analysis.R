@@ -145,7 +145,7 @@ pdf(file.path("PDF", "postPlot.pdf"), width=13, height=8)
                                               pts=pat)
 
       op = par(mfrow=c(3,3), mar=c(4.1,3,1,2), cex.main=1.5, cex.lab=1.5, cex.axis=1.5)
-      postPlot(post=post, prior=prior,
+      analysis2Dmito::postPlot(post=post, prior=prior,
                                postpred=postpred,
                                classifs=class,
                                dataMats = dataMats,
