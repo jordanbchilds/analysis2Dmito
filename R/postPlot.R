@@ -37,7 +37,7 @@
 #' and posterior predictive model for the patient sample. Default is "".
 #' @param chan y axis label to be placed on the final classification
 #' and posterior predictive model for the patient sample. Default is "".
-#' @param pat The subject identifier, to be placed in the top left corner of the
+#' @param pat_id The subject identifier, to be placed in the top left corner of the
 #' first plot. The default is "".
 #' @param chains The number of chains present in the posterior draws. The
 #' default is 1.

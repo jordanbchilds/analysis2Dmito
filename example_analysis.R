@@ -144,15 +144,15 @@ pdf(file.path("PDF", "postPlot.pdf"), width=13, height=8)
                                               ctrlID=ctrlIDs,
                                               pts=pat)
 
-      op = par(mfrow=c(3,3), mar=c(4.1,3,1,2), cex.main=1.5, cex.lab=1.5, cex.axis=1.5)
+      op = par(mfrow=c(3,3), mar=c(4.3,4.1,1.5,2), cex.main=1.5, cex.lab=1.5, cex.axis=1.5)
       analysis2Dmito::postPlot(post=post, prior=prior,
-                               postpred=postpred,
-                               classifs=class,
-                               dataMats = dataMats,
-                               var.names=c("mu_m", "tau_m", "tau_norm", "mu_c", "tau_c", "probdiff", "m", "c"),
-                               mitoPlot_xlab=paste0("log(", mitochan, ")"),
-                               mitoPlot_ylab=paste0("log(", chan, ")"))
-      title(main=root, line=-1, outer=TRUE)
+               postpred=postpred,
+               classifs=class,
+               dataMats = dataMats,
+               var.names=c("mu_m", "tau_m", "tau_norm", "mu_c", "tau_c", "probdiff", "m", "c"),
+               mitochan=paste0("log(", mitochan, ")"),
+               chan=paste0("log(", chan, ")"),
+               pat_id=pat)
       par(op)
     }
   }
@@ -190,9 +190,8 @@ pdf(file.path("PDF", "classif.pdf"), width=13, height=8)
       )
       title(main = bquote(atop(.(pat), "nPat:" ~ .(nrow(dataMats$pts)) * ",   E(" * pi * "|X)=" * .(pi_est))))
     }
-    par(op)
-
   }
+  par(op)
 }
 dev.off()
 
@@ -216,7 +215,6 @@ for( chan in channels ){
     print(ess_list[[root]])
   }
 }
-
 
 
 
