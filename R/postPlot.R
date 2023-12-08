@@ -33,12 +33,12 @@
 #' to the plot.
 #' @param ... Any additional parameters to be passed to the plotting functions
 #' e.g. lwd, cex, etc.
-#' @param mitoPlot_xlab x axis label to be placed on the final classification
+#' @param mitochan x axis label to be placed on the final classification
 #' and posterior predictive model for the patient sample. Default is "".
-#' @param mitoPlot_ylab y axis label to be placed on the final classification
+#' @param chan y axis label to be placed on the final classification
 #' and posterior predictive model for the patient sample. Default is "".
-#' @param main_title Title to be placed over at the top of the plotting window.
-#' Default is "".
+#' @param pat The subject identifier, to be placed in the top left corner of the
+#' first plot. The default is "".
 #' @param chains The number of chains present in the posterior draws. The
 #' default is 1.
 #'
@@ -101,9 +101,9 @@ postPlot = function(post,
                                   "m",
                                   "c"),
                     xlabs = NULL,
-                    mitoPlot_xlab="",
-                    mitoPlot_ylab="",
-                    main_title="",
+                    chan="",
+                    mitochan="",
+                    patient="",
                     chains=1,
                     ...) {
   if (!is.null(xlabs)) {
@@ -241,6 +241,8 @@ postPlot = function(post,
         ...
       )
     }
+    if( var == var.names[1] )
+      text( xlims[1], yMax, labels=pat, adj=c(0.0, 0.9), cex=1.5 )
   }
 
   xlims = range((c(dataMats$ctrl[, 1], dataMats$pts[, 1])))
@@ -248,8 +250,8 @@ postPlot = function(post,
 
   plot(
     NULL,
-    xlab = mitoPlot_xlab,
-    ylab = mitoPlot_ylab,
+    xlab = mitochan,
+    ylab = chan,
     main = "",
     xlim = xlims,
     ylim = ylims,
