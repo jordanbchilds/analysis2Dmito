@@ -53,7 +53,7 @@ list_saver = function(df_list,
 
   file_names = names(df_list)
   for (ii in seq_along(file_names)) {
-    filePath = paste0(paste(root[ii], file_names[ii], sep = rootSep[ii]), ext)
+    filePath = paste0(paste(root[ii], file_names[ii], sep = rootSep), ext)
     if (file.exists(filePath) && !replace) {
       message("File exists and has NOT been replaced.")
     } else {
