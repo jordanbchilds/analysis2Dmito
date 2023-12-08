@@ -196,7 +196,7 @@ pdf(file.path("PDF", "classif.pdf"), width=13, height=8)
 dev.off()
 
 # --- Calculating ESS
-install.packges("coda")
+install.packages("coda")
 install.packages("mcmcse")
 library("coda")
 library("mcmcse")
