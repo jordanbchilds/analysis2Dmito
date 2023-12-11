@@ -62,7 +62,7 @@ Once the dependencies are installed successfully the package itself can be insta
 messages This is to be expected and as long as the package has a non-zero exit 
 status i.e. the package is downloaded successfully, this should not be a problem. 
 ```{r echo=TRUE}
-install_github("jordanbchilds/analysis2Dmito")
+install_github("jordanbchilds/analysis2Dmito", quiet = TRUE, upgrade="never")
 library("analysis2Dmito")
 ```
 
