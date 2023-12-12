@@ -1,6 +1,8 @@
 # Classifying the OXPHOS status of skeletal muscle fibres
 An R package for the Bayesian classification of myofibres according to OXPHOS protein expression profiles.
 
+# Getting Started 
+
 ## Update R 
 Before continuing you should update R, this is to allow you
 to use Rtools and to configure a C++ toolchain. The package was built
