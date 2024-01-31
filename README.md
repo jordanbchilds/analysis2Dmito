@@ -1,34 +1,20 @@
 # Classifying the OXPHOS status of skeletal muscle fibres
 An R package for the Bayesian classification of myofibres according to OXPHOS protein expression profiles.
 
-__PLEASE READ BEFORE ATTEMPTING TO USE PACAKGE__
+# Getting Started 
 
 ## Update R 
-Before continuing it is suggested that R is updated, this is imported to be able
+Before continuing you should update R, this is to allow you
 to use Rtools and to configure a C++ toolchain. The package was built
 on R version 4.3.1 and so at least this version is suggested. The [article](https://www.listendata.com/2015/08/how-to-update-r-software.html)
 contains instructions on how to do this. Note that if you are using Rstudio 
-(Posit) you may need to set the version of R being used, [this](https://support.posit.co/hc/en-us/articles/200486138-Changing-R-versions-for-the-RStudio-Desktop-IDE) post on the Posit website should help with this. 
-
-For windows users updating R can easily done within R itself, using the `installr` package. 
-```{R echo=TRUE}
-install.packages("installr")
-library("installr")
-updateR()
-```
+(Posit) you may need to set the version of R being used, [this](https://support.posit.co/hc/en-us/articles/200486138-Changing-R-versions-for-the-RStudio-Desktop-IDE) post on the Posit website should help. 
 
 ## C++ toolchain
 C++ toolchain can be created through R, using some helpful packages along the way. 
 
 For Windows users, this is relatively easy and can done through `Rtools`, which
 can be installed [here](https://cran.r-project.org/bin/windows/Rtools/). 
-Alternatively it can be installed via the `installr::installRtools` function.
-If the package `installr` is not installed this should be done first. 
-```{R echo=TRUE}
-# install.packages("installr")
-library("installr")
-install.Rtools()
-```
 
 For Mac a C++ toolchain can be created using the `macrtools` package, a guideline for
 its installation and use can be found 
@@ -58,9 +44,7 @@ library("readr")
 library("tidyr")
 library("devtools")
 ```
-Once the dependencies are installed successfully the package itself can be installed. Downloadingthe package may take a couple minutes and produce a series of warning 
-messages This is to be expected and as long as the package has a non-zero exit 
-status i.e. the package is downloaded successfully, this should not be a problem. 
+Once the dependencies are installed successfully the package itself can be installed. Downloading the package may take a couple minutes and produce a series of warning messages This is to be expected and as long as the package has a non-zero exit status i.e. the package is downloaded successfully, this should not be a problem. 
 ```{r echo=TRUE}
 install_github("jordanbchilds/analysis2Dmito", quiet = TRUE, upgrade="never")
 library("analysis2Dmito")
@@ -75,7 +59,7 @@ classifications, with the suffixes; "POST", "PRIOR", "POSTPRED", "PRIORPRED" and
 "CLASSIF" respectively. The script also plots three key aspects of the output; 
 MCMC output, prior and posterior comparisons and fibre classifications. The 
 pipeline used in the example script and plots produced are discussed in more 
-detail in the following sections, the scripts itself has some minimal 
+detail in the following sections, the script itself has some minimal 
 comments throughout. 
 
 # Pipeline
@@ -101,7 +85,7 @@ below.
 | Variable Name | Description |
 | ------------- | ----------- |
 | `value` | A numerical value representing the expression level (average pixel intensity) for a particular fibre within a sample for a particular channel. |
-| `sampleID` | A unique string identifying the sample from which an observation was made e.g. `C01`, `C02`, `P01`, `P02`, ... |
+| `sampleID` | A unique string identifying the sample/tissue-section from which an observation was made e.g. `C01`, `C02`, `P01`, `P02`, ... |
 |`fibreID` | An integer identifying a single fibre in its sample. This identifier is not unique throughout the whole dataset, it is only unique within the sample it comes from. It should be consistent across channels for the sample. |
 | `sbj_type` | A string identifying which samples are control subjects and which are patients. Control samples must be labelled as "control" and patient samples labelled as "patient". |
 | `channel` | A string labeling the channel or protein measured. |
@@ -115,9 +99,9 @@ information on the `pivot_longer` function and examples see this [blog post](htt
 ## Transforming the data
 
 Before moving on to inference it is advisable to explore the data. For good 
-results the healthy control data should show a linear relationship and constant 
-variance, two assumptions made during linear modelling. The healthy and 
-deficient fibres should also appear to be distinct populations although the 
+results the healthy control data should show a linear relationship between the level of the OXPHOS protein of interest and protein which is a surrogate for mitochondrial mass.  There should be a constant 
+variance about the linear regression.  These two assumptions are commonly made during linear modelling. 
+The healthy and deficient fibres should also appear to be distinct populations although the 
 shape of the deficient population is less important. This may be achieved by 
 data transformation. The usual transformation seen in literature is the log 
 transform, this works well for many datasets although it may not be the best 
