@@ -97,12 +97,16 @@
 #'
 #' data_mat = analysis2Dmito::getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 #'
-#' tau_mode = 50
-#' tau_var = 10
+#' tau_mode = 50 # choose tau's mode apriori
+#' tau_var = 10 # choose tau's variance apriori
+#' # from these two quantities calculate the shape and rate
 #' rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
 #' shape_tau = 1 + tau_mode * rate_tau
 #'
-#' infOut = analysis2Dmito::stan_inference(data_mat, parameterVals=list(shape_tau=shape_tau, rate_tau=rate_tau))
+#' # pass parameter values to the `stan_inference` function
+#' infOut = analysis2Dmito::stan_inference(data_mat,
+#'                                         parameterVals=list(shape_tau=shape_tau,
+#'                                                            rate_tau=rate_tau))
 #'
 #'
 #' @importFrom rstan sampling
@@ -145,18 +149,25 @@ stan_inference = function(dataMats,
   }
   tau_mode = mean( prec )
   tau_var = 10
-  rate_tau = 0.5*(tau_mode + sqrt(tau_mode^2+4*tau_var)) / tau_var
-  shape_tau = 1 + tau_mode*rate_tau
+  # rate_tau = 0.5*(tau_mode + sqrt(tau_mode^2+4*tau_var)) / tau_var
+  # shape_tau = 1 + tau_mode*rate_tau
+  shape_tau = tau_mode^2 / tau_var
+  rate_tau = tau_mode / tau_var
 
   tau_m_mode = 50
   tau_m_var = 50
-  rate_tau_m = 0.5*(tau_m_mode + sqrt(tau_m_mode^2+4*tau_m_var)) / tau_m_var
-  shape_tau_m = 1 + tau_m_mode*rate_tau_m
+  # rate_tau_m = 0.5*(tau_m_mode + sqrt(tau_m_mode^2+4*tau_m_var)) / tau_m_var
+  # shape_tau_m = 1 + tau_m_mode*rate_tau_m
+  shape_tau_m = tau_m_mode^2 / tau_m_var
+  rate_tau_m = tau_m_mode / tau_m_var
 
   tau_c_mode = 50
   tau_c_var = 50
-  rate_tau_c = 0.5*(tau_c_mode + sqrt(tau_c_mode^2+4*tau_c_var)) / tau_c_var
-  shape_tau_c = 1 + tau_c_mode*rate_tau_c
+  # rate_tau_c = 0.5*(tau_c_mode + sqrt(tau_c_mode^2+4*tau_c_var)) / tau_c_var
+  # shape_tau_c = 1 + tau_c_mode*rate_tau_c
+
+  shape_tau_c = tau_c_mode^2 / tau_c_var
+  rate_tau_c = tau_c_mode / tau_c_var
 
   param_list = list(
     D=2,
@@ -178,7 +189,9 @@ stan_inference = function(dataMats,
     shape_tau = shape_tau, rate_tau = rate_tau,
     alpha_pi = 1.0, beta_pi = 1.0,
     slope_lb = 0.1,
-    tau_def=1e-2
+    pi_lb=0.0,
+    pi_ub=0.5,
+    tau_def=0.0001
   )
 
   if (!is.null(parameterVals) && is.list(parameterVals)) {

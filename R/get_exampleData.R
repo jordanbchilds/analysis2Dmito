@@ -30,12 +30,12 @@ get_exampleData = function() {
 
   rawData = rawData[,c("ID", "patient_id", mitochan, channels)]
   colnames(rawData) = c("fibreID", "sampleID", mitochan, channels)
-  data = tidyr::pivot_longer(rawData, cols=c(mitochan, channels), names_to="channel")
+  data = tidyr::pivot_longer(rawData, cols=c(mitochan, channels), names_to="Channel", values_to="Value")
 
-  data_df= as.data.frame(data)
+  data_df = as.data.frame(data)
 
-  data_df$sbj_type = "control"
-  data_df$sbj_type[grep("C", data_df$sampleID, invert=TRUE)] = "patient"
+  data_df$sbjType = "control"
+  data_df$sbjType[grep("C", data_df$sampleID, invert=TRUE)] = "patient"
 
   return( data_df )
 }
