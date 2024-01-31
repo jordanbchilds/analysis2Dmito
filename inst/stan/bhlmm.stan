@@ -17,7 +17,7 @@ functions{
     real y = mu + sigma*Phi(u);
     return y;
   }
-  real beta_tr_rng(real a, real b, real lb, real up){
+  real beta_tr_rng(real a, real b, real lb, real ub){
     real piStar = beta_rng(a,b);
     while( piStar<lb || piStar>ub ){
       piStar = beta_rng(a,b);
