@@ -48,8 +48,8 @@ data{
   real pi_lb;
   real pi_ub;
 
-  real<lower=0> alpha_pi;
-  real<lower=0> beta_pi;
+  // real<lower=0> alpha_pi;
+  // real<lower=0> beta_pi;
 
   real tau_def;
 
@@ -86,7 +86,7 @@ model{
     c[i] ~ normal(mu_c, 1/sqrt(tau_c));
   }
 
-  probdiff ~ beta(alpha_pi, beta_pi) T[pi_lb, pi_ub];
+  probdiff ~ uniform(pi_lb, pi_ub);
   tau_norm ~ gamma(shape_tau, rate_tau);
 
   sigma_norm = 1/sqrt(tau_norm);
@@ -155,7 +155,7 @@ generated quantities{
   m_pred_prior = normal_lb_rng(mu_m_prior, 1/sqrt(tau_m_prior), slope_lb);
   c_pred_prior = normal_rng(mu_c_prior, 1/sqrt(tau_c_prior));
   tau_norm_prior = gamma_rng(shape_tau, rate_tau);
-  probdiff_prior = beta_tr_rng(alpha_pi, beta_pi, pi_lb, pi_ub);
+  probdiff_prior = uniform_rng(pi_lb, pi_ub);
 
   // posterior parent slope and inter distribution
   m_pred = normal_lb_rng(mu_m, 1/sqrt(tau_m), slope_lb);
