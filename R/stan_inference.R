@@ -197,17 +197,6 @@ stan_inference = function(dataMats,
     tau_def=0.0001
   )
 
-  init_list = list(
-    tau_norm = tau_mode,
-    mu_m = slope_mean, tau_m = tau_m_mode,
-    mu_c = inter_mean, tau_c = tau_c_mode,
-    probdiff = (pi_ub-pi_lb)/2
-  )
-  for( i in 1:(nCtrl+1) ){
-    init_list[[paste("m[",i,"]")]] = slope_mean
-    init_list[[paste("c[",i,"]")]] = inter_mean
-  }
-
   if (!is.null(parameterVals) && is.list(parameterVals)) {
     for (param in names(parameterVals) ) {
       if (param %in% names(param_list) ) {
@@ -216,6 +205,19 @@ stan_inference = function(dataMats,
         message(paste("The parameter `", param, "` is not part of the model."))
       }
     }
+  }
+
+
+  init_list = list(
+    tau_norm = data_list$shape_tau/data_list$rate_tau,
+    mu_m = data_list$mean_mu_m, tau_m = data_list$shape_tau_m/data_list$rate_tau_m,
+    mu_c = data_list$mean_mu_c, tau_c = data_list$shape_tau_c/data_list$rate_tau_c,
+    probdiff = (data_list$pi_ub-data_list$pi_lb)/2
+  )
+
+  for( i in 1:(nCtrl+1) ){
+    init_list[[paste("m[",i,"]")]] = data_list$mean_mu_m
+    init_list[[paste("c[",i,"]")]] = data_list$mean_mu_c
   }
 
   output = rstan::sampling(stanmodels$bhlmm,
