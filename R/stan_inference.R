@@ -220,7 +220,7 @@ stan_inference = function(dataMats,
 
   output = rstan::sampling(stanmodels$bhlmm,
                            data=param_list,
-                           init_init_list,
+                           init=init_list,
                            chains=chains,
                            iter=iter,
                            warmup=warmup,
