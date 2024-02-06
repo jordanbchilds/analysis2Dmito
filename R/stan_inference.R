@@ -147,6 +147,9 @@ stan_inference = function(dataMats,
     inter[i] = mod$coefficients[1]
     prec[i] = 1 / summary(mod)$sigma^2
   }
+  slope_mean = mean(grad)
+  inter_mean = mean(inter)
+
   tau_mode = mean( prec )
   tau_var = 10
   # rate_tau = 0.5*(tau_mode + sqrt(tau_mode^2+4*tau_var)) / tau_var
@@ -182,8 +185,8 @@ stan_inference = function(dataMats,
     ctrlIndex = dataMats$indexCtrl,
     nSyn = nSyn,
     xSyn = xSyn,
-    mean_mu_m = mean( grad ), prec_mu_m = 1/0.25^2,
-    mean_mu_c = mean( inter ), prec_mu_c = 1/0.25^2,
+    mean_mu_m = slope_mean, prec_mu_m = 1/0.25^2,
+    mean_mu_c = inter_mean, prec_mu_c = 1/0.25^2,
     shape_tau_m = shape_tau_m, rate_tau_m = rate_tau_m,
     shape_tau_c = shape_tau_c, rate_tau_c = rate_tau_c,
     shape_tau = shape_tau, rate_tau = rate_tau,
@@ -193,6 +196,17 @@ stan_inference = function(dataMats,
     pi_ub=0.5,
     tau_def=0.0001
   )
+
+  init_list = list(
+    tau_norm = tau_mode,
+    mu_m = slope_mean, tau_m = tau_m_mode,
+    mu_c = inter_mean, tau_c = tau_c_mode,
+    probdiff = (pi_ub-pi_lb)/2
+  )
+  for( i in 1:(nCtrl+1) ){
+    init_list[[paste("m[",i,"]")]] = slope_mean
+    init_list[[paste("c[",i,"]")]] = inter_mean
+  }
 
   if (!is.null(parameterVals) && is.list(parameterVals)) {
     for (param in names(parameterVals) ) {
@@ -206,6 +220,7 @@ stan_inference = function(dataMats,
 
   output = rstan::sampling(stanmodels$bhlmm,
                            data=param_list,
+                           init_init_list,
                            chains=chains,
                            iter=iter,
                            warmup=warmup,
