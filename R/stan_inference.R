@@ -207,16 +207,15 @@ stan_inference = function(dataMats,
     }
   }
 
-
   in_list = list(
-    tau_norm = data_list$shape_tau/data_list$rate_tau,
-    mu_m = data_list$mean_mu_m, tau_m = data_list$shape_tau_m/data_list$rate_tau_m,
-    mu_c = data_list$mean_mu_c, tau_c = data_list$shape_tau_c/data_list$rate_tau_c,
-    probdiff = (data_list$pi_ub-data_list$pi_lb)/2
+    tau_norm = param_list$shape_tau/param_list$rate_tau,
+    mu_m = param_list$mean_mu_m, tau_m = param_list$shape_tau_m/param_list$rate_tau_m,
+    mu_c = param_list$mean_mu_c, tau_c = param_list$shape_tau_c/param_list$rate_tau_c,
+    probdiff = (param_list$pi_ub-param_list$pi_lb)/2
   )
   for( i in 1:(nCtrl+1) ){
-    in_list[[paste("m[",i,"]")]] = data_list$mean_mu_m
-    in_list[[paste("c[",i,"]")]] = data_list$mean_mu_c
+    in_list[[paste("m[",i,"]")]] = param_list$mean_mu_m
+    in_list[[paste("c[",i,"]")]] = param_list$mean_mu_c
   }
 
   init_list = list()
