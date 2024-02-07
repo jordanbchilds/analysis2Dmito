@@ -11,8 +11,8 @@ stan_inference(
   saveOnly = FALSE,
   saveRoot = "",
   chains = 1,
-  iter = 12000,
-  warmup = 10000,
+  iter = 22000,
+  warmup = 20000,
   ...
 )
 }
@@ -32,9 +32,11 @@ or the elements should be in the following order.
 
 \item{saveRoot}{A string, the file path root of the saved files. The default is "".}
 
-\item{iter}{The final number of posterior draws (disregarding burn-in and thinning). Default is 2000.}
+\item{iter}{The final number of posterior draws including warmup and thinning,
+the argmuent is passed directly to the \code{rstan::sampling} function. The default is 22000.}
 
-\item{warmup}{The number of posterior draws discarded for burn-in. This passed directly to the \link[rstan:stanmodel-method-sampling]{rstan::sampling} function, a default value is given to the longer burn-ins usually required for this model. Default is 10000.}
+\item{warmup}{The number of posterior draws discarded for burn-in. This is passed
+directly to the \link[rstan:stanmodel-method-sampling]{rstan::sampling} function. The default is 20,000.}
 
 \item{...}{Extra parameters to be passed to the \link[rstan:stanmodel-method-sampling]{rstan::sampling} function.}
 }
@@ -132,12 +134,16 @@ pat = pts[1]
 
 data_mat = analysis2Dmito::getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 
-tau_mode = 50
-tau_var = 10
+tau_mode = 50 # choose tau's mode apriori
+tau_var = 10 # choose tau's variance apriori
+# from these two quantities calculate the shape and rate
 rate_tau = 0.5 * (tau_mode + sqrt(tau_mode ^ 2 + 4 * tau_var)) / tau_var
 shape_tau = 1 + tau_mode * rate_tau
 
-infOut = analysis2Dmito::stan_inference(data_mat, parameterVals=list(shape_tau=shape_tau, rate_tau=rate_tau))
+# pass parameter values to the `stan_inference` function
+infOut = analysis2Dmito::stan_inference(data_mat,
+                                        parameterVals=list(shape_tau=shape_tau,
+                                                           rate_tau=rate_tau))
 
 
 }

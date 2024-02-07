@@ -13,9 +13,10 @@ postPlot(
   classifs,
   var.names = c("mu_m", "tau_m", "tau_norm", "mu_c", "tau_c", "probdiff", "m", "c"),
   xlabs = NULL,
-  mitoPlot_xlab = "",
-  mitoPlot_ylab = "",
-  MCMCout = NULL,
+  chan = "",
+  mitochan = "",
+  patient = "",
+  chains = 1,
   ...
 )
 }
@@ -53,8 +54,20 @@ as given in 'var.names' will be plotted.}
 \item{xlabs}{A character vector of names of variables as they should be added
 to the plot.}
 
+\item{chan}{y axis label to be placed on the final classification
+and posterior predictive model for the patient sample. Default is "".}
+
+\item{mitochan}{x axis label to be placed on the final classification
+and posterior predictive model for the patient sample. Default is "".}
+
+\item{chains}{The number of chains present in the posterior draws. The
+default is 1.}
+
 \item{...}{Any additional parameters to be passed to the plotting functions
 e.g. lwd, cex, etc.}
+
+\item{pat_id}{The subject identifier, to be placed in the top left corner of the
+first plot. The default is "".}
 }
 \value{
 NULL.
@@ -65,26 +78,40 @@ function. Plotted are the priors/parent distributions and posteriors of
 variables in the model as well as the 95\\% predictive posterior for the
 like-control linear model and the classifications.
 }
+\details{
+If multiple chains are present in the posterior files, then the density plots
+ignore this and plot all draws as though they were one - assuming that if the
+the chains do not converge to the same stationary distribution this would be
+evident and produce a multi-modal plot. The posterior predictive plot does
+not ignore this and will plot each posterior predictive over the
+classification plot. This will indicate if there are differences in the
+chains as the posterior predictives will different.
+}
 \examples{
 exampleData = get_exampleData()
 # the measure of mitochondrial mass - the x-axis of the 2D mito plot
-mitochan = "raw_porin"
+mitochan = "VDAC"
 # all channels available in the dataset
 channelsAll = unique(exampleData[,"channel"])
 # remove mitochan from the channels of interest
 channels = channelsAll[ channelsAll!=mitochan ]
 sbj = unique(exampleData$sampleID)
-ctrlid = c("C01", "C02", "C03", "C04", "C05")
+ctrlid = c("C01", "C02", "C03", "C04")
 pts = sbj[ !(sbj \%in\% ctrlid) ]
+
 chan = channels[1]
 pat = pts[1]
 
-data_mat = getData_mats(exampleData, cord=c(mitochan, chan), ctrlID=ctrlid, pts=pat, getIndex=TRUE)
+data_mat = getData_mats(exampleData,
+                        cord=c(mitochan, chan),
+                        ctrlID=ctrlid,
+                        pts=pat,
+                        getIndex=TRUE)
 
-infOut = inference(data_mat, parameterVals=list(shape_tau=20, rate_tau=0.2))
+infOut = stan_inference( data_mat )
 class = apply(infOut$classif, 2, mean)
 
-postPlot(post=infOut$post, prior=infOut$prior, postpred=infOut$postpred,
-    dataMats=data_mat, classifs=class)
+postPlot(post=infOut$POST, prior=infOut$PRIOR, classifs=class, postpred=infOut$POSTPRED,
+         dataMats=data_mat)
 
 }

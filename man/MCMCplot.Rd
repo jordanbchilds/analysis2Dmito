@@ -9,8 +9,8 @@ MCMCplot(
   prior = NULL,
   lag = 20,
   nRow = NULL,
-  colPost = alphaPink(1),
-  colPrior = alphaGreen(1),
+  colPost = analysis2Dmito::alphaPink(1),
+  colPrior = analysis2Dmito::alphaGreen(1),
   main_title = "",
   ...
 )

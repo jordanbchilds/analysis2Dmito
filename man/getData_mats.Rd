@@ -9,7 +9,7 @@ getData_mats(
   channels,
   ctrlID = NULL,
   pts = NULL,
-  ctrl_only = FALSE,
+  ctrlOnly = FALSE,
   getIndex = TRUE
 )
 }
@@ -20,27 +20,27 @@ for the format the data should be in.}
 \item{channels}{A vector of strings or a single string containing the
 channels which will form the columns of the returned matrices.}
 
-\item{ctrlID}{A character vector denoting the ID for the control samples in
-the 'sampleID' column of data. If this is not given the data must have a
-"sbj_type" column specifying which samples are control or patient.}
+\item{ctrlID}{A character vector denoting the IDs for the control samples in
+the \code{sampleID} column of data. If this is not given the data must have a
+\code{sbjType} column specifying which samples are \code{control} or \code{patient}.}
 
 \item{pts}{A vector of subject names or a single subject name, whose
-expression levels are to be returned. The default value is NULL, if this is
+expression levels are to be returned. The default value is \code{NULL}, if this is
 the case the protein expression levels for all samples within the dataset are
 returned.}
 
-\item{ctrl_only}{A boolean variable indicating whether to return only control
-subject data, the default is FALSE.}
+\item{ctrlOnly}{A boolean variable indicating whether to return only control
+subject data, the default is \code{FALSE.}}
 
-\item{getINDEX}{A boolean parameter. If TRUE, a vector is returned for both
+\item{getINDEX}{A boolean parameter. If \code{TRUE}, a vector is returned for both
 the control and patient data matrices indicating which observations come the
 same sample.}
 }
 \value{
-If \code{ctrl_only=TRUE} and \code{getIndex=FALSE} then a matrix is returned of
+If \code{ctrlOnly=TRUE} and \code{getIndex=FALSE} then a matrix is returned of
 just the control sample fibre expression otherwise a list is returned
 containing data matrices and index vectors. The columns of the data matrices
-correspond to the channels requested, in the order they are given in channels
+correspond to the channels requested, in the order they are given in \code{channels}
 argument. The possible elements in the list are:
 \itemize{
 \item \code{ctrl} : The control sample data matrix.
@@ -54,31 +54,32 @@ observations belong to the same sample.
 }
 
 The indexes, in the \code{indexPts} and \code{indexCtrl} vectors, range from 1 to the total
-number of samples being . For example, if four control samples are in the dataset (and their
-sample IDs passed to the \code{ctrlID} argument) then observations with an index
+number of control samples in the data . For example, if four control samples are in the dataset (and their
+sample IDs are passed to the \code{ctrlID} argument) then observations with an index
 of 1 will be associated with the first element in \code{ctrlID}, an index of 2 will
-be observations from the second element in \code{ctrlID} etc. The patient indexes
+be observations from the second element in \code{ctrlID} etc. Continuing this example, the patient indexes
 will start at 5 (as there are four control sample) and will increase
 similarly depending on the number of patient samples being outputted, which
-can is controlled by the \code{pts} argument.
-dataset.
+can be controlled by the \code{pts} argument. If the data is then going to be used
+in with the \link{stan_inference} function, then there should only
+be one patient sample.
 }
 \description{
 The function aggregates the data into the form needed for
-\link{inference}. To be able to do this the data passed to the
+\link{stan_inference}. To be able to do this the data passed to the
 function must be in a specific form, see details for more info.
 }
 \details{
 The data frame passed to the function must be in long form and have
-the following columns; 'value', 'channel', 'sampleID' and 'fibreID'. Where
-'value' is the protein expression level, 'channel' is the protein or channel
-that the value expresses, 'sampleID' is the identifying name associated with
-the tissue sample on which the measurement was made and 'fibreID' is the
+the following columns; \code{Value}, \code{Channel}, \code{sampleID} and \code{fibreID}. Where
+'Value' is the protein expression level, 'Channel' is the protein or channel
+that the value expresses, \code{sampleID} is the identifying name associated with
+the tissue sample on which the measurement was made and \code{fibreID} is the
 fibre identification from that sample. Other columns can be present but are
 not needed. One column which is helpful is a column identifying which samples
 are from control subjects and which are from patients. For this to be used
-the column must be called "sbj_type" and the each value must be labelled
-"control" or "patient". To be able to transform the data into long form, we
+the column must be called \code{sbjType} and the each value must be labelled
+\code{control} or \code{patient}. To be able to transform the data into long form, we
 suggest using the \link{tidyverse} package and the \link[tidyr:pivot_longer]{tidyr::pivot_longer} function.
 }
 \examples{
@@ -86,7 +87,7 @@ exampleData = get_exampleData()
 # the measure of mitochondrial mass - the x-axis of the 2D mito plot
 mitochan = "VDAC"
 # all channels available in the dataset
-channelsAll = unique(exampleData[,"channel"])
+channelsAll = unique(exampleData[,"Channel"])
 # remove mitochan from the channels of interest
 channels = channelsAll[ channelsAll!=mitochan ]
 
@@ -97,6 +98,6 @@ pts = grep("C", sbj, value=TRUE, invert=TRUE)
 chan = channels[1]
 pat = pts[1]
 
-data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlid, pts=pat)
+data_mat = getData_mats(exampleData, channels=c(mitochan, chan), ctrlID=ctrlID, pts=pat)
 
 }
