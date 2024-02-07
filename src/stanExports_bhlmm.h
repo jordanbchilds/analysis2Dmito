@@ -27,7 +27,7 @@ namespace model_bhlmm_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 131> locations_array__ =
+static constexpr std::array<const char*, 133> locations_array__ =
   {" (found before start of program)",
   " (in 'bhlmm', line 48, column 2 to column 23)",
   " (in 'bhlmm', line 49, column 2 to column 14)",
@@ -123,9 +123,11 @@ static constexpr std::array<const char*, 131> locations_array__ =
   " (in 'bhlmm', line 31, column 2 to column 27)",
   " (in 'bhlmm', line 32, column 2 to column 26)",
   " (in 'bhlmm', line 33, column 2 to column 25)",
-  " (in 'bhlmm', line 34, column 2 to column 16)",
-  " (in 'bhlmm', line 35, column 2 to column 13)",
-  " (in 'bhlmm', line 36, column 2 to column 13)",
+  " (in 'bhlmm', line 34, column 2 to column 25)",
+  " (in 'bhlmm', line 35, column 2 to column 24)",
+  " (in 'bhlmm', line 36, column 2 to column 16)",
+  " (in 'bhlmm', line 37, column 2 to column 31)",
+  " (in 'bhlmm', line 38, column 2 to column 31)",
   " (in 'bhlmm', line 39, column 2 to column 15)",
   " (in 'bhlmm', line 40, column 2 to column 21)",
   " (in 'bhlmm', line 41, column 2 to column 20)",
@@ -192,16 +194,16 @@ normal_lb_rng(const T0__& mu, const T1__& sigma, const T2__& lb, RNG&
   (void) DUMMY_VAR__;
   try {
     local_scalar_t__ p_lb = DUMMY_VAR__;
-    current_statement__ = 120;
+    current_statement__ = 122;
     p_lb = stan::math::normal_cdf(lb, mu, sigma);
     local_scalar_t__ u = DUMMY_VAR__;
-    current_statement__ = 121;
+    current_statement__ = 123;
     u = (stan::math::logical_lt(p_lb, 1) ? stan::math::uniform_rng(p_lb, 1,
                                              base_rng__) : 1);
     local_scalar_t__ y = DUMMY_VAR__;
-    current_statement__ = 122;
+    current_statement__ = 124;
     y = (mu + (sigma * stan::math::Phi(u)));
-    current_statement__ = 123;
+    current_statement__ = 125;
     return y;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -226,16 +228,16 @@ beta_tr_rng(const T0__& a, const T1__& b, const T2__& lb, const T3__& ub,
   (void) DUMMY_VAR__;
   try {
     local_scalar_t__ piStar = DUMMY_VAR__;
-    current_statement__ = 125;
+    current_statement__ = 127;
     piStar = stan::math::beta_rng(a, b, base_rng__);
-    current_statement__ = 128;
+    current_statement__ = 130;
     while ((stan::math::primitive_value(stan::math::logical_lt(piStar, lb))
            ||
            stan::math::primitive_value(stan::math::logical_gt(piStar, ub)))) {
-      current_statement__ = 126;
+      current_statement__ = 128;
       piStar = stan::math::beta_rng(a, b, base_rng__);
     }
-    current_statement__ = 129;
+    current_statement__ = 131;
     return piStar;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -259,6 +261,8 @@ private:
   double rate_tau_c;
   double shape_tau;
   double rate_tau;
+  double alpha_pi;
+  double beta_pi;
   double slope_lb;
   double pi_lb;
   double pi_ub;
@@ -425,58 +429,82 @@ public:
       current_statement__ = 94;
       stan::math::check_greater_or_equal(function__, "rate_tau", rate_tau, 0);
       current_statement__ = 95;
+      context__.validate_dims("data initialization", "alpha_pi", "double",
+        std::vector<size_t>{});
+      alpha_pi = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 95;
+      alpha_pi = context__.vals_r("alpha_pi")[(1 - 1)];
+      current_statement__ = 95;
+      stan::math::check_greater_or_equal(function__, "alpha_pi", alpha_pi, 0);
+      current_statement__ = 96;
+      context__.validate_dims("data initialization", "beta_pi", "double",
+        std::vector<size_t>{});
+      beta_pi = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 96;
+      beta_pi = context__.vals_r("beta_pi")[(1 - 1)];
+      current_statement__ = 96;
+      stan::math::check_greater_or_equal(function__, "beta_pi", beta_pi, 0);
+      current_statement__ = 97;
       context__.validate_dims("data initialization", "slope_lb", "double",
         std::vector<size_t>{});
       slope_lb = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 95;
+      current_statement__ = 97;
       slope_lb = context__.vals_r("slope_lb")[(1 - 1)];
-      current_statement__ = 96;
+      current_statement__ = 98;
       context__.validate_dims("data initialization", "pi_lb", "double",
         std::vector<size_t>{});
       pi_lb = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 96;
+      current_statement__ = 98;
       pi_lb = context__.vals_r("pi_lb")[(1 - 1)];
-      current_statement__ = 97;
+      current_statement__ = 98;
+      stan::math::check_greater_or_equal(function__, "pi_lb", pi_lb, 0);
+      current_statement__ = 98;
+      stan::math::check_less_or_equal(function__, "pi_lb", pi_lb, 1);
+      current_statement__ = 99;
       context__.validate_dims("data initialization", "pi_ub", "double",
         std::vector<size_t>{});
       pi_ub = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 97;
+      current_statement__ = 99;
       pi_ub = context__.vals_r("pi_ub")[(1 - 1)];
-      current_statement__ = 98;
+      current_statement__ = 99;
+      stan::math::check_greater_or_equal(function__, "pi_ub", pi_ub, 0);
+      current_statement__ = 99;
+      stan::math::check_less_or_equal(function__, "pi_ub", pi_ub, 1);
+      current_statement__ = 100;
       context__.validate_dims("data initialization", "tau_def", "double",
         std::vector<size_t>{});
       tau_def = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 98;
+      current_statement__ = 100;
       tau_def = context__.vals_r("tau_def")[(1 - 1)];
-      current_statement__ = 99;
+      current_statement__ = 101;
       context__.validate_dims("data initialization", "nCtrl", "int",
         std::vector<size_t>{});
       nCtrl = std::numeric_limits<int>::min();
-      current_statement__ = 99;
+      current_statement__ = 101;
       nCtrl = context__.vals_i("nCtrl")[(1 - 1)];
-      current_statement__ = 99;
+      current_statement__ = 101;
       stan::math::check_greater_or_equal(function__, "nCtrl", nCtrl, 0);
-      current_statement__ = 100;
+      current_statement__ = 102;
       context__.validate_dims("data initialization", "nPat", "int",
         std::vector<size_t>{});
       nPat = std::numeric_limits<int>::min();
-      current_statement__ = 100;
+      current_statement__ = 102;
       nPat = context__.vals_i("nPat")[(1 - 1)];
-      current_statement__ = 100;
+      current_statement__ = 102;
       stan::math::check_greater_or_equal(function__, "nPat", nPat, 0);
-      current_statement__ = 101;
+      current_statement__ = 103;
       context__.validate_dims("data initialization", "nPts", "int",
         std::vector<size_t>{});
       nPts = std::numeric_limits<int>::min();
-      current_statement__ = 101;
-      nPts = context__.vals_i("nPts")[(1 - 1)];
-      current_statement__ = 101;
-      stan::math::check_greater_or_equal(function__, "nPts", nPts, 0);
-      current_statement__ = 102;
-      stan::math::validate_non_negative_index("ctrl_mat", "nCtrl", nCtrl);
       current_statement__ = 103;
-      stan::math::validate_non_negative_index("ctrl_mat", "D", D);
+      nPts = context__.vals_i("nPts")[(1 - 1)];
+      current_statement__ = 103;
+      stan::math::check_greater_or_equal(function__, "nPts", nPts, 0);
       current_statement__ = 104;
+      stan::math::validate_non_negative_index("ctrl_mat", "nCtrl", nCtrl);
+      current_statement__ = 105;
+      stan::math::validate_non_negative_index("ctrl_mat", "D", D);
+      current_statement__ = 106;
       context__.validate_dims("data initialization", "ctrl_mat", "double",
         std::vector<size_t>{static_cast<size_t>(nCtrl),
           static_cast<size_t>(D)});
@@ -487,28 +515,28 @@ public:
         nCtrl, D);
       {
         std::vector<local_scalar_t__> ctrl_mat_flat__;
-        current_statement__ = 104;
+        current_statement__ = 106;
         ctrl_mat_flat__ = context__.vals_r("ctrl_mat");
-        current_statement__ = 104;
+        current_statement__ = 106;
         pos__ = 1;
-        current_statement__ = 104;
+        current_statement__ = 106;
         for (int sym1__ = 1; sym1__ <= D; ++sym1__) {
-          current_statement__ = 104;
+          current_statement__ = 106;
           for (int sym2__ = 1; sym2__ <= nCtrl; ++sym2__) {
-            current_statement__ = 104;
+            current_statement__ = 106;
             stan::model::assign(ctrl_mat, ctrl_mat_flat__[(pos__ - 1)],
               "assigning variable ctrl_mat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 104;
+            current_statement__ = 106;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 105;
-      stan::math::validate_non_negative_index("pat_mat", "nPat", nPat);
-      current_statement__ = 106;
-      stan::math::validate_non_negative_index("pat_mat", "D", D);
       current_statement__ = 107;
+      stan::math::validate_non_negative_index("pat_mat", "nPat", nPat);
+      current_statement__ = 108;
+      stan::math::validate_non_negative_index("pat_mat", "D", D);
+      current_statement__ = 109;
       context__.validate_dims("data initialization", "pat_mat", "double",
         std::vector<size_t>{static_cast<size_t>(nPat),
           static_cast<size_t>(D)});
@@ -519,55 +547,55 @@ public:
         D);
       {
         std::vector<local_scalar_t__> pat_mat_flat__;
-        current_statement__ = 107;
+        current_statement__ = 109;
         pat_mat_flat__ = context__.vals_r("pat_mat");
-        current_statement__ = 107;
+        current_statement__ = 109;
         pos__ = 1;
-        current_statement__ = 107;
+        current_statement__ = 109;
         for (int sym1__ = 1; sym1__ <= D; ++sym1__) {
-          current_statement__ = 107;
+          current_statement__ = 109;
           for (int sym2__ = 1; sym2__ <= nPat; ++sym2__) {
-            current_statement__ = 107;
+            current_statement__ = 109;
             stan::model::assign(pat_mat, pat_mat_flat__[(pos__ - 1)],
               "assigning variable pat_mat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 107;
+            current_statement__ = 109;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 108;
+      current_statement__ = 110;
       stan::math::validate_non_negative_index("ctrlIndex", "nCtrl", nCtrl);
-      current_statement__ = 109;
+      current_statement__ = 111;
       context__.validate_dims("data initialization", "ctrlIndex", "int",
         std::vector<size_t>{static_cast<size_t>(nCtrl)});
       ctrlIndex = std::vector<int>(nCtrl, std::numeric_limits<int>::min());
-      current_statement__ = 109;
+      current_statement__ = 111;
       ctrlIndex = context__.vals_i("ctrlIndex");
-      current_statement__ = 109;
+      current_statement__ = 111;
       stan::math::check_greater_or_equal(function__, "ctrlIndex", ctrlIndex,
         1);
-      current_statement__ = 109;
-      stan::math::check_less_or_equal(function__, "ctrlIndex", ctrlIndex, M);
-      current_statement__ = 110;
-      stan::math::validate_non_negative_index("m", "M", M);
       current_statement__ = 111;
-      stan::math::validate_non_negative_index("c", "M", M);
+      stan::math::check_less_or_equal(function__, "ctrlIndex", ctrlIndex, M);
       current_statement__ = 112;
-      stan::math::validate_non_negative_index("classif", "nPat", nPat);
+      stan::math::validate_non_negative_index("m", "M", M);
       current_statement__ = 113;
-      stan::math::validate_non_negative_index("probvec", "nPat", nPat);
+      stan::math::validate_non_negative_index("c", "M", M);
       current_statement__ = 114;
-      stan::math::validate_non_negative_index("dens", "nPat", nPat);
+      stan::math::validate_non_negative_index("classif", "nPat", nPat);
       current_statement__ = 115;
-      stan::math::validate_non_negative_index("dens", "K", K);
+      stan::math::validate_non_negative_index("probvec", "nPat", nPat);
       current_statement__ = 116;
-      stan::math::validate_non_negative_index("yPred", "nSyn", nSyn);
+      stan::math::validate_non_negative_index("dens", "nPat", nPat);
       current_statement__ = 117;
-      stan::math::validate_non_negative_index("m_prior", "M", M);
+      stan::math::validate_non_negative_index("dens", "K", K);
       current_statement__ = 118;
-      stan::math::validate_non_negative_index("c_prior", "M", M);
+      stan::math::validate_non_negative_index("yPred", "nSyn", nSyn);
       current_statement__ = 119;
+      stan::math::validate_non_negative_index("m_prior", "M", M);
+      current_statement__ = 120;
+      stan::math::validate_non_negative_index("c_prior", "M", M);
+      current_statement__ = 121;
       stan::math::validate_non_negative_index("yPred_prior", "nSyn", nSyn);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

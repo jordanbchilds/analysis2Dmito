@@ -34,13 +34,12 @@ data{
   real<lower=0> shape_tau;
   real<lower=0> rate_tau;
 
+  real<lower=0> alpha_pi;
+  real<lower=0> beta_pi;
+
   real slope_lb;
-  real pi_lb;
-  real pi_ub;
-
-  // real<lower=0> alpha_pi;
-  // real<lower=0> beta_pi;
-
+  real<lower=0, upper=1> pi_lb;
+  real<lower=0, upper=1> pi_ub;
   real tau_def;
 
   int<lower=0> nCtrl; //number of control data points
