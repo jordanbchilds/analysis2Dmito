@@ -260,13 +260,13 @@ postPlot = function(post,
   graphics::points(
     dataMats$ctrl,
     pch = 20,
-    col = analysis2Dmito::alphaBlack(0.01),
+    col = analysis2Dmito::alphaBlack(0.1),
     ...
   )
   graphics::points(
     dataMats$pts,
     pch = 20,
-    col = analysis2Dmito::classcols(classifs, alphaLevel=0.02),
+    col = analysis2Dmito::classcols(classifs, alphaLevel=0.4),
     ...
   )
 
