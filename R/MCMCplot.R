@@ -62,16 +62,14 @@ MCMCplot = function(post,
     } else {
       stop(
         paste(
-          "The file,",
-          post,
-          ", does not exist, check the file path and working directory."
+          "The file,", post,", does not exist, check the file path and working directory."
         )
       )
     }
   }
 
   if (is.null(prior)) {
-    message("No prior draws given - only posteriors will be plotted")
+    message("No prior draws given - only posteriors will be plotted.")
   }
 
   if (is.character(prior)) {
@@ -80,10 +78,7 @@ MCMCplot = function(post,
       prior = as.data.frame(prior)
     } else {
       stop(
-        paste(
-          "The file,",
-          prior,
-          ", does not exist, check the file path and working directory."
+        paste("The file,", prior,", does not exist, check the file path and working directory."
         )
       )
     }
@@ -93,6 +88,8 @@ MCMCplot = function(post,
   if (is.null(nRow)) nRow = length(col.names)
   op = par(mfrow = c(nRow, 3), ...)
   for (param in col.names) {
+    title(main=main_title, outer=TRUE, line=-1)
+
     post_vec = post[, param]
     plot(
       ts(post_vec),
@@ -121,6 +118,7 @@ MCMCplot = function(post,
         main = ""
       )
     }
+
     xlims = range(post[, param])
     if (!is.null(prior)) {
       xlims = range(c(post[, param], prior[, param]))
@@ -135,7 +133,6 @@ MCMCplot = function(post,
       main = ""
     )
     if (!is.null(prior)) lines(density(prior[, param]), lwd = 2, col = analysis2Dmito::alphaPink(1.0))
-    if (!is.null(main_title)) title(main=main_title, outer=TRUE, line=-1)
   }
   par(op)
 }

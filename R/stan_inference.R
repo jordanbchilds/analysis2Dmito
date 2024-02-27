@@ -207,25 +207,25 @@ stan_inference = function(dataMats,
     }
   }
 
-  in_list = list(
-    tau_norm = param_list$shape_tau/param_list$rate_tau,
-    mu_m = param_list$mean_mu_m, tau_m = param_list$shape_tau_m/param_list$rate_tau_m,
-    mu_c = param_list$mean_mu_c, tau_c = param_list$shape_tau_c/param_list$rate_tau_c,
-    probdiff = (param_list$pi_ub-param_list$pi_lb)/2
-  )
-  for( i in 1:(nCtrl+1) ){
-    in_list[[paste("m[",i,"]")]] = param_list$mean_mu_m
-    in_list[[paste("c[",i,"]")]] = param_list$mean_mu_c
-  }
-
-  init_list = list()
-  for(i in 1:chains){
-    init_list[[i]] = in_list
-  }
+  # in_list = list(
+  #   tau_norm = param_list$shape_tau/param_list$rate_tau,
+  #   mu_m = param_list$mean_mu_m, tau_m = param_list$shape_tau_m/param_list$rate_tau_m,
+  #   mu_c = param_list$mean_mu_c, tau_c = param_list$shape_tau_c/param_list$rate_tau_c,
+  #   probdiff = (param_list$pi_ub-param_list$pi_lb)/2
+  # )
+  # for( i in 1:(nCtrl+1) ){
+  #   in_list[[paste("m[",i,"]")]] = param_list$mean_mu_m
+  #   in_list[[paste("c[",i,"]")]] = param_list$mean_mu_c
+  # }
+  #
+  # init_list = list()
+  # for(i in 1:chains){
+  #   init_list[[i]] = in_list
+  # }
 
   output = rstan::sampling(stanmodels$bhlmm,
                            data=param_list,
-                           init=init_list,
+                           # init=init_list,
                            chains=chains,
                            iter=iter,
                            warmup=warmup,
@@ -239,6 +239,8 @@ stan_inference = function(dataMats,
                        grepl("probvec", outcols)|grepl("dens", outcols)|
                        grepl("yPred", outcols)|grepl("_tmp", outcols)|
                        grepl("_prior", outcols) ) ]
+  paramNames = colnames(post)
+
   postpred_mat = outmat[, grepl("yPred", outcols) & !grepl("_prior", outcols)]
 
   prior = outmat[, !( grepl("classif", outcols)|grepl("lp__", outcols)|
@@ -257,6 +259,11 @@ stan_inference = function(dataMats,
     priorpred = cbind(xSyn, t(priorpred))
     colnames(priorpred) = c("mitochan", "lwrNorm", "medNorm", "uprNorm")
   } else {
+    post = cbind( rep(1:chains, each=(iter-warmup)), post)
+    prior = cbind( rep(1:chains, each=(iter-warmup)), post)
+    colnames(post) = c("chain", paramNames)
+    colnames(prior) = c("chain", paramNames)
+
     postpred = NULL
     priorpred = NULL
 
@@ -267,10 +274,10 @@ stan_inference = function(dataMats,
       postpred = rbind(postpred, t(postpred_chain))
       priorpred = rbind(priorpred, t(priorpred_chain))
     }
-    postpred = cbind(rep(xSyn, chains), postpred)
-    priorpred = cbind(rep(xSyn, chains), priorpred)
-    colnames(postpred) = c("mitochan", "lwrNorm", "medNorm", "uprNorm")
-    colnames(priorpred) = c("mitochan", "lwrNorm", "medNorm", "uprNorm")
+    postpred = cbind( rep(1:chains, each=nSyn), rep(xSyn, chains), postpred)
+    priorpred = cbind( rep(1:chains, each=nSyn), rep(xSyn, chains), priorpred)
+    colnames(postpred) = c("chain", "mitochan", "lwrNorm", "medNorm", "uprNorm")
+    colnames(priorpred) = c("chain", "mitochan", "lwrNorm", "medNorm", "uprNorm")
   }
 
   outList = list(POST=post, POSTPRED=postpred, CLASSIF=classifs_mat,
