@@ -88,7 +88,7 @@ MCMCplot = function(post,
   if (is.null(nRow)) nRow = length(col.names)
   op = par(mfrow = c(nRow, 3), ...)
   for (param in col.names) {
-    title(main=main_title, outer=TRUE, line=-1)
+
 
     post_vec = post[, param]
     plot(
@@ -133,6 +133,7 @@ MCMCplot = function(post,
       main = ""
     )
     if (!is.null(prior)) lines(density(prior[, param]), lwd = 2, col = analysis2Dmito::alphaPink(1.0))
+    title(main=main_title, outer=TRUE, line=-1)
   }
   par(op)
 }
