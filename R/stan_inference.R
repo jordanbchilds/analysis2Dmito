@@ -235,7 +235,7 @@ stan_inference = function(dataMats,
   outcols = colnames(outmat)
 
   classifs_mat = outmat[, grepl("classif", outcols)]
-  post = outmat[, !( grepl("classif", outcols)|grepl("lp__", outcols)|
+  post = outmat[, !( grepl("classif", outcols)| #grepl("lp__", outcols)
                        grepl("probvec", outcols)|grepl("dens", outcols)|
                        grepl("yPred", outcols)|grepl("_tmp", outcols)|
                        grepl("_prior", outcols) ) ]
@@ -243,7 +243,7 @@ stan_inference = function(dataMats,
 
   postpred_mat = outmat[, grepl("yPred", outcols) & !grepl("_prior", outcols)]
 
-  prior = outmat[, !( grepl("classif", outcols)|grepl("lp__", outcols)|
+  prior = outmat[, !( grepl("classif", outcols)| #grepl("lp__", outcols)|
                         grepl("probvec", outcols)|grepl("dens", outcols)|
                         grepl("yPred", outcols)|grepl("_tmp", outcols) ) & grepl("_prior", outcols) ]
   colnames(prior) = gsub("_prior", "", colnames(prior))
