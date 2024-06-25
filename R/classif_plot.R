@@ -57,7 +57,7 @@ classif_plot = function(dataMats,
   plot(NULL, xlim = xlims, ylim = ylims, ...)
   points(dataMats$ctrl,
          pch = 20,
-         col = alphaBlack(colAlpha*0.),
+         col = alphaBlack(colAlpha*0.9),
          ...)
   if (is.null(classifs)) {
     cols = alphaGreen(colAlpha)
