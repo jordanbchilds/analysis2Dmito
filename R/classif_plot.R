@@ -17,6 +17,8 @@
 #' linear regression model for this dataset. The columns should be labelled;
 #' `mtiochan`, `lwrNorm`, `medNorm` and `uprNorm`. This is the form of the
 #' output given by [analysis2Dmito::inference], in the `POSTPRED`.
+#' @param colAlpha Transparency value of the plotted points. A numeric between
+#' 0.0 and 1.0.
 #'
 #' @return NULL.
 #'
@@ -47,6 +49,7 @@
 classif_plot = function(dataMats,
                         classifs = NULL,
                         postpred = NULL,
+                        colAlpha = 1.0,
                         ...) {
   xlims = range(c(dataMats$ctrl[, 1], dataMats$pts[, 1]))
   ylims = range(c(dataMats$ctrl[, 2], dataMats$pts[, 2]))
@@ -54,11 +57,11 @@ classif_plot = function(dataMats,
   plot(NULL, xlim = xlims, ylim = ylims, ...)
   points(dataMats$ctrl,
          pch = 20,
-         col = alphaBlack(0.1))
+         col = alphaBlack(colAlpha))
   if (is.null(classifs)) {
-    cols = alphaGreen(0.7)
+    cols = alphaGreen(colAlpha)
   } else {
-    cols = classcols(classifs)
+    cols = classcols(classifs, colAlpha)
   }
   points(dataMats$pts,
          pch = 20,

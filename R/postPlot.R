@@ -37,7 +37,7 @@
 #' and posterior predictive model for the patient sample. Default is "".
 #' @param chan y axis label to be placed on the final classification
 #' and posterior predictive model for the patient sample. Default is "".
-#' @param pat_id The subject identifier, to be placed in the top left corner of the
+#' @param patient The subject identifier, to be placed in the top left corner of the
 #' first plot. The default is "".
 #' @param chains The number of chains present in the posterior draws. The
 #' default is 1.
@@ -242,7 +242,7 @@ postPlot = function(post,
       )
     }
     if( var == var.names[1] )
-      text( xlims[1], yMax, labels=pat, adj=c(0.0, 0.9), cex=1.5 )
+      text( xlims[1], yMax, labels=patient, adj=c(0.0, 0.9), cex=1.5 )
   }
 
   xlims = range((c(dataMats$ctrl[, 1], dataMats$pts[, 1])))
@@ -260,7 +260,7 @@ postPlot = function(post,
   graphics::points(
     dataMats$ctrl,
     pch = 20,
-    col = analysis2Dmito::alphaBlack(0.1),
+    col = analysis2Dmito::alphaBlack(0.05),
     ...
   )
   graphics::points(

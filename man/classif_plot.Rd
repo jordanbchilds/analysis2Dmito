@@ -4,7 +4,7 @@
 \alias{classif_plot}
 \title{2Dmito Plot with Classifications}
 \usage{
-classif_plot(dataMats, classifs = NULL, postpred = NULL, ...)
+classif_plot(dataMats, classifs = NULL, postpred = NULL, colAlpha = 1, ...)
 }
 \arguments{
 \item{dataMats}{A list of matrices containing the control data, named \code{ctrl},
@@ -22,6 +22,9 @@ posterior predictive interval and the corresponding x-axis values for a
 linear regression model for this dataset. The columns should be labelled;
 \code{mtiochan}, \code{lwrNorm}, \code{medNorm} and \code{uprNorm}. This is the form of the
 output given by \link{inference}, in the \code{POSTPRED}.}
+
+\item{colAlpha}{Transparency value of the plotted points. A numeric between
+0.0 and 1.0.}
 }
 \value{
 NULL.

@@ -60,14 +60,14 @@ and posterior predictive model for the patient sample. Default is "".}
 \item{mitochan}{x axis label to be placed on the final classification
 and posterior predictive model for the patient sample. Default is "".}
 
+\item{patient}{The subject identifier, to be placed in the top left corner of the
+first plot. The default is "".}
+
 \item{chains}{The number of chains present in the posterior draws. The
 default is 1.}
 
 \item{...}{Any additional parameters to be passed to the plotting functions
 e.g. lwd, cex, etc.}
-
-\item{pat_id}{The subject identifier, to be placed in the top left corner of the
-first plot. The default is "".}
 }
 \value{
 NULL.
