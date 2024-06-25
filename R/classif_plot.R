@@ -57,15 +57,17 @@ classif_plot = function(dataMats,
   plot(NULL, xlim = xlims, ylim = ylims, ...)
   points(dataMats$ctrl,
          pch = 20,
-         col = alphaBlack(colAlpha))
+         col = alphaBlack(colAlpha*0.),
+         ...)
   if (is.null(classifs)) {
     cols = alphaGreen(colAlpha)
   } else {
-    cols = classcols(classifs, colAlpha)
+    cols = classcols(classifs, alphaLevel=colAlpha)
   }
   points(dataMats$pts,
          pch = 20,
-         col = cols)
+         col = cols,
+         ...)
   lines(
     postpred[, "mitochan"],
     postpred[, "lwrNorm"],
