@@ -22,10 +22,12 @@ A character vector of the hexidecimal value defining the colour.
 Defining a transparent version of a given colour.
 }
 \details{
-Either a valid colour name or RGB values must be passed to the function.
+Either a valid colour name or RGB values must be passed to the function. If
+both \code{name} and \code{rgbVals} are passed to the function, \code{name} is used to create
+the colour.
 }
 \examples{
 myBlue = alphaCol(0.5, name="blue")
-myRed = alphaCol(0.1, rgb=c(240, 20, 2-), maxValue=255)
+myRed = alphaCol(0.1, rgb=c(240, 20, 20), maxValue=255)
 
 }

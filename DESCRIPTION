@@ -1,10 +1,18 @@
 Package: analysis2Dmito
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Type: Package
+Title: Classify single-myofibres as OXPHOS deficient based on protein abundance
+Version: 0.1.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Jordan", "Childs", email="j.childs@newcastle.co.uk", role = c("aut", "cre"))
+Description: analysis2Dmito fits a Bayesian hierarchical linear mixture model, to 
+             OXPHOS protein abundance data. The model is proposed in the paper 
+             `Bayesian classification of OXPHOS skeletal myofibres` by Childs et al.. The functions
+             provided here are specific for this purpose. Unforetunately, due to 
+             lack of consistency in the structure of related data, tthe user must
+             first wrangle their data into a specified format. A detailed
+             description of the this and how to use the important fucntions within
+             the package can be found on the package 
+             [GitHub page](https://github.com/jordanbchilds/analysis2Dmito).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -18,12 +26,20 @@ Imports:
     Rcpp (>= 0.12.0),
     RcppParallel (>= 5.0.1),
     rstan (>= 2.18.1),
-    rstantools (>= 2.3.1.1)
+    rstantools (>= 2.3.1.1),
+    data.table (>= 1.15.0),
+    plyr (>= 1.8.9), 
+    readr (>= 2.1.5),
+    tidyr (>= 1.3.1)
 LinkingTo: 
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     RcppParallel (>= 5.0.1),
     rstan (>= 2.18.1),
-    StanHeaders (>= 2.18.0)
+    StanHeaders (>= 2.18.0),
+    data.table (>= 1.15.0),
+    plyr (>= 1.8.9), 
+    readr (>= 2.1.5),
+    tidyr (>= 1.3.1)
 SystemRequirements: GNU make

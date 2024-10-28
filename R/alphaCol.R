@@ -3,7 +3,9 @@
 #' @description Defining a transparent version of a given colour.
 #'
 #' @details
-#' Either a valid colour name or RGB values must be passed to the function.
+#' Either a valid colour name or RGB values must be passed to the function. If
+#' both `name` and `rgbVals` are passed to the function, `name` is used to create
+#' the colour.
 #'
 #'
 #' @param name A valid colour name, as listed by [colors] function.
@@ -20,7 +22,7 @@
 #'
 #' @examples
 #' myBlue = alphaCol(0.5, name="blue")
-#' myRed = alphaCol(0.1, rgb=c(240, 20, 2-), maxValue=255)
+#' myRed = alphaCol(0.1, rgb=c(240, 20, 20), maxValue=255)
 #'
 alphaCol = function(alpha, name = NULL, rgbVals = NULL, maxValue=255) {
   if (is.null(name) && is.null(rgbVals)) {
@@ -31,10 +33,10 @@ alphaCol = function(alpha, name = NULL, rgbVals = NULL, maxValue=255) {
   } else {
     stop("`name` is not a valid colour. Use colors() funciton to check for valid colour names.")
   }
-  if ( sum(rgbVals > maxValue)>=1 ){
+  if ( all(rgbVals > maxValue) ){
     stop("`rgbVals` must be smaller than the maximum specified value, `maxValue`.")
   }
-  if( alpha>1 || alpha<0 ){
+  if (alpha>1 || alpha<0) {
     stop("`alpha` must be in the range [0,1].")
   }
 

@@ -1,16 +1,28 @@
-#' The 'analysis2Dmito' package.
+#' The 'analysis2Dmito packge'
 #'
-#' @description A DESCRIPTION OF THE PACKAGE
+#' @description analysis2Dmito fits a Bayesian hierarchical linear mixture model, to
+#' OXPHOS protein abundance data. The model is proposed in the paper
+#' `Bayesian classification of OXPHOS skeletal myofibres` by Childs et al.. The functions
+#' provided here are specific for this purpose. Unforetunately, due to
+#' lack of consistency in the structure of related data, tthe user must
+#' first wrangle their data into a specified format. A detailed
+#' description of the this and how to use the important fucntions within
+#' the package can be found on the package
+#' [GitHub page](https://github.com/jordanbchilds/analysis2Dmito).
 #'
 #' @docType package
-#' @name analysis2Dmito-package
+#' @name analysis2Dmito
 #' @aliases analysis2Dmito
-#' @useDynLib analysis2Dmito, .registration = TRUE
+#' @useDynLib analysis2Dmito
 #' @import methods
 #' @import Rcpp
-#' @importFrom rstan sampling
+#' @import RcppParallel
+#' @import rstan
+#' @import rstantools
+#' @import data.table
+#' @import plyr
+#' @import readr
+#' @import tidyr
 #'
-#' @references
-#' Stan Development Team (NA). RStan: the R interface to Stan. R package version 2.32.3. https://mc-stan.org
-#'
+"_PACKAGE"
 NULL
