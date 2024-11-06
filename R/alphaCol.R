@@ -7,11 +7,11 @@
 #' both `name` and `rgbVals` are passed to the function, `name` is used to create
 #' the colour.
 #'
-#'
-#' @param name A valid colour name, as listed by [colors] function.
-#' @param rgbVals A numeric vector of RGB values.
-#' @param maxValue The maximum colour value, default to 1.
-#' @param alpha The level of transparency, in the range [0,1].
+#' @param col A valid colour name, as listed by [colors] function. OR a positive
+#' integer indexing the colour listed in the [palette] function. OR a string of
+#' the form "#rrggbb", see [rgb].
+#' @param alpha The level of transparency, a `numeric` in the range [0,1].
+#' @param maxValue The maximum colour value, default to 255.
 #'
 #' @return A character vector of the hexidecimal value defining the colour.
 #'
@@ -21,24 +21,26 @@
 #' @importFrom grDevices col2rgb
 #'
 #' @examples
-#' myBlue = alphaCol(0.5, name="blue")
-#' myRed = alphaCol(0.1, rgb=c(240, 20, 20), maxValue=255)
+#' colOne = alphaCol(col="blue", alpha=0.5)
+#' colTwo = alphaCol(col=6, alpha=0.1)
+#' colThree = alphaCol(rgb(0.6, 0.1, 0.6), alpha=0.8)
 #'
-alphaCol = function(alpha, name = NULL, rgbVals = NULL, maxValue=255) {
-  if (is.null(name) && is.null(rgbVals)) {
-    stop("Either a valid colour name OR a vector of RGB values must be passed.")
-  }
-  if (!is.null(name) && (name %in% colors()) ) {
-    rgbVals = as.vector(col2rgb(name))
-  } else {
-    stop("`name` is not a valid colour. Use colors() funciton to check for valid colour names.")
-  }
-  if ( all(rgbVals > maxValue) ){
-    stop("`rgbVals` must be smaller than the maximum specified value, `maxValue`.")
-  }
-  if (alpha>1 || alpha<0) {
+#'
+alphaCol = function(col, alpha=0.5) {
+  if (alpha<0.0 | alpha>1.0 ) {
     stop("`alpha` must be in the range [0,1].")
   }
 
-  return(rgb(rgbVals[1]/maxValue, rgbVals[2]/maxValue, rgbVals[3]/maxValue, alpha))
+  if (is.character(col) && (col%in%colors() | str_sub(col,1,1)=='#')) {
+    if (str_sub(col,1,1)=='#' & nchar(col)==9) {
+      col = str_sub(col, 1, 7)
+    }
+    rgbVals = t( col2rgb(col, alpha=FALSE) )
+    return (rgb(red=rgbVals[1], green=rgbVals[2], blue=rgbVals[3], alpha=alpha*255, maxColorValue=255))
+  } else if (is.numeric(col) && (ceiling(col)==floor(col) & col>0)) {
+    rgbVals = t( col2rgb(col, alpha=FALSE) )
+    return (rgb(red=rgbVals[1], green=rgbVals[2], blue=rgbVals[3], alpha=alpha*255, maxColorValue=255))
+  } else {
+    stop ("`col` was not appropriately defined, see documentation.")
+  }
 }

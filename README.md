@@ -84,11 +84,11 @@ below.
 
 | Variable Name | Description |
 | ------------- | ----------- |
-| `value` | A numerical value representing the expression level (average pixel intensity) for a particular fibre within a sample for a particular channel. |
+| `Value` | A numerical value representing the expression level (average pixel intensity) for a particular fibre within a sample for a particular channel. |
 | `sampleID` | A unique string identifying the sample/tissue-section from which an observation was made e.g. `C01`, `C02`, `P01`, `P02`, ... |
 |`fibreID` | An integer identifying a single fibre in its sample. This identifier is not unique throughout the whole dataset, it is only unique within the sample it comes from. It should be consistent across channels for the sample. |
-| `sbj_type` | A string identifying which samples are control subjects and which are patients. Control samples must be labelled as "control" and patient samples labelled as "patient". |
-| `channel` | A string labeling the channel or protein measured. |
+| `sbjType` | A string identifying which samples are control subjects and which are patients. Control samples must be labelled as "control" and patient samples labelled as "patient". |
+| `Channel` | A string labeling the channel or protein measured. |
 
 
 __Any dataset used with the functions in this package must have at least these five columns__, other columns are allowed but are not necessary. The data is in a format 
@@ -121,21 +121,22 @@ mitochan = "VDAC"
 channels = unique( grep(mitochan, exampleData$channel, value=TRUE, invert=TRUE) )
 
 # extract control sample IDs
-ctrlIDs = unique( exampleData[exampleData$sbj_type=="control", "sampleID"] )
+ctrlIDs = unique( exampleData[exampleData$sbjType=="control", "sampleID"] )
 # extract patient sample IDs
-patIDs = unique( exampleData[exampleData$sbj_type=="patient", "sampleID"] )
-patIDs = sort(patIDs)
+ptsIDs = unique( exampleData[exampleData$sbjType=="patient", "sampleID"] )
+ptsIDs = sort(ptsIDs)
 
 # plot patient data and control data
 for( chan in channels ){
-  xDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==mitochan, "value"]
-  yDat_ctrl = exampleData[exampleData$sbj_type=="control" & exampleData$channel==chan, "value"]
+  xDat_ctrl = exampleData[exampleData$sbjType=="control" & exampleData$Channel==mitochan, "Value"]
+  yDat_ctrl = exampleData[exampleData$sbjType=="control" & exampleData$Channel==chan, "Value"]
 
-  for( pat in patIDs ){
-    png(paste0("ExploratoryAnalysis_",chan,"_",pat,".png"), type = "cairo-png", width=1920, height=1080,pointsize=36)
+  for( pat in ptsIDs ){
+    png(paste0("ExploratoryAnalysis_",chan,"_",pat,".png"), 
+    type = "cairo-png", width=1920, height=1080, pointsize=36)
     op = par(mfrow=c(1,3))
-    xDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==mitochan, "value"]
-    yDat_pat = exampleData[exampleData$sampleID==pat & exampleData$channel==chan, "value"]
+    xDat_pat = exampleData[exampleData$sampleID==pat & exampleData$Channel==mitochan, "Value"]
+    yDat_pat = exampleData[exampleData$sampleID==pat & exampleData$Channel==chan, "Value"]
     plot( xDat_ctrl, yDat_ctrl, pch=20, col="black",
           xlab=mitochan, ylab=chan, main=pat,
           xlim=range(c(xDat_ctrl, xDat_pat)), ylim=range(c(yDat_ctrl, yDat_pat)) )
@@ -174,12 +175,12 @@ If the data is transformed so that healthy fibres show a linear relationship and
 
 ```{r echo=TRUE}
 
-pat = "P01"
+patID = "P01"
 
 dataMats = getData_mats(data=exampleData, 
                         ctrlID=ctrlIDs,
                         channels=c(mitochan, chan),
-                        pts=pat, 
+                        pts=patID, 
                         getIndex=TRUE)
 
 output = stan_inference(dataMats)
@@ -204,11 +205,13 @@ dPrior = density( output$PRIOR[,"probdiff"] )
 xlims = range(c(dPrior$x, dPost$x))
 ylims = range(c(dPrior$y, dPost$y))
 
+op = par(mfrow=c(1,1))
 plot(dPrior, col=alphaPink(0.7), lwd=2,
     xlim=xlims, ylim=ylims,
      main="Proportion of Deficiency", xlab="")
 lines( dPost, col=alphaGreen(0.7), lwd=2)
 legend("topright", legend=c("post", "prior"), lty=1, col=c(alphaGreen(1.0), alphaPink(1.0)))
+par(op)
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/pi_postprior_ex.png?raw=true)
@@ -216,6 +219,7 @@ legend("topright", legend=c("post", "prior"), lty=1, col=c(alphaGreen(1.0), alph
 The `POSTPRED` and `PRIORPRED` matrices in the output list contain prior and posterior predictive interval - marginalised over parameter uncertainty - for the patient sample passed to the model. The first column in this is called `mitochan` and are the values on the x-axis for the prediction. The remaining six columns are the 2.5\%, 50\% and 97.5\% quantiles of the prediction for the healthy patient fibres and the deficient patient fibres. This is found by calculating the predictive distribution of the protein expression at each value stored in the `mitochan` column and then calculating its quantiles. 
 
 ```{r echo=TRUE}
+op = par(mfrow=c(1,1))
 plot(dataMats$pts, pch=20, col=alphaBlack(0.2),
      xlab=paste0("log(", mitochan ,")"), ylab="log(MTCO1)", 
      main="Posterior predictive linear regression")
@@ -225,6 +229,7 @@ lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"lwrNorm"],
       lty=2, col=alphaPink(0.9))
 lines(output$POSTPRED[,"mitochan"], output$POSTPRED[,"uprNorm"], 
       lty=2, col=alphaPink(0.9))
+op = par(mfrow=c(1,1))
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/postpred_ex.png?raw=true)
@@ -233,9 +238,13 @@ The last item in the list is called `CLASSIF` and is matrix of every posterior c
 
 ```{r echo=TRUE}
 def_prob = colMeans(output$CLASSIF)
+
+op = par(mfrow=c(1,1))
 plot(dataMats$pts, pch=20, col=classcols(def_prob),
-     xlab=paste0("log(", mitochan ,")"), ylab="log(MTCO1)", 
-     main="Posterior fibre classifications")
+     xlab=paste0("log(", mitochan ,")"), 
+     ylab=paste0("log(", chan, ")"), 
+     main="Posterior myofibre classifications")
+par(op)
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_ex.png?raw=true)
@@ -269,17 +278,15 @@ To be able to visualise the prior and posterior densities for all variables we c
 
 ```{r echo=TRUE}
 op = par(mfrow=c(3,3)) # plotting grid: 3x3
-
 postPlot(post=output$POST,
          prior=output$PRIOR,
          postpred=output$POSTPRED,
          dataMats=dataMats,
          classifs=def_prob,
          var.names=c("mu_m", "tau_m", "m", "mu_c", "tau_c", "c", "probdiff", "tau_norm"), 
-         mitoPlot_xlab="log(VDAC)",
-         mitoPlot_ylab="log(MTCO1)"
+         mitoPlot_xlab=paste0("log(", mitochan, ")"),
+         mitoPlot_ylab=paste0("log(", chan, ")")
          )
-
 par(op) # end plotting grid 
 ```
 
@@ -290,11 +297,14 @@ In the above output we see that little is learnt about the parameters `mu_m`, `t
 To just see the fibre classification, the `classif_plot` function can be used. The function creates a plot similar to that which was seen before but allows you to plot the posterior predictive without tediously writing the `lines` function. The function also automatically plots the control data in a translucent black colour. 
 
 ```{r echo=TRUE}
+op = par(mfrow=c(1,1))
 classif_plot(dataMats=dataMats,
              classifs=def_prob,
              postpred=output$POSTPRED,
-             xlab="log(VDAC)",
-             ylab="log(MTCO1)")
+             xlab=paste0("log(", mitochan, ")"),
+             ylab=paste0("log(", chan, ")") 
+             )
+par(op)
 ```
 
 ![alt text](https://github.com/jordanbchilds/analysis2Dmito/blob/main/readme_png/classif_plot_ex.png?raw=true)
@@ -321,7 +331,7 @@ across two cores.
 output = stan_inference(dataMats, chains=5, ncores=2)
 ```
 
-Once multiple chains have run, we can check have reached the same posterior
+Once multiple chains have run, we can check they have reached the same posterior
 distribution using the `rstan::Rhat` function. It is suggested that if the value
 of rhat is greater than 1.05 then the chains have NOT converged to the same 
 distribution. The function requires a matrix of the draws for a specific parameter. 

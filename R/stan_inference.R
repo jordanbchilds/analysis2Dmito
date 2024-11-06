@@ -213,22 +213,23 @@ stan_inference = function(dataMats,
                            iter=iter,
                            warmup=warmup,
                            ...)
-
   outmat = as.matrix(output)
+  outmat = outmat[, ]
   outcols = colnames(outmat)
 
+
   classifs_mat = outmat[, grepl("classif", outcols)]
-  post = outmat[, !( grepl("classif", outcols)| #grepl("lp__", outcols)
-                       grepl("probvec", outcols)|grepl("dens", outcols)|
-                       grepl("yPred", outcols)|grepl("_tmp", outcols)|
+  post = outmat[, !( grepl("classif", outcols) | grepl("lp__", outcols) |
+                       grepl("probvec", outcols) | grepl("dens", outcols) |
+                       grepl("yPred", outcols) | grepl("_tmp", outcols) |
                        grepl("_prior", outcols) ) ]
   paramNames = colnames(post)
 
   postpred_mat = outmat[, grepl("yPred", outcols) & !grepl("_prior", outcols)]
 
-  prior = outmat[, !( grepl("classif", outcols)| #grepl("lp__", outcols)|
-                        grepl("probvec", outcols)|grepl("dens", outcols)|
-                        grepl("yPred", outcols)|grepl("_tmp", outcols) ) & grepl("_prior", outcols) ]
+  prior = outmat[, !( grepl("classif", outcols) | grepl("lp__", outcols) |
+                        grepl("probvec", outcols) | grepl("dens", outcols) |
+                        grepl("yPred", outcols) | grepl("_tmp", outcols) ) & grepl("_prior", outcols) ]
   colnames(prior) = gsub("_prior", "", colnames(prior))
 
   priorpred_mat = outmat[, grepl("yPred", outcols) & grepl("_prior", outcols)]
