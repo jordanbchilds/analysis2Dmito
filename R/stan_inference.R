@@ -214,7 +214,6 @@ stan_inference = function(dataMats,
                            warmup=warmup,
                            ...)
   outmat = as.matrix(output)
-  outmat = outmat[, ]
   outcols = colnames(outmat)
 
 
